@@ -1,0 +1,16 @@
+{% extends "index/base.html" %}
+
+{% load staticfiles %}
+
+{% block static_block %} 
+<link rel="stylesheet" href="{% static 'css/sql.css' %}">
+{% endblock static_block %}
+
+{% block body_block %}
+<div class="form-group">
+    <label for="sql">SQL</label>
+    <textarea class="form-control" id="sql" placeholder="Insert SQL here..."></textarea>
+    <br>
+    <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
+</div>
+{% endblock body_block %}

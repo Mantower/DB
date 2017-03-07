@@ -1,0 +1,11 @@
+{% extends "index/base.html" %}
+{% load staticfiles %}
+
+{% block static_block %} 
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock static_block %}
+
+{% block body_block %}
+<h1 id="project-title">DB</h1>
+<h3 id="author">by Erik, Garnix, Ron</h3>
+{% endblock body_block %}

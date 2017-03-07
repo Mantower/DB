@@ -1,0 +1,36 @@
+{% extends "index/base.html" %}
+
+{% load staticfiles %}
+
+{% block static_block %} 
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+<script src="{% static 'js/table.js' %}"></script>
+{% endblock static_block %}
+
+{% block body_block %}
+<h3>Choose one table to view</h3>
+<select class="form-control" onchange="redirect(this.value)">
+  {% for table in table_names %}
+  {% if table == table_name %}
+  <option value="{{ table }}" selected>{{ table }}</option>
+  {% else %}
+  <option value="{{ table }}">{{ table }}</option>
+  {% endif %}
+  {% endfor %}
+</select>
+<h3>{{ table_name }}</h3>
+<table class="table">
+    <tr>
+      {% for col_title in title %}
+        <th>{{ col_title }}</th>
+      {% endfor %}
+    </tr>
+    {% for row in content %}
+    <tr>
+      {% for col_content in row %}
+        <td>{{ col_content }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock body_block %}

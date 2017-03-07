@@ -1,0 +1,12 @@
+nav {
+    font-family: 'Yanone+Kaffeesatz', sans-serif;
+}
+
+body {
+    font-family: 'Muli', sans-serif;
+}
+
+.body-block {
+    width:80%;
+    margin: 0 auto;
+}
