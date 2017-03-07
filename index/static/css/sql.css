@@ -5,3 +5,7 @@
 #sql-submit {
     float: right;
 }
+
+p.danger {
+    color: #d9534f;
+}

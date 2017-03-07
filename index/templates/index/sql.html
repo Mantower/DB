@@ -8,9 +8,30 @@
 
 {% block body_block %}
 <div class="form-group">
-    <label for="sql">SQL</label>
-    <textarea class="form-control" id="sql" placeholder="Insert SQL here..."></textarea>
-    <br>
-    <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
+    <form method="POST">
+        {% csrf_token %}
+        <label for="sql">SQL</label>
+        <textarea class="form-control" name="sql" id="sql" placeholder="Insert SQL here..."></textarea>
+        <br>
+        <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
+    </form>
 </div>
+<br>
+<hr>
+{% if success %}
+<div class="panel panel-success">
+{% elif success == False %}
+<div class="panel panel-danger">
+{% else %}
+<div class="panel panel-primary">
+{% endif %}
+<div class="panel-heading">
+    <h3 class="panel-title">SQL execution {{ panel_msg }}</h3>
+  </div>
+  <div class="panel-body">
+    <p>{{ sql }}</p>
+    <p class="danger">{{ err_msg }}</p>
+  </div>
+</div>
+
 {% endblock body_block %}
