@@ -84,20 +84,20 @@ class Contraints:
         	return True
     	return False
 
-  # Check that value is a string within char limit 40
-  def varcharFulfil(value):
-    if isInstance(value, basestring) and value.length <= 40:
-      return True
-    return False
+  	# Check that value is a string within char limit 40
+  	def varcharFulfil(value):
+    	if isInstance(value, basestring) and value.length <= 40:
+      	return True
+    	return False
 
-  # Check that there are no keys with the same value
-  # Check for null value
-  def keyFulfil(value):
+  	# Check that there are no keys with the same value
+  	# Check for null value
+  	def keyFulfil(value):
       return False    
 
-  # Check that there are no duplicate values (maybe stringify all values in a row, and compare the two strings?)
-  def duplicateFulfil(value):
-    return False 
+  	# Check that there are no duplicate values (maybe stringify all values in a row, and compare the two strings?)
+  	def duplicateFulfil(value):
+    	return False 
   
 # each row
 class Entity:
