@@ -8,18 +8,30 @@ class Database:
   
   # Create up to 10 individual tables
   def create_table(self, table_name,columns,constraints, keys=None):
-    pass
+  		if Contraints.tableFulfil(self):
+  			table = Table(table_name,columns,keys)
+  			if table != null
+  				tables.append(table)
+  			else:
+  				# Database full, cannot append another table
   
   def get_all_table_names(self):
-    pass
+  	names = []
+  	for i in range(tables.length):
+  		names[i] = tables[i].name
+
+  	return names
   
   def get_table(self, name):
-    pass
+  	for i in range(tables.length)
+  		if tables[i].name = name:
+  			return tables[i]
+  	return
   
     
 # each table
 class Table:
-  def __init__(self, name, columns, pks=[0]):
+  def __init__(self, name, columns, contraints, pks=[0]):
     self.name = name
     # store column if column is_valid 
     self.columns = columns
@@ -57,36 +69,35 @@ class Column:
     return False
 '''
 
-class TableConstraint:
-  # Check that the DB doesn't contain more then 10 tables already
-  def fulfil(database):
-    
-    return false
-  
-class IntConstraint:
-  # Check that value is an int within -2,147,483,648 to 2,147,483,647
-  def fulfil(value):
-    if isInstance(value, int) and value >= -2147483648 and value <= 2147483647:
-        return True
-    return False
-  
-class VarcharConstraint:
-  # Check that value is a string within char limit 40
-  def fulfil(value):
-    if isInstance(value, basestring) and value.length <= 40:
-      return True
-    return False
 
-class KeyConstraint:
-  # Check that there are no keys with the same value
-  # Check for null value
-  def fulfil(value):
-      return False
-    
-class DuplicateConstraint:
-  # Check that there are no duplicate values (maybe stringify all values in a row, and compare the two strings?)
-  def fulfil(value):
-    return False
+class Contraints:
+
+	# Check that the DB doesn't contain more then 10 tables already
+	def tableFulfil(value):
+		if value.length < 10:
+			return true
+		return false
+
+    # Check that value is an int within -2,147,483,648 to 2,147,483,647
+	def intFulfil(value):
+    	if isInstance(value, int) and value >= -2147483648 and value <= 2147483647:
+        	return True
+    	return False
+
+  	# Check that value is a string within char limit 40
+  	def varcharFulfil(value):
+    	if isInstance(value, basestring) and value.length <= 40:
+      	return True
+    	return False
+
+  	# Check that there are no keys with the same value
+  	# Check for null value
+  	def keyFulfil(value):
+      return False    
+
+  	# Check that there are no duplicate values (maybe stringify all values in a row, and compare the two strings?)
+  	def duplicateFulfil(value):
+    	return False 
   
 # each row
 class Entity:
