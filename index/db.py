@@ -7,9 +7,9 @@ class Database:
         pass
   
     # Create up to 10 individual tables
-    def create_table(self, table_name, columns, constraints, keys=None):
+    def create_table(self, table_name, columns, pks=None):
         if can_create():
-            table = Table(table_name,columns,keys)
+            table = Table(table_name, columns, pks)
             tables.append(table)
     
     def can_create(self):
@@ -28,7 +28,7 @@ class Database:
     
 # each table
 class Table:
-    def __init__(self, name, columns, contraints, pks=[0]):
+    def __init__(self, name, columns, pks=[0]):
         self.name = name
         # store column if column is_valid 
         self.columns = columns
