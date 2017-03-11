@@ -5,7 +5,7 @@ class Database:
         self.tables = []
   
     def exec_sql(self, sql):
-        #Call string parsing, and it would call the insert and create
+        #Call string parsing
         input_text(sql)
       
     def can_create(name, col_name, col_datatypes, col_constraints):
@@ -17,26 +17,32 @@ class Database:
             col_constraints ([int]): The constraint value for each column.
         Returns:
             bool: The return value. True for valid, False otherwise.
+            String: The error message. None if no error.
         """
         # Check that all three list have the same length
         if not len(col_name) == len(col_datatype) == len(col_constraints):
-            return False
+            return False, "Internal Error: Length of column name and data type and constraints is not equal."
+        
+        # All column length are the same
+        # Check that length of column is less than 10
+        if len(col_name) >= 10:
+            return False, "Number of column exceed 10."
           
         # Check that the DB doesn't contain more then 10 tables already
         if len(self.tables) >= 10:
-            return False
+            return False, "Table limit exceed."
         
         # Check that the column data types are either varchar or int
         for dtype in col_datatypes:
             if dtype not in Datatype.str2dt:
-                return False
+                return False, "Type " + dtype + " is not defined."
             
         # Check that the column constraints are < 40 for varchar
         for dtype, cons in zip(datatype, constraints):
-            if Datatype.str2dt[dtype] == Datatype.VARCHAR and len(cons) > 40:
-                return False
+            if Datatype.str2dt[dtype] == Datatype.VARCHAR and cons > 40:
+                return False, "Maximum length of varchar exceed 40."
         
-        return True
+        return True, None
     
     
     # Create up to 10 individual tables
@@ -50,14 +56,18 @@ class Database:
             keys ([Bool]): To indicate if the column is primary key.
         Returns:
             bool: The return value. True for successful creation, False otherwise.
-            * maybe some error message?
+            String: The error message. None if no error.
         """
-        if can_create(table_name, col_names, col_datatypes, col_constraints):
+        passed, err_msg = can_create(table_name, col_names, col_datatypes, col_constraints)
+        if passed:
             columns = []
             for cname, dtype, cons, key in zip(col_names, col_datatypes, col_constraints, keys):
                 columns.append(Column(cname, Datatype.str2dt[dtype], cons, key))
             table = Table(table_name, columns)
             self.tables.append(table)
+            return True, None
+        else:
+            return False, err_msg
 
     
     def get_all_table_names(self):
@@ -78,7 +88,7 @@ class Datatype():
 # each table
 class Table:
     def __init__(self, name, columns):
-        """The init fucntion of Table. It assumes that all columns are valid. 
+        """The init fucntion of Table. It assumes that all columns are valid.
         Args:
             name (String): The table name.
             columns ([Column]): The Column objects .
@@ -101,17 +111,14 @@ class Table:
             col_names ([String] || None): The column names. If this value is None, we will use default sequence.
         Returns:
             bool: The return value. True for successful insertion, False otherwise.
-        
-        Todo:
-            maybe some error message?
-            insert entity
+            String: The error message. None if no error.
         """
         # check if the col_name is in column
         # and convert the whole list to their order in the table
         col_ids = []
         for n in col_names:
             if n not in self.col_name2id:
-                return False
+                return False, "Column " + n + " is not in Table " + self.name
             else:
                 # convert col_name to its order in the table and append to list
                 col_ids.append(self.col_name2id[n])
@@ -123,14 +130,13 @@ class Table:
             entity = Entity(values)
       
         # validate entity
-        if not entity_is_valid(entity):
-            return False
+        passed, err_msg = entity_is_valid(entity)
+        if not passed:
+            return False, err_msg
         
         # insert entity
-        pass
-  
-    def delete(self, entity):
-        pass
+        self.entities.append(entity)
+        return True, None
   
     def entity_is_vaild(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
@@ -138,29 +144,18 @@ class Table:
             entity (Entity): The entity we want to test.
         Returns:
             bool: The return value. True for valid, False otherwise.
+            String: The error message. None if no error.
         
         Test:
+            Check for empty key value
             Check if column values are valid
-            Check for null value
             Check that there are no keys with the same value
         
         Todo:
-            Check for null value
-            We know we can't have empty value for primary key
-            But can we have empty value for non-primary-key column?
-            If so, we only have to check for those pk columns.
+            Move Bool:key from Column to Table to save some time gererating key_id list
             
         """
-        # Check if column values are valid
-        for v, c in zip(entity.values, self.columns):
-            if not c.is_valid(v):
-                return False
-        
-        ''' NOT SURE IF WE CAN HAVE MISSING VALUE '''
-        # Check for null value
-        
-        
-        # Check that there are no keys with the same value
+        # Basic setup.
         # Get all order id that the corresponding column is marked as primary key
         key_id = []
         for i, c in enumerate(self.column):
@@ -169,16 +164,31 @@ class Table:
         # Get all value that the corresponding column is marked as primary key
         entity_key_values = [v for (v, c) in zip(entity.values, self.columns) if c.key]
         
+        
+        # Check for empty key value
+        for i, v in enumerate(entity_key_values):
+            if not v:
+                return False, "Empty value for primary key Column" + self.columns[i].name + "."
+        
+        
+        # Check if column values are valid
+        for v, c in zip(entity.values, self.columns):
+            passed, err_msg = c.is_valid(v)
+            if not passed:
+                return False, err_msg
+        
+        
+        # Check that there are no keys with the same value
         # Go through all entities, and check there are no same primary key
         # Can speed up by better Data Structure
         for e in self.entities:
             # Extract key column values of every entities, and compare with the one we want to test
             # If there's same combination, we say this entity is invalid
             if entity_key_values == [e[i] for i in key_id]:
-                return False
+                return False, "Same primary key pair (" + entity_key_values.join(',') + ") exists."
             
         # Pass all validation 
-        return True
+        return True, None
   
     # Getting data for specific key
     def fetch(self, column_name):
@@ -230,8 +240,18 @@ class IntConstraint:
     
     @staticmethod
     def is_valid(value):
-        # Check that value is an int within -2,147,483,648 to 2,147,483,647
-        return isInstance(value, int) and value >= -2147483648 and value <= 2147483647
+        """The fucntion checks that value is an int within -2,147,483,648 to 2,147,483,647 
+        Args:
+            values (Any): The value to test.
+        Returns:
+            bool: The return value. True for valid, False otherwise.
+            String: The error message. None if no error.
+        """
+        if not isInstance(value, int):
+            return False, "Value " + value + " is not int."
+        if value < -2147483648 or value > 2147483647:
+            return False, "Value " + value + " out of range."
+        return True, None
 
 class VarcharConstraint:
     def __init__(self, max_len):
@@ -243,8 +263,19 @@ class VarcharConstraint:
         pass
     
     def is_valid(value):
-        # Check that value is a string within char limit 40
-        return isInstance(value, basestring) and len(value) <= max_len
+        """The fucntion checks that length of varchar is within maximum length of a varchar.
+        Args:
+            values (Any): The value to test.
+        Returns:
+            bool: The return value. True for valid, False otherwise.
+            String: The error message. None if no error.
+        """
+        if not isInstance(value, basestring):
+            return False, "Value " + value + " is not varchar."
+        if len(value) > max_len:
+            return False, "Value " + value + " exceed maximum length " + self.max_len + "."
+        return True, None
+        
 
 """
 Temporary functions that insert fake data into views
