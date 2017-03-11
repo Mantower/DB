@@ -5,7 +5,7 @@ class Database:
         self.tables = []
   
     def exec_sql(self, sql):
-        #Call string parsing
+        #Call string parsing, and it would call the insert and create
         input_text(sql)
       
     def can_create(name, col_name, col_datatypes, col_constraints):
