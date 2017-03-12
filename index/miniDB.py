@@ -8,7 +8,7 @@ class Database:
         #Call string parsing
         return input_text(self, sql)
       
-    def can_create(name, col_name, col_datatypes, col_constraints):
+    def can_create(self,name, col_name, col_datatypes, col_constraints):
         """The fucntion to check whether the type or constraint is valid for table creation
         Args:
             name (String): The table name.

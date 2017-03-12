@@ -8,6 +8,7 @@
 from miniDB import *
 import sys
 import re
+import unicodedata
 from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
 	Combine, Group, alphas, nums, alphanums, ParseException, Forward, oneOf, quotedString, \
 	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, quotedString
@@ -17,17 +18,23 @@ def input_file(DB,file):
 		content = content_file.read()
 	#print("file:"+content)
 	return DB,content
-def input_text(DB,sql):
+def input_text(DB,sqlText):
 	#Eliminate all newline
-	Uans = sql.replace("\n"," ")
+	#Text = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
+	print(type(sqlText))
+	print("--------------OriginSQL:"+sqlText)
+	Uans = sqlText.replace("\n"," ")
+	print("Hello")
+	print("-------------Uans"+Uans)
 	#Generate the SQL command respectively
 	pattern = re.compile("insert", re.IGNORECASE)
 	st = pattern.sub("\ninsert", Uans)
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
 	#Make them into list
+	print("before:"+str(st ))
 	sqlList = [s.strip() for s in st.splitlines()]
-	
+	print("sqlList:"+str(sqlList))
 	#Call the specific function
 	success = []
 	errMsg = []
@@ -35,10 +42,14 @@ def input_text(DB,sql):
 		act = obj.split(' ', 1)[0]
 		print("act:"+act)
 		print("all:"+obj)
-		if act.lower()=="create":
-			success.append(def_create(DB,obj))
+		sucTemp = "" 
+		errTemp = ""
+		if act.lower()=="create":			
+			sucTemp ,errTemp = def_create(DB,obj)
 		elif act.lower()=="insert":
-			errMsg.append(def_insert(DB,obj))
+			sucTemp ,errTemp = def_insert(DB,obj)
+		success.append(sucTemp)
+		errMsg.append(errTemp)
 	return success, errMsg
 
 
@@ -134,6 +145,7 @@ def process_input_create(DB,tokens):
 	col_names = []
 	col_datatypes = []
 	col_constraints = []
+	
 	for i in range(len(tokens)):
 		try:
 			tables = tokens[i]["tables"]
