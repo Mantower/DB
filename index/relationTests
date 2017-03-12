@@ -1,0 +1,63 @@
+CREATE DATABASE TESTDB;
+
+CREATE TABLE TESTDB.EMPLOYEE {
+		Fname 			VARCHAR(40) 		NOT NULL,
+		Minit 			VARCHAR(1),
+		Lname 			VARCHAR(40) 		NOT NULL,
+		Ssn 			INT(9) 				NOT NULL,
+		Bdate 			VARCHAR(40),
+		Address 		VARCHAR(40),
+		Sex 			VARCHAR(1),
+		Salary 			INT(10),
+		Super_ssn 		INT(9),
+		Dno 			INT 				NOT NULL,
+		PRIMARY KEY(Ssn),
+		FOREIGN KEY(Super_ssn) 	REFERENCES EMPLOYEE(Ssn),
+		FOREIGN KEY (Dno) 		REFERENCES DEPARTMENT(Dnumber)
+};
+
+CREATE TABLE TESTDB.DEPARTMENT {
+		Dname 			VARCHAR(15) 		NOT NULL,
+		Dnumber 		INT 				NOT NULL,
+		Mgr_ssn 		INT(9) 				NOT NULL,
+		Mgr_start_date 	VARCHAR(40),
+		PRIMARY KEY (Dnumber),
+		UNIQUE (Dname),
+		FOREIGN KEY(Mgr_ssn) 	REFERENCES EMPLOYEE(Ssn)
+};
+
+CREATE TABLE TESTDB.DEPT_LOCATIONS {
+		Dnumber 		INT 			NOT NULL,
+		Dlocation 		VARCHAR(15) 	NOT NULL,
+		PRIMARY KEY (Dnumber, Dlocation),
+		FOREIGN KEY(Dnumber) 	REFERENCES DEPARTMENT(Dnumber)	
+};
+
+CREATE TABLE TESTDB.PROJECT {
+		Pname 			VARCHAR(15) 	NOT NULL,
+		Pnumber 		INT 			NOT NULL,
+		Plocation 		VARCHAR(15),
+		Dnum 			INT 			NOT NULL,
+		PRIMARY KEY(Pnumber),
+		UNIQUE(PName),
+		FOREIGN KEY (Dnum)		REFERENCES DEPARTMENT(Dnumber)
+};
+
+CREATE TABLE TESTDB.WORKS_ON {
+		Essn 			VARCHAR(9)		NOT NULL,
+		Pno 			INT				NOT NULL,
+		Hours			INT(40),
+		PRIMARY KEY(Essn, Pno),
+		FOREIGN KEY(Essn)		REFERENCES EMPLOYEE(Ssn),
+		FOREIGN KEY(Pno)		REFERENCES PROJECT(Pnumber)	
+};
+
+CREATE TABKE TESTDB.DEPENDENT {
+		Essn 			INT(9)			NOT NULL,
+		Dependent_name	VARCHAR(15)		NOT NULL,
+		Sex				VARCHAR(1),
+		Bdate			VARCHAR(40),
+		Relationship	VARCHAR(8),
+		PRIMARY KEY(Essn, Dependent_name),
+		FOREIGN KEY (Essn)		REFERENCES EMPLOYEE(Ssn)	
+};
