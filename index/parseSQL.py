@@ -131,10 +131,10 @@ def def_insert(DB,text):
 	simpleSQL = insertStmt
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
-	tokens = simpleSQL.runTests(text)
+	success, tokens = simpleSQL.runTests(text)
 
 	if(success):
-		process_input_insert(tokens)
+		process_input_insert(DB,tokens)
 	else:
 		return success, tokens
 
