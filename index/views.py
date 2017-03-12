@@ -17,6 +17,7 @@ def sql_view(request):
         data = {'sql':sql_str}
         return render(request,'index/sql.html', data)
     elif request.method == 'POST':
+        sql_unicode = ""
         if request.POST.get('sql'):
             sql_unicode = request.POST['sql']
         # read DB from pkl file
