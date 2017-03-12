@@ -150,8 +150,8 @@ def process_input_create(DB,tokens):
 			tables = tokens[i]["tables"]
 			values = tokens[i]["values"]
 		except:
-			print("INCORRECT SQL")
-			return False, "FAT: VALUES INCORRECT"
+			print("TABLE INCORRECT SQL")
+			return False, "FAT: Illegal value type or table name"
 		print("table:"+tables)
 		print("values:"+str(len(values))+" "+str(values))
 		for k in values:
@@ -166,7 +166,7 @@ def process_input_create(DB,tokens):
 				try:
 					con = int(con)
 				except:
-					return False, "Constraints were not int"
+					return False, "FAT: Constraints were not int"
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
