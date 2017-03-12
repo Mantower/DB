@@ -162,12 +162,16 @@ def process_input_create(DB,tokens):
 			if typeOri.lower() != "int":
 				con = typeOri[typeOri.find("(")+1:typeOri.find(")")]		
 				typeOri = typeOri.split("(",1)[0]
-				
+				try:
+					con = int(con)
+				except:
+					return False, "Constraints were not int"
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
 			elif length !=2 :
 				print("length error")
+			
 			col_names.append(col)
 			col_datatypes.append(typeOri)
 			col_constraints.append(con)
