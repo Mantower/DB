@@ -175,7 +175,10 @@ def process_input_create(DB,tokens):
 			con = None
 			if typeOri.lower() == "varchar":
 				con = k[2][k[2].find("(")+1:typeOri.find(")")]		
-				con = int(con)
+				try:
+					con = int(con)
+				except:
+					return False, "FATL: the correct type of varchar :'varchar(int)'"
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
