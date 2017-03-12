@@ -1,9 +1,8 @@
 # simpleSQL.py
 #
-# simple demo of using the parsing library to do simple-minded SQL parsing
+# simple  using the parsing library to do simple-minded SQL parsing
 # could be extended to include where clauses etc.
 #
-# Copyright (c) 2003,2016, Paul McGuire
 #
 from miniDB import *
 import sys
@@ -12,31 +11,37 @@ from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
 	Combine, Group, alphas, nums, alphanums, ParseException, Forward, oneOf, quotedString, \
 	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, quotedString
 
-def input_file(file):
+def input_file(DB,file):
 	with open(file, 'r') as content_file:
 		content = content_file.read()
 	#print("file:"+content)
-	return content
-def input_text(sql):
+	return DB,content
+def input_text(DB,sql):
+	#Eliminate all newline
 	Uans = sql.replace("\n"," ")
+	#Generate the SQL command respectively
 	pattern = re.compile("insert", re.IGNORECASE)
 	st = pattern.sub("\ninsert", Uans)
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
-	print("st"+st)
+	#Make them into list
 	sqlList = [s.strip() for s in st.splitlines()]
-	print(str(sqlList))
+	
+	#Call the specific function
+	success = []
+	errMsg = []
 	for obj in sqlList:
 		act = obj.split(' ', 1)[0]
 		print("act:"+act)
 		print("all:"+obj)
 		if act.lower()=="create":
-			return def_create(obj)
+			success.append(def_create(DB,obj))
 		elif act.lower()=="insert":
-			return def_insert(obj)
+			errMsg.append(def_insert(DB,obj))
+	return success, errMsg
 
 
-def def_create(text):
+def def_create(DB,text):
 	createStmt = Forward()
 	CREATE = Keyword("create", caseless = True)
 	TABLE = Keyword("table",caseless = True)
@@ -69,12 +74,12 @@ def def_create(text):
 	simpleSQL.ignore( oracleSqlComment )
 	success ,tokens = simpleSQL.runTests(text)
 	if(success):
-		doubleCheck, flag = process_input_create(tokens)
+		doubleCheck, flag = process_input_create(DB,tokens)
 		return doubleCheck, flag
 	else:
 		return success, tokens
 
-def def_insert(text):
+def def_insert(DB,text):
 	print("insert!")
 	insertStmt = Forward()
 	INSERT = Keyword("insert", caseless = True)
@@ -94,7 +99,7 @@ def def_insert(text):
 	#for brackets
 	insertStmt = Forward()
 	
-	#tableValueExpression << tableValueCondition + ZeroOrMore(tableValueExpression) 
+
 	#define the grammar
 	"""
 	insertStmt  << ( Group(INSERT + INTO)  + 
@@ -123,7 +128,7 @@ def def_insert(text):
 	else:
 		return success, tokens
 
-def process_input_create(tokens):
+def process_input_create(DB,tokens):
 	keys = []
 	col_names = []
 	col_datatypes = []
@@ -156,14 +161,14 @@ def process_input_create(tokens):
 			col_datatypes.append(typeOri)
 			col_constraints.append(con)
 			keys.append(key)
-		#create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		print("tables:"+tables)
 		print("col_names:"+str(col_names))
 		print("col_datatypes:"+str(col_datatypes))
 		print("col_constraints:"+str(col_constraints))
 		print("keys:"+str(keys))
+		DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		return True, None
-def process_input_insert(tokens):
+def process_input_insert(DB,tokens):
 	v = []
 	c = []
 	for i in range(len(tokens)):
@@ -186,7 +191,8 @@ def process_input_insert(tokens):
 		print("table:"+tables)
 		print("value:"+str(values))
 		print("cols:"+str(cols))
-		#tables.insert(v, c)
+		tableObj = DB.get_table(tables):
+		tableObj.insert(v, c)
 		return True, None
 		
 def stage1Test():
