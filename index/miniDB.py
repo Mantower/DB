@@ -58,6 +58,7 @@ class Database:
             bool: The return value. True for successful creation, False otherwise.
             String: The error message. None if no error.
         """
+        print("Create Table")
         passed, err_msg = self.can_create(table_name, col_names, col_datatypes, col_constraints)
         if passed:
             columns = []

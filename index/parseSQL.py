@@ -28,13 +28,15 @@ def input_text(DB,sqlText):
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
 	#Make them into list
-	print("before:"+str(st ))
+
 	sqlList = [s.strip() for s in st.splitlines()]
 	print("sqlList:"+str(sqlList))
 	#Call the specific function
 	success = []
 	errMsg = []
-	for obj in sqlList:
+	for obj in sqlList:		
+		if str(obj) == "":
+			continue
 		act = obj.split(' ', 1)[0]
 		print("act:"+act)
 		print("all:"+obj)
