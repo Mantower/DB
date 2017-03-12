@@ -267,7 +267,7 @@ class VarcharConstraint:
         self.max_len = max_len
         pass
     
-    def is_valid(value):
+    def is_valid(self, value):
         """The fucntion checks that length of varchar is within maximum length of a varchar.
         Args:
             values (Any): The value to test.
@@ -277,8 +277,8 @@ class VarcharConstraint:
         """
         if not isinstance(value, basestring):
             return False, "Value " + value + " is not varchar."
-        if len(value) > max_len:
-            return False, "Value " + value + " exceed maximum length " + self.max_len + "."
+        if len(value) > self.max_len:
+            return False, "Value " + value + " exceed maximum length " + str(self.max_len) + "."
         return True, None
         
 
