@@ -173,11 +173,9 @@ def process_input_create(DB,tokens):
 			typeOri = k[1]
 			key = False
 			con = None
-			
 			if typeOri.lower() == "varchar":
 				con = k[2][k[2].find("(")+1:typeOri.find(")")]		
 				con = int(con)
-				
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
@@ -185,7 +183,7 @@ def process_input_create(DB,tokens):
 				print("length error")
 			
 			col_names.append(col)
-			col_datatypes.append(typeOri)
+			col_datatypes.append(typeOri.lower())
 			col_constraints.append(con)
 			keys.append(key)
 		print("tables:"+tables)
