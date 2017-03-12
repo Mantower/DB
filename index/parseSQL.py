@@ -21,11 +21,7 @@ def input_file(DB,file):
 def input_text(DB,sqlText):
 	#Eliminate all newline
 	#Text = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
-	print(type(sqlText))
-	print("--------------OriginSQL:"+sqlText)
-	Uans = sqlText.replace("\n"," ")
-	print("Hello")
-	print("-------------Uans"+Uans)
+	Uans = re.sub(r"\r\n"," ",sqlText)
 	#Generate the SQL command respectively
 	pattern = re.compile("insert", re.IGNORECASE)
 	st = pattern.sub("\ninsert", Uans)
