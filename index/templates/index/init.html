@@ -1,0 +1,22 @@
+{% extends "index/base.html" %}
+
+{% load staticfiles %}
+
+{% block static_block %} 
+{% endblock static_block %}
+
+{% block body_block %}
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        <input class="btn btn-default" id="sql-submit" type="submit" value="Initiate Database">
+    </form>
+</div>
+<hr>
+{% if success %}
+<div class="alert alert-success" role="alert">Init success!</div>
+{% elif success == False %}
+<div class="alert alert-danger" role="alert">Init Failed!</div>
+{% endif %}
+
+{% endblock body_block %}

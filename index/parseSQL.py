@@ -31,9 +31,9 @@ def input_text(sql):
 		print("act:"+act)
 		print("all:"+obj)
 		if act.lower()=="create":
-			def_create(obj)
+			return def_create(obj)
 		elif act.lower()=="insert":
-			def_insert(obj)
+			return def_insert(obj)
 
 
 def def_create(text):

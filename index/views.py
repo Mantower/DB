@@ -1,6 +1,8 @@
 from django.shortcuts import render
-import db
-import sql 
+from django.conf import settings
+import pickle
+import miniDB
+import sql
 
 # Create your views here.
 def index(request):
@@ -16,16 +18,18 @@ def sql_view(request):
     elif request.method == 'POST':
         if request.POST.get('sql'):
             sql_str = request.POST['sql']
-        # the db we want to do action on
+        # read DB from pkl file
         database = None
+        
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
-        success, err_msg = sql.exec_sql(sql_str, database)
+        success, err_msg = database.exec_sql(sql_str)
 
         # additional message to indicate the execution is successful or not
         panel_msg = ""
         if success:
             panel_msg += "success"
+
         else:
             panel_msg += "error"
 
@@ -41,7 +45,7 @@ def table_view(request,table_name=None):
     # the db we want to view
     database = None
     # retreive all table names
-    table_names = db.get_all_table_names(database)
+    table_names = miniDB.get_all_table_names(database)
 
     # if user doesn't specify which table to view, choose the first one as default
     if table_name == None:
@@ -50,9 +54,29 @@ def table_view(request,table_name=None):
         except:
             table_name = "Default table name"
     
-    title, content = db.get_table(table_name, database)
+    title, content = miniDB.get_table(table_name, database)
     data = {'table_names':table_names,
             'table_name':table_name,
             'title':title,
             'content':content}
     return render(request,'index/table.html', data)
+
+def init_db(request):
+    if request.method == 'GET':
+        return render(request,'index/init.html')
+    elif request.method == 'POST':
+        database = miniDB.Database()
+        save_db(database)
+
+        # fake
+        data = {'success':True}
+        return render(request,'index/init.html', data)
+
+def save_db(database):
+    # dump new db into a file
+    output = open(settings.DB_NAME, 'wb')
+    pickle.dump(database, output)
+def load_db(database):
+    # read DB from pkl file
+    with open(settings.DB_NAME, 'rb') as f:
+        database = pickle.load(f)
