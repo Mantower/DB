@@ -174,8 +174,9 @@ def process_input_create(DB,tokens):
 			key = False
 			con = None
 			if typeOri.lower() == "varchar":
-				con = k[2][k[2].find("(")+1:typeOri.find(")")]		
+					
 				try:
+					con = k[2][k[2].find("(")+1:typeOri.find(")")]	
 					con = int(con)
 				except:
 					return False, "FATL: the correct type of varchar :'varchar(int)'"
