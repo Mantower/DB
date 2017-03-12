@@ -97,8 +97,8 @@ def def_insert(DB,text):
 	VALUES = Keyword("values", caseless = True)
 	
 	
-	columnRval = Word(alphas,alphanums+"_$" ) | quotedString | Word(nums)
-
+	#columnRval = Word(alphas,alphanums+"_$" ) | quotedString | Word(nums)
+	columnRval = Word(alphas,alphanums+"_$" ) |  Word(nums)
 	#here ident is for table name
 	ident	= Word(alphas, alphanums + "_$").setName("identifier")
 	valueCondition = Group(
