@@ -77,7 +77,7 @@ def def_create(DB,text):
 	#define the grammar
 	createStmt  << ( Group(CREATE + TABLE ) + 
 					ident.setResultsName("tables") + 
-					Optional( "(" + delimitedList(tableValueCondition).setResultsName("values") + ")", "" ))
+					 "(" + delimitedList(tableValueCondition).setResultsName("values") + ")" )
 
 	# define Oracle comment format, and ignore them
 	simpleSQL = createStmt

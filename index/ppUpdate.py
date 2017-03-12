@@ -1687,9 +1687,10 @@ class ParserElement(object):
                 else:
                     out.append(' '*pe.loc + '^' + fatal)
                 out.append("FAIL: " + str(pe))
+                print("out.:"+str(out))
                 allResults.append(out)
                 success = False
-                return success, fatal
+                return success, "FAIL: " + str(pe)
                 
             if printResults:
                 out.append('')
