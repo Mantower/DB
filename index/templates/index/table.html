@@ -23,8 +23,8 @@
 <h3>{{ table_name }}</h3>
 <table class="table">
     <tr>
-      {% for col_title in title %}
-        <th>{{ col_title }}</th>
+      {% for col in columns %}
+        <th>{{ col }}</th>
       {% endfor %}
     </tr>
     {% for row in content %}
