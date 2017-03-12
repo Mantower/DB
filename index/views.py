@@ -17,6 +17,7 @@ def sql_view(request):
         data = {'sql':sql_str}
         return render(request,'index/sql.html', data)
     elif request.method == 'POST':
+        sql_unicode = ""
         if request.POST.get('sql'):
             sql_unicode = request.POST['sql']
         # read DB from pkl file
@@ -25,20 +26,21 @@ def sql_view(request):
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
-        success, err_msg = database.exec_sql(sql_str)
-
+        success, err_msgs = database.exec_sql(sql_str)
+        print(success)
         # additional message to indicate the execution is successful or not
-        panel_msg = ""
-        if success:
-            panel_msg += "success"
-            save_db(database)
-        else:
-            panel_msg += "error"
+        panel_msgs = []
+        for s in success:
+            if s:
+                panel_msg = "success"
+            else:
+                panel_msg = "error"
+            panel_msgs.append(panel_msg)
+
+        save_db(database)
 
         data = {'sql':sql_str,
-                'success':success,
-                'panel_msg':panel_msg,
-                'err_msg':err_msg
+                'info':zip(success, panel_msgs, err_msgs)
                 }
 
         return render(request,'index/sql.html', data)
@@ -48,8 +50,6 @@ def table_view(request,table_name=None):
     database = load_db()
     # retreive all table names
     table_names = database.get_all_table_names()
-    print(table_names)
-    print(database.tables)
     # if user doesn't specify which table to view, choose the first one as default
     if table_name == None:
         try:
@@ -57,11 +57,13 @@ def table_view(request,table_name=None):
         except:
             return render(request,'index/table.html')
     
-    title, content = database.get_table(table_name)
+    table = database.get_table(table_name)
+    
     data = {'table_names':table_names,
             'table_name':table_name,
-            'title':title,
-            'content':content}
+            'columns':[c.name for c in table.columns],
+            'content':[row.values for row in table.entities]
+            }
     return render(request,'index/table.html', data)
 
 def init_db(request):

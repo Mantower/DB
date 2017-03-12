@@ -8,6 +8,7 @@
 from miniDB import *
 import sys
 import re
+import unicodedata
 from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
 	Combine, Group, alphas, nums, alphanums, ParseException, Forward, oneOf, quotedString, \
 	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, quotedString
@@ -17,28 +18,36 @@ def input_file(DB,file):
 		content = content_file.read()
 	#print("file:"+content)
 	return DB,content
-def input_text(DB,sql):
+def input_text(DB,sqlText):
 	#Eliminate all newline
-	Uans = sql.replace("\n"," ")
+	#Text = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
+	Uans = re.sub(r"\r\n"," ",sqlText)
 	#Generate the SQL command respectively
 	pattern = re.compile("insert", re.IGNORECASE)
 	st = pattern.sub("\ninsert", Uans)
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
 	#Make them into list
+
 	sqlList = [s.strip() for s in st.splitlines()]
-	
+	print("sqlList:"+str(sqlList))
 	#Call the specific function
 	success = []
 	errMsg = []
-	for obj in sqlList:
+	for obj in sqlList:		
+		if str(obj) == "":
+			continue
 		act = obj.split(' ', 1)[0]
 		print("act:"+act)
 		print("all:"+obj)
-		if act.lower()=="create":
-			success.append(def_create(DB,obj))
+		sucTemp = "" 
+		errTemp = ""
+		if act.lower()=="create":			
+			sucTemp ,errTemp = def_create(DB,obj)
 		elif act.lower()=="insert":
-			errMsg.append(def_insert(DB,obj))
+			sucTemp ,errTemp = def_insert(DB,obj)
+		success.append(sucTemp)
+		errMsg.append(errTemp)
 	return success, errMsg
 
 
@@ -122,10 +131,10 @@ def def_insert(DB,text):
 	simpleSQL = insertStmt
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
-	tokens = simpleSQL.runTests(text)
+	success, tokens = simpleSQL.runTests(text)
 
 	if(success):
-		process_input_insert(tokens)
+		return process_input_insert(DB,tokens)
 	else:
 		return success, tokens
 
@@ -134,6 +143,7 @@ def process_input_create(DB,tokens):
 	col_names = []
 	col_datatypes = []
 	col_constraints = []
+	
 	for i in range(len(tokens)):
 		try:
 			tables = tokens[i]["tables"]
@@ -152,12 +162,16 @@ def process_input_create(DB,tokens):
 			if typeOri.lower() != "int":
 				con = typeOri[typeOri.find("(")+1:typeOri.find(")")]		
 				typeOri = typeOri.split("(",1)[0]
-				
+				try:
+					con = int(con)
+				except:
+					return False, "Constraints were not int"
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
 			elif length !=2 :
 				print("length error")
+			
 			col_names.append(col)
 			col_datatypes.append(typeOri)
 			col_constraints.append(con)
@@ -167,24 +181,21 @@ def process_input_create(DB,tokens):
 		print("col_datatypes:"+str(col_datatypes))
 		print("col_constraints:"+str(col_constraints))
 		print("keys:"+str(keys))
-		DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
-		return True, None
+		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
+		
 def process_input_insert(DB,tokens):
-	v = []
-	c = []
 	for i in range(len(tokens)):
 		print(str(tokens[i]))
 		tables = tokens[i]["tables"]
 		#cols = tokens[i]["col"]
 		values = tokens[i]["val"]
 		print("lenght:"+str(len(values)))
-		v.append(values)
+		
 		try:
 			cols = tokens[i]["col"]		
 			print("cols:"+str(cols))	
 			#c.append(cols)
 		except:
-			c.append(None)
 			cols = None
 			print("no col asssigned")
 
@@ -193,8 +204,7 @@ def process_input_insert(DB,tokens):
 		print("value:"+str(values))
 		print("cols:"+str(cols))
 		tableObj = DB.get_table(tables)
-		tableObj.insert(v, c)
-		return True, None
+		return tableObj.insert(values, cols)		
 		
 def stage1Test():
 	txt = input_file("string.txt")
