@@ -196,9 +196,9 @@ def process_input_insert(DB,tokens):
 				print("turn the value")
 				values[k] = int(values[k])
 				print(int(k))
-			except:
+			except:				
+				values[k] = values[k].replace("'","").replace('"', '')
 				print("type:string:"+values[k])
-
 		try:
 			cols = tokens[i]["col"]		
 			print("cols:"+str(cols))	
