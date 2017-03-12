@@ -64,21 +64,34 @@ def def_create(DB,text):
 
 	#for brackets
 	createStmt = Forward()
-	varW = Combine(VARCHAR + Optional("("+Word(nums)+")"))
+	
 
 	
 	#createExpression << Combine(CREATE + TABLE + ident) + ZeroOrMore()
+	varW = Word(alphas,alphanums+"_$") +  Word(alphas,alphanums+"_$") +Combine("("+Word(nums)+")") + Optional(PRIMARY)
+	varI =  Word(alphas,alphanums+"_$") + Word(alphas,alphanums+"_$")  +  Optional(PRIMARY)
+	tableRval = Group(varW | varI)
+	
+	#tableCondition = 
+	'''
+	varW = Combine(VARCHAR + "("+Word(nums)+")")
 	tableValueCondition = Group(
 		( Word(alphas,alphanums+"_$") + varW + Optional(PRIMARY)) |
 		( Word(alphas,alphanums+"_$") + INT + Optional(PRIMARY) )
 		)
+	'''
 	#tableValueExpression = Forward()
 	#tableValueExpression << tableValueCondition + ZeroOrMore(tableValueExpression) 
+	
 	#define the grammar
 	createStmt  << ( Group(CREATE + TABLE ) + 
 					ident.setResultsName("tables") + 
+					 "(" + delimitedList(tableRval).setResultsName("values") + ")" )
+	'''
+	createStmt  << ( Group(CREATE + TABLE ) + 
+					ident.setResultsName("tables") + 
 					 "(" + delimitedList(tableValueCondition).setResultsName("values") + ")" )
-
+	'''
 	# define Oracle comment format, and ignore them
 	simpleSQL = createStmt
 	oracleSqlComment = "--" + restOfLine
@@ -102,9 +115,9 @@ def def_insert(DB,text):
 	columnRval =  Word(nums) | quotedString
 	#here ident is for table name
 	ident	= Word(alphas, alphanums + "_$").setName("identifier")
-	valueCondition = Group(
+	'''valueCondition = Group(
 		 "(" + delimitedList( columnRval ) + ")" 
-		)
+		)'''
 	valueCondition = delimitedList( columnRval )
 		
 	#for brackets
@@ -160,13 +173,11 @@ def process_input_create(DB,tokens):
 			typeOri = k[1]
 			key = False
 			con = None
-			if typeOri.lower() != "int":
-				con = typeOri[typeOri.find("(")+1:typeOri.find(")")]		
-				typeOri = typeOri.split("(",1)[0]
-				try:
-					con = int(con)
-				except:
-					return False, "FAT: Constraints were not int"
+			
+			if typeOri.lower() == "varchar":
+				con = k[2][k[2].find("(")+1:typeOri.find(")")]		
+				con = int(con)
+				
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
