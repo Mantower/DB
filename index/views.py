@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.conf import settings
+import unicodedata
 import pickle
 import miniDB
 import sql
@@ -17,19 +18,20 @@ def sql_view(request):
         return render(request,'index/sql.html', data)
     elif request.method == 'POST':
         if request.POST.get('sql'):
-            sql_str = request.POST['sql']
+            sql_unicode = request.POST['sql']
         # read DB from pkl file
-        database = None
+        database = load_db()
         
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
+        sql_str = sql_unicode.encode('ascii','ignore')
         success, err_msg = database.exec_sql(sql_str)
 
         # additional message to indicate the execution is successful or not
         panel_msg = ""
         if success:
             panel_msg += "success"
-
+            save_db(database)
         else:
             panel_msg += "error"
 
@@ -43,18 +45,19 @@ def sql_view(request):
 
 def table_view(request,table_name=None):
     # the db we want to view
-    database = None
+    database = load_db()
     # retreive all table names
-    table_names = miniDB.get_all_table_names(database)
-
+    table_names = database.get_all_table_names()
+    print(table_names)
+    print(database.tables)
     # if user doesn't specify which table to view, choose the first one as default
     if table_name == None:
         try:
             table_name = table_names[0]
         except:
-            table_name = "Default table name"
+            return render(request,'index/table.html')
     
-    title, content = miniDB.get_table(table_name, database)
+    title, content = database.get_table(table_name)
     data = {'table_names':table_names,
             'table_name':table_name,
             'title':title,
@@ -76,7 +79,7 @@ def save_db(database):
     # dump new db into a file
     output = open(settings.DB_NAME, 'wb')
     pickle.dump(database, output)
-def load_db(database):
+def load_db():
     # read DB from pkl file
     with open(settings.DB_NAME, 'rb') as f:
-        database = pickle.load(f)
+        return pickle.load(f)

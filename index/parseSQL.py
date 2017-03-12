@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2003,2016, Paul McGuire
 #
-from db import *
+from miniDB import *
 import sys
 import re
 from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
@@ -156,7 +156,7 @@ def process_input_create(tokens):
 			col_datatypes.append(typeOri)
 			col_constraints.append(con)
 			keys.append(key)
-		#create_table(tables, col_names, col_datatypes, col_constraints, keys):
+		#create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		print("tables:"+tables)
 		print("col_names:"+str(col_names))
 		print("col_datatypes:"+str(col_datatypes))

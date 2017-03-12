@@ -8,6 +8,7 @@
 {% endblock static_block %}
 
 {% block body_block %}
+{% if table_name %}
 <h3>Choose one table to view</h3>
 <select class="form-control" onchange="redirect(this.value)">
   {% for table in table_names %}
@@ -18,6 +19,7 @@
   {% endif %}
   {% endfor %}
 </select>
+
 <h3>{{ table_name }}</h3>
 <table class="table">
     <tr>
@@ -33,4 +35,7 @@
     </tr>
     {% endfor %}
 </table>
+{% else %}
+<p>No Table in the Database</p>
+{% endif %}
 {% endblock body_block %}
