@@ -181,8 +181,8 @@ def process_input_create(DB,tokens):
 		print("col_datatypes:"+str(col_datatypes))
 		print("col_constraints:"+str(col_constraints))
 		print("keys:"+str(keys))
-		DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
-		return True, None
+		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
+		
 def process_input_insert(DB,tokens):
 	v = []
 	c = []

@@ -32,6 +32,10 @@ class Database:
         if len(self.tables) >= 10:
             return False, "Table limit exceed."
         
+        # Check that the DB doesn't constain same name table
+        if self.get_table(name):
+            return False, "Table with same name exists."
+
         # Check that the column data types are either varchar or int
         for dtype in col_datatypes:
             if dtype not in Datatype.str2dt:
@@ -58,7 +62,6 @@ class Database:
             bool: The return value. True for successful creation, False otherwise.
             String: The error message. None if no error.
         """
-        print("Create Table")
         passed, err_msg = self.can_create(table_name, col_names, col_datatypes, col_constraints)
         if passed:
             columns = []
