@@ -191,8 +191,11 @@ class Table:
         return True, None
   
     # Getting data for specific key
-    def fetch(self, column_name):
-        pass
+    def get_column(self, name):
+        for c in self.columns:
+            if c.name == name:
+                return c
+        return None
 
 class Column:
     def __init__(self, name, datatype, constraint_val, key):
