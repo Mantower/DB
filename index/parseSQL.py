@@ -194,12 +194,11 @@ def process_input_insert(DB,tokens):
 		try:
 			cols = tokens[i]["col"]		
 			print("cols:"+str(cols))	
-			#c.append(cols)
 		except:
 			cols = None
 			print("no col asssigned")
 
-		print("values:"+str(len(values))+" "+str(values))
+		print("values:"+str(len(values))+"\t "+str(values))
 		print("table:"+tables)
 		print("value:"+str(values))
 		print("cols:"+str(cols))
