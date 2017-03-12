@@ -106,40 +106,6 @@ class Table:
         self.col_name2id = {}
         for i, c in enumerate(columns):
             self.col_name2id[c.name] = i
-       
-    def insert(self, values, col_names=None):
-        """The fucntion inserts a row into the table. It will check if the given parameter is valid. 
-        Args:
-            values ([int || String]): The value to insert.
-            col_names ([String] || None): The column names. If this value is None, we will use default sequence.
-        Returns:
-            bool: The return value. True for successful insertion, False otherwise.
-            String: The error message. None if no error.
-        """
-        # check if the col_name is in column
-        # and convert the whole list to their order in the table
-        col_ids = []
-        for n in col_names:
-            if n not in self.col_name2id:
-                return False, "Column " + n + " is not in Table " + self.name
-            else:
-                # convert col_name to its order in the table and append to list
-                col_ids.append(self.col_name2id[n])
-        
-        # create Entitiy
-        if col_names:
-            entity = Entity(values, col_ids)
-        else:
-            entity = Entity(values)
-      
-        # validate entity
-        passed, err_msg = entity_is_valid(entity)
-        if not passed:
-            return False, err_msg
-        
-        # insert entity
-        self.entities.append(entity)
-        return True, None
   
     def entity_is_vaild(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
@@ -161,7 +127,7 @@ class Table:
         # Basic setup.
         # Get all order id that the corresponding column is marked as primary key
         key_id = []
-        for i, c in enumerate(self.column):
+        for i, c in enumerate(self.columns):
             key_id.append((i,c))
         
         # Get all value that the corresponding column is marked as primary key
@@ -176,7 +142,7 @@ class Table:
         
         # Check if column values are valid
         for v, c in zip(entity.values, self.columns):
-            passed, err_msg = c.is_valid(v)
+            passed, err_msg = c.constraint.is_valid(v)
             if not passed:
                 return False, err_msg
         
@@ -192,7 +158,47 @@ class Table:
             
         # Pass all validation 
         return True, None
-  
+
+    def insert(self, values, col_names=None):
+        """The fucntion inserts a row into the table. It will check if the given parameter is valid. 
+        Args:
+            values ([int || String]): The value to insert.
+            col_names ([String] || None): The column names. If this value is None, we will use default sequence.
+        Returns:
+            bool: The return value. True for successful insertion, False otherwise.
+            String: The error message. None if no error.
+        """
+        # check if the col_name is in column
+        # and convert the whole list to their order in the table
+        col_ids = []
+        if col_names:
+            for n in col_names:
+                if n not in self.col_name2id:
+                    print(n)
+                    return False, "Column " + n + " is not in Table " + self.name
+                else:
+                    # convert col_name to its order in the table and append to list
+                    col_ids.append(self.col_name2id[n])
+        
+        # create Entitiy
+        print("Values")
+        print(values)
+        if col_names:
+            entity = Entity(values, col_ids)
+        else:
+            entity = Entity(values)
+        print("Entity")
+        print(entity.values)
+
+        # validate entity
+        passed, err_msg = self.entity_is_vaild(entity)
+        if not passed:
+            return False, err_msg
+        
+        # insert entity
+        self.entities.append(entity)
+        return True, None  
+
     # Getting data for specific key
     def get_column(self, name):
         for c in self.columns:
@@ -223,22 +229,19 @@ class Column:
     
 # each row
 class Entity:
-    def __init__(self, values):
+    def __init__(self, values, col_id=None):
         """The init fucntion to create an Entity. It assumes that all parameter are valid. 
+        The order of the values in the Entity is sorted by col_id. 
+        Use default sequence if col_id is None.
         Args:
             values ([String|int]): The value for the corresponding column.
+            col_id ([int] | None): The order of the corresponding value. 
         """
-        self.values = values
-        
-    def __init__(self, values, col_id):
-        """The init fucntion to create an Entity. It assumes that all parameter are valid. 
-        The order of the values in the Entity is sorted by col_id.
-        Args:
-            values ([String|int]): The value for the corresponding column.
-            col_id ([int]): The order of the corresponding value.
-        """
-        for cid, v in zip(col_id, values):
-            self.values[cid] = v
+        if col_id:
+            for cid, v in zip(col_id, values):
+                self.values[cid] = v
+        else:
+            self.values = values
 
 class IntConstraint:
     def __init__(self):
@@ -253,7 +256,7 @@ class IntConstraint:
             bool: The return value. True for valid, False otherwise.
             String: The error message. None if no error.
         """
-        if not isInstance(value, int):
+        if not isinstance(value, int):
             return False, "Value " + value + " is not int."
         if value < -2147483648 or value > 2147483647:
             return False, "Value " + value + " out of range."
@@ -276,7 +279,7 @@ class VarcharConstraint:
             bool: The return value. True for valid, False otherwise.
             String: The error message. None if no error.
         """
-        if not isInstance(value, basestring):
+        if not isinstance(value, basestring):
             return False, "Value " + value + " is not varchar."
         if len(value) > max_len:
             return False, "Value " + value + " exceed maximum length " + self.max_len + "."

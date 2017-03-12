@@ -198,7 +198,7 @@ def process_input_insert(DB,tokens):
 			print("cols:"+str(cols))	
 			#c.append(cols)
 		except:
-			c.append(None)
+			c = None
 			cols = None
 			print("no col asssigned")
 
