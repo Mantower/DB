@@ -1,11 +1,30 @@
 CREATE DATABASE TESTDB;
 
+success
+
+# Trying to create database with already taken name
+CREATE DATABASE TESTDB;
+
+fail
+
 CREATE TABLE TESTDB.STUDENT (
 		studentId int PRIMARY KEY,
 		name VARCHAR(15),
 		gender VARCHAR(1),
 		age int
 )
+
+success
+
+# Trying to create table with already taken name
+CREATE TABLE TESTDB.STUDENT (
+		studentId int PRIMARY KEY,
+		name VARCHAR(15),
+		gender VARCHAR(1),
+		age int
+)
+
+fail
 
 CREATE TABLE TESTDB.VEHICLE (
 		licenseNumber VARCHAR(10),
@@ -15,6 +34,8 @@ CREATE TABLE TESTDB.VEHICLE (
 		engineSize int
 )
 
+success
+
 CREATE TABLE TESTDB.BOOK (
 		isbn VARCHAR(20) PRIMARY KEY,
 		title VARCHAR(20),
@@ -23,17 +44,31 @@ CREATE TABLE TESTDB.BOOK (
 		editorial VARCHAR(15)
 )
 
+success
+
+# Trying to add table with two primary keys
+CREATE TABLE TESTDB.COURSE (
+		name VARCHAR(40) PRIMARY KEY,
+		id INT PRIMARY KEY
+)
+
+success
+
 # Trying to insert a table with a missing paranthesis
 CREATE TABLE TESTDB.TEACHERS 
 		FName VARCHAR,
 		LName VARCHAR(20)
 )
 
-# Trying to insert table without specifing the database
+fail
+
+# Trying to insert table without specifing the database (should pick TESTDB)
 CREATE TABLE TEACHERS (
 		FName VARCHAR,
 		LName VARCHAR(20)
 )
+
+success
 
 # Trying to insert a table with unknown type 'date'
 CREATE TABLE TESTDB.TEACHERS (
@@ -41,6 +76,7 @@ CREATE TABLE TESTDB.TEACHERS (
 		LName DATE
 )
 
+fail
 
 # Trying to insert a table with one ',' extra
 CREATE TABLE TESTDB.TEACHERS (
@@ -48,34 +84,86 @@ CREATE TABLE TESTDB.TEACHERS (
 		LName VARCHAR,
 )
 
+fail
+
+# Trying to insert a table with duplicate column name
+CREATE TABLE TESTDB.TEACHERS (
+		FName VARCHAR,
+		LName VARCHAR,
+		Fname VARCHAR
+)
+
+fail
+
+# Trying to insert a table with out of bounds varchar limit
+CREATE TABLE TESTDB.TEACHERS (
+		FName VARCHAR,
+		LName VARCHAR(50)
+)
+
+fail
+
 INSERT INTO STUDENT
 VALUES(10, 'John Smith', 'M', 22);
 
+success
+
 INSERT INTO STUDENT
 VALUES(11, 'Hsu You-Ting', 'F', 23);
+
+success
 
 INSERT INTO STUDENT
 VALUES(12, 'John Cena', 'M', 45),
 VALUES(14, 'Chuck Norris', 'M', 55);
 
+success
+
 INSERT INTO STUDENT (name, age, studentId, gender)
 VALUES ('Ai Toshiko', 21, 15, 'F');
 
+success
+
 INSERT INTO STUDENT (age, studentId, gender, name)
 VALUES (20, 13, 'M', 'Fernando Sierra');
+
+success
 
 # Trying to insert student with already taken key
 INSERT INTO STUDENT
 VALUES (10, 'Huang Hao-Wei', 'M', 26);
 
+fail
+
 # Trying to insert a string where an integer is expected in pages
 INSERT INTO BOOK
 VALUES (12345, 'Romeo and Juliet', 'Shakespeare', 'Hello', 'Prentice Hall');
+
+fail
 
 # Trying to insert string of over length 2 into type
 INSERT INTO Vehicle (licenseNumber, brand, model, engineSize, type)
 VALUES ('AH-304', 'Toyota', 'Corolla', 1600, 'Sedan');
 
+fail
+
 # Tring to insert string over length 2 into type and string of length over 10 in # licenseNumber
 INSERT INTO VEHICLE (licenseNumber, brand, model, engineSize, type)
 VALUES ('abcdefghijklmnop', 'Nissan', 'Sentra', 1500, 'Sedan')
+
+fail
+
+# Trying to insert out of range int
+INSERT INTO STUDENT
+VALUES(16, 'Spongebob', 'M', 2147483650);
+
+fail
+
+# Trying to insert value at attribute limit
+INSERT INTO STUDENT
+VALUES(17, 'Abcdefghijklmno', 'M', 2147483647);
+
+fail
+
+INSERT INTO COURSE
+VALUES('Database systems')
