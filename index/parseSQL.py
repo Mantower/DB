@@ -184,21 +184,19 @@ def process_input_create(DB,tokens):
 		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		
 def process_input_insert(DB,tokens):
-	v = []
-	c = []
 	for i in range(len(tokens)):
 		print(str(tokens[i]))
 		tables = tokens[i]["tables"]
 		#cols = tokens[i]["col"]
 		values = tokens[i]["val"]
 		print("lenght:"+str(len(values)))
-		v.append(values)
+		
 		try:
 			cols = tokens[i]["col"]		
 			print("cols:"+str(cols))	
 			#c.append(cols)
 		except:
-			c.append(None)
+			
 			cols = None
 			print("no col asssigned")
 
@@ -207,7 +205,7 @@ def process_input_insert(DB,tokens):
 		print("value:"+str(values))
 		print("cols:"+str(cols))
 		tableObj = DB.get_table(tables)
-		tableObj.insert(v, c)
+		tableObj.insert(values, cols)
 		return True, None
 		
 def stage1Test():
