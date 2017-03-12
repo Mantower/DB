@@ -97,8 +97,8 @@ def def_insert(DB,text):
 	VALUES = Keyword("values", caseless = True)
 	
 	
-	columnRval = Word(alphas,alphanums+"_$" ) | quotedString | Word(nums)
-
+	#columnRval = Word(alphas,alphanums+"_$" ) | quotedString | Word(nums)
+	columnRval = Word(alphas,alphanums+"_$" ) |  Word(nums)
 	#here ident is for table name
 	ident	= Word(alphas, alphanums + "_$").setName("identifier")
 	valueCondition = Group(
@@ -194,12 +194,11 @@ def process_input_insert(DB,tokens):
 		try:
 			cols = tokens[i]["col"]		
 			print("cols:"+str(cols))	
-			#c.append(cols)
 		except:
 			cols = None
 			print("no col asssigned")
 
-		print("values:"+str(len(values))+" "+str(values))
+		print("values:"+str(len(values))+"\t "+str(values))
 		print("table:"+tables)
 		print("value:"+str(values))
 		print("cols:"+str(cols))

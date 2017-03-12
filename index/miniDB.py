@@ -46,8 +46,7 @@ class Database:
             if Datatype.str2dt[dtype] == Datatype.VARCHAR and cons > 40:
                 return False, "Maximum length of varchar exceed 40."
         
-        return True, None
-    
+        return True, None  
     
     # Create up to 10 individual tables
     def create_table(self, table_name, col_names, col_datatypes, col_constraints, keys=None):
@@ -181,15 +180,12 @@ class Table:
                     col_ids.append(self.col_name2id[n])
         
         # create Entitiy
-        print("Values")
-        print(values)
         if col_names:
             entity = Entity(values, col_ids)
         else:
             entity = Entity(values)
-        print("Entity")
-        print(entity.values)
 
+        print(values)
         # validate entity
         passed, err_msg = self.entity_is_vaild(entity)
         if not passed:
