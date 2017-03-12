@@ -67,10 +67,12 @@ def def_create(text):
 	simpleSQL = createStmt
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
-	tokens = simpleSQL.runTests(text)
-
-	process_input_create(tokens)
-	return tokens
+	success ,tokens = simpleSQL.runTests(text)
+	if(success):
+		doubleCheck, flag = process_input_create(tokens)
+		return doubleCheck, flag
+	else:
+		return success, tokens
 
 def def_insert(text):
 	print("insert!")
@@ -115,10 +117,11 @@ def def_insert(text):
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
 	tokens = simpleSQL.runTests(text)
-	
-	process_input_insert(tokens)
 
-	return tokens
+	if(success):
+		process_input_insert(tokens)
+	else:
+		return success, tokens
 
 def process_input_create(tokens):
 	keys = []
@@ -131,7 +134,7 @@ def process_input_create(tokens):
 			values = tokens[i]["values"]
 		except:
 			print("INCORRECT SQL")
-			continue
+			return False, "FAT: VALUES INCORRECT"
 		print("table:"+tables)
 		print("values:"+str(len(values))+" "+str(values))
 		for k in values:
@@ -159,6 +162,7 @@ def process_input_create(tokens):
 		print("col_datatypes:"+str(col_datatypes))
 		print("col_constraints:"+str(col_constraints))
 		print("keys:"+str(keys))
+		return True, None
 def process_input_insert(tokens):
 	v = []
 	c = []
@@ -177,12 +181,13 @@ def process_input_insert(tokens):
 			c.append(None)
 			cols = None
 			print("no col asssigned")
+
 		print("values:"+str(len(values))+" "+str(values))
 		print("table:"+tables)
 		print("value:"+str(values))
 		print("cols:"+str(cols))
 		#tables.insert(v, c)
-		
+		return True, None
 		
 def stage1Test():
 	txt = input_file("string.txt")

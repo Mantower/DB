@@ -1690,6 +1690,7 @@ class ParserElement(object):
                 out.append("FAIL: " + str(pe))
                 allResults.append(out)
                 success = False
+                return success, fatal
                 
             if printResults:
                 out.append('')
@@ -1700,7 +1701,8 @@ class ParserElement(object):
                 allResults.append(out)
 
             allValue.append(ans)
-        return allValue
+        return success, allValue
+        
         if not printResults:
             return success, allResults
 
