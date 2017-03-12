@@ -49,8 +49,6 @@ def table_view(request,table_name=None):
     database = load_db()
     # retreive all table names
     table_names = database.get_all_table_names()
-    print(table_names)
-    print(database.tables)
     # if user doesn't specify which table to view, choose the first one as default
     if table_name == None:
         try:
@@ -58,11 +56,13 @@ def table_view(request,table_name=None):
         except:
             return render(request,'index/table.html')
     
-    title, content = database.get_table(table_name)
+    table = database.get_table(table_name)
+    
     data = {'table_names':table_names,
             'table_name':table_name,
-            'title':title,
-            'content':content}
+            'columns':[c.name for c in table.columns],
+            'content':[row.values for row in table.entities]
+            }
     return render(request,'index/table.html', data)
 
 def init_db(request):

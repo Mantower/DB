@@ -39,7 +39,10 @@ class Database:
             
         # Check that the column constraints are < 40 for varchar
         for dtype, cons in zip(col_datatypes, col_constraints):
-            if Datatype.str2dt[dtype] == Datatype.VARCHAR and cons > 40:
+            print("Cons")
+            print(cons)
+            print(type(cons))
+            if Datatype.str2dt[dtype] == Datatype.VARCHAR and int(cons) > 40:
                 return False, "Maximum length of varchar exceed 40."
         
         return True, None
@@ -59,12 +62,17 @@ class Database:
             String: The error message. None if no error.
         """
         passed, err_msg = self.can_create(table_name, col_names, col_datatypes, col_constraints)
+        print("IN CAN CREATE")
+        print(passed)
+        print(err_msg)
         if passed:
             columns = []
             for cname, dtype, cons, key in zip(col_names, col_datatypes, col_constraints, keys):
                 columns.append(Column(cname, Datatype.str2dt[dtype], cons, key))
+            print("Column OK")
             table = Table(table_name, columns)
             self.tables.append(table)
+            print("Create OK")
             return True, None
         else:
             return False, err_msg
