@@ -4,6 +4,7 @@
 # could be extended to include where clauses etc.
 #
 #
+
 from miniDB import *
 import sys
 import re
@@ -191,7 +192,7 @@ def process_input_insert(DB,tokens):
 		print("table:"+tables)
 		print("value:"+str(values))
 		print("cols:"+str(cols))
-		tableObj = DB.get_table(tables):
+		tableObj = DB.get_table(tables)
 		tableObj.insert(v, c)
 		return True, None
 		
