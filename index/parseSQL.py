@@ -28,13 +28,15 @@ def input_text(DB,sqlText):
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
 	#Make them into list
-	print("before:"+str(st ))
+
 	sqlList = [s.strip() for s in st.splitlines()]
 	print("sqlList:"+str(sqlList))
 	#Call the specific function
 	success = []
 	errMsg = []
-	for obj in sqlList:
+	for obj in sqlList:		
+		if str(obj) == "":
+			continue
 		act = obj.split(' ', 1)[0]
 		print("act:"+act)
 		print("all:"+obj)
@@ -129,10 +131,10 @@ def def_insert(DB,text):
 	simpleSQL = insertStmt
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
-	tokens = simpleSQL.runTests(text)
+	success, tokens = simpleSQL.runTests(text)
 
 	if(success):
-		process_input_insert(tokens)
+		process_input_insert(DB,tokens)
 	else:
 		return success, tokens
 
@@ -160,12 +162,16 @@ def process_input_create(DB,tokens):
 			if typeOri.lower() != "int":
 				con = typeOri[typeOri.find("(")+1:typeOri.find(")")]		
 				typeOri = typeOri.split("(",1)[0]
-				
+				try:
+					con = int(con)
+				except:
+					return False, "Constraints were not int"
 			if length == 3:
 				#with primary key, the primary key string should have been checked during parsing
 				key = True
 			elif length !=2 :
 				print("length error")
+			
 			col_names.append(col)
 			col_datatypes.append(typeOri)
 			col_constraints.append(con)
