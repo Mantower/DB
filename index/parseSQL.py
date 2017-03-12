@@ -6,12 +6,13 @@
 #
 
 from miniDB import *
+import shlex
 import sys
 import re
 import unicodedata
 from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
 	Combine, Group, alphas, nums, alphanums, ParseException, Forward, oneOf, quotedString, \
-	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, quotedString
+	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit
 
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
@@ -96,9 +97,9 @@ def def_insert(DB,text):
 	INTO = Keyword("into",caseless = True)
 	VALUES = Keyword("values", caseless = True)
 	
-	
+	string_literal = quotedString("'")
 	#columnRval = Word(alphas,alphanums+"_$" ) | quotedString | Word(nums)
-	columnRval = Word(alphas,alphanums+"_$" ) |  Word(nums)
+	columnRval =  Word(nums) | quotedString
 	#here ident is for table name
 	ident	= Word(alphas, alphanums + "_$").setName("identifier")
 	valueCondition = Group(
@@ -190,7 +191,14 @@ def process_input_insert(DB,tokens):
 		#cols = tokens[i]["col"]
 		values = tokens[i]["val"]
 		print("lenght:"+str(len(values)))
-		
+		for k in range(len(values)):
+			try:
+				print("turn the value")
+				values[k] = int(values[k])
+				print(int(k))
+			except:
+				print("type:string:"+values[k])
+
 		try:
 			cols = tokens[i]["col"]		
 			print("cols:"+str(cols))	
