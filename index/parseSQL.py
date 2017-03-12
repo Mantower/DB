@@ -134,7 +134,7 @@ def def_insert(DB,text):
 	success, tokens = simpleSQL.runTests(text)
 
 	if(success):
-		process_input_insert(DB,tokens)
+		return process_input_insert(DB,tokens)
 	else:
 		return success, tokens
 
@@ -203,8 +203,7 @@ def process_input_insert(DB,tokens):
 		print("value:"+str(values))
 		print("cols:"+str(cols))
 		tableObj = DB.get_table(tables)
-		tableObj.insert(values, cols)
-		return True, None
+		return tableObj.insert(values, cols)		
 		
 def stage1Test():
 	txt = input_file("string.txt")

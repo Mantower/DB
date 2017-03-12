@@ -1,0 +1,81 @@
+CREATE DATABASE TESTDB;
+
+CREATE TABLE TESTDB.STUDENT (
+		studentId int PRIMARY KEY,
+		name VARCHAR(15),
+		gender VARCHAR(1),
+		age int
+)
+
+CREATE TABLE TESTDB.VEHICLE (
+		licenseNumber VARCHAR(10),
+		brand VARCHAR(15),
+		model VARCHAR(15),
+		type VARCHAR(2),
+		engineSize int
+)
+
+CREATE TABLE TESTDB.BOOK (
+		isbn VARCHAR(20) PRIMARY KEY,
+		title VARCHAR(20),
+		author VARCHAR(20),
+		pages int,
+		editorial VARCHAR(15)
+)
+
+# Trying to insert a table with a missing paranthesis
+CREATE TABLE TESTDB.TEACHERS 
+		FName VARCHAR,
+		LName VARCHAR(20)
+)
+
+# Trying to insert table without specifing the database
+CREATE TABLE TEACHERS (
+		FName VARCHAR,
+		LName VARCHAR(20)
+)
+
+# Trying to insert a table with unknown type 'date'
+CREATE TABLE TESTDB.TEACHERS (
+		FName VARCHAR,
+		LName DATE
+)
+
+
+# Trying to insert a table with one ',' extra
+CREATE TABLE TESTDB.TEACHERS (
+		FName VARCHAR,
+		LName VARCHAR,
+)
+
+INSERT INTO STUDENT
+VALUES(10, 'John Smith', 'M', 22);
+
+INSERT INTO STUDENT
+VALUES(11, 'Hsu You-Ting', 'F', 23);
+
+INSERT INTO STUDENT
+VALUES(12, 'John Cena', 'M', 45),
+VALUES(14, 'Chuck Norris', 'M', 55);
+
+INSERT INTO STUDENT (name, age, studentId, gender)
+VALUES ('Ai Toshiko', 21, 15, 'F');
+
+INSERT INTO STUDENT (age, studentId, gender, name)
+VALUES (20, 13, 'M', 'Fernando Sierra');
+
+# Trying to insert student with already taken key
+INSERT INTO STUDENT
+VALUES (10, 'Huang Hao-Wei', 'M', 26);
+
+# Trying to insert a string where an integer is expected in pages
+INSERT INTO BOOK
+VALUES (12345, 'Romeo and Juliet', 'Shakespeare', 'Hello', 'Prentice Hall');
+
+# Trying to insert string of over length 2 into type
+INSERT INTO Vehicle (licenseNumber, brand, model, engineSize, type)
+VALUES ('AH-304', 'Toyota', 'Corolla', 1600, 'Sedan');
+
+# Tring to insert string over length 2 into type and string of length over 10 in # licenseNumber
+INSERT INTO VEHICLE (licenseNumber, brand, model, engineSize, type)
+VALUES ('abcdefghijklmnop', 'Nissan', 'Sentra', 1500, 'Sedan')
