@@ -18,20 +18,22 @@
 </div>
 <br>
 <hr>
-{% if success %}
+{% for info_row in info %}
+{% if info_row.0 %}
 <div class="panel panel-success">
-{% elif success == False %}
+{% elif info_row.0 == False %}
 <div class="panel panel-danger">
 {% else %}
 <div class="panel panel-primary">
 {% endif %}
 <div class="panel-heading">
-    <h3 class="panel-title">SQL execution {{ panel_msg }}</h3>
+    <h3 class="panel-title">SQL execution {{ info_row.1 }}</h3>
   </div>
   <div class="panel-body">
     <p>{{ sql }}</p>
-    <p class="danger">{{ err_msg }}</p>
+    <p class="danger">{{ info_row.2 }}</p>
   </div>
 </div>
+{% endfor %}
 
 {% endblock body_block %}

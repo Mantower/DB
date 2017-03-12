@@ -25,20 +25,21 @@ def sql_view(request):
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
-        success, err_msg = database.exec_sql(sql_str)
-
+        success, err_msgs = database.exec_sql(sql_str)
+        print(success)
         # additional message to indicate the execution is successful or not
-        panel_msg = ""
-        if success:
-            panel_msg += "success"
-            save_db(database)
-        else:
-            panel_msg += "error"
+        panel_msgs = []
+        for s in success:
+            if s:
+                panel_msg = "success"
+            else:
+                panel_msg = "error"
+            panel_msgs.append(panel_msg)
+
+        save_db(database)
 
         data = {'sql':sql_str,
-                'success':success,
-                'panel_msg':panel_msg,
-                'err_msg':err_msg
+                'info':zip(success, panel_msgs, err_msgs)
                 }
 
         return render(request,'index/sql.html', data)

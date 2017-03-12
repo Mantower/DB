@@ -20,7 +20,7 @@ class Database:
             String: The error message. None if no error.
         """
         # Check that all three list have the same length
-        if not len(col_name) == len(col_datatype) == len(col_constraints):
+        if not len(col_name) == len(col_datatypes) == len(col_constraints):
             return False, "Internal Error: Length of column name and data type and constraints is not equal."
         
         # All column length are the same
@@ -38,7 +38,7 @@ class Database:
                 return False, "Type " + dtype + " is not defined."
             
         # Check that the column constraints are < 40 for varchar
-        for dtype, cons in zip(datatype, constraints):
+        for dtype, cons in zip(col_datatypes, col_constraints):
             if Datatype.str2dt[dtype] == Datatype.VARCHAR and cons > 40:
                 return False, "Maximum length of varchar exceed 40."
         
@@ -58,7 +58,7 @@ class Database:
             bool: The return value. True for successful creation, False otherwise.
             String: The error message. None if no error.
         """
-        passed, err_msg = can_create(table_name, col_names, col_datatypes, col_constraints)
+        passed, err_msg = self.can_create(table_name, col_names, col_datatypes, col_constraints)
         if passed:
             columns = []
             for cname, dtype, cons, key in zip(col_names, col_datatypes, col_constraints, keys):
