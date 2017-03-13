@@ -26,15 +26,14 @@ class TableTestCase(TestCase):
         save_db(database, TEST_DB_NAME)
 
         database_with_student_table = miniDB.Database()
-        database = load_db(TEST_DB_NAME)
         sql = "CREATE TABLE STUDENT (\
             studentId int PRIMARY KEY,\
             name VARCHAR(15),\
             gender VARCHAR(1),\
             age int\
             )"
-        passed, err_msg = database_with_student_table .exec_sql(sql)
-        save_db(database, TEST_DB_WITH_STUDENT)
+        passed, err_msg = database_with_student_table.exec_sql(sql)
+        save_db(database_with_student_table, TEST_DB_WITH_STUDENT)
 
 # TABLE TESTS
 
