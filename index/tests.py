@@ -2,6 +2,8 @@ from django.test import TestCase
 import miniDB
 import views
 
+#https://docs.djangoproject.com/en/1.10/topics/testing/overview/
+
 # Create your tests here.
 class TableTestCase(TestCase):
     def setUp(self):
