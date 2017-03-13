@@ -39,7 +39,7 @@ class TableTestCase(TestCase):
             id INT PRIMARY KEY\
             )"
         passed, err_msg = database.exec_sql(sql)
-        save_db(database, TEST_DB_WITH_STUDENT)
+        save_db(database_with_student_table, TEST_DB_WITH_STUDENT)
 
 # TABLE TESTS
 
@@ -138,18 +138,18 @@ class TableTestCase(TestCase):
     def test_table_creation_with_duplicate_column_name(self):
         database = load_db(TEST_DB_NAME)
         sql = "CREATE TABLE TEACHERS (\
-            FName VARCHAR,\
-            LName VARCHAR,\
-            Fname VARCHAR\
+            FName VARCHAR(4),\
+            LName VARCHAR(4),\
+            Fname VARCHAR(4)\
             )"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
-        #self.assertEqual(err_msg, [None])
+        self.assertEqual(err_msg, ["Columns contain duplicate name."])
 
     def test_table_creation_with_bounds_varchar_limit(self):
         database = load_db(TEST_DB_NAME)
         sql = "CREATE TABLE TEACHERS (\
-            FName VARCHAR,\
+            FName VARCHAR(4),\
             LName VARCHAR(50)\
             )"
         passed, err_msg = database.exec_sql(sql)
@@ -187,32 +187,32 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO STUDENT \
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])   
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Entry contains duplicate key"])   
 
     def test_insert_data_mismatch(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(15, 'Mr. Bean', 'M', '45')"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Entry contains data mismatch"])
     
     def test_insert_string_length(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(16, 'Caitlyn Jenner', 'MF', 45)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["String length out of bound"])
 
     def test_insert_int_size(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(17, 'Infinity Man', 'M', 2147483650)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Int size out of bound"])
 
     def test_insert_int_size(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -227,24 +227,24 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO STUDENT \
         VALUES(, 'Null Woman', 'W', 100)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Entry with NULL key"])
 
     def test_insert_missing_paranthesis(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(19, 'Dr. Paranthesis', 'M', 67"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Entry with missing paranthesis"])
 
     def test_insert_missing_attribute(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(20, 'Prof. No Age', 'M')"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Entry with missing attribute"])
 
     def test_insert_key_combinations1(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -269,6 +269,6 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO COURSE \
         VALUES('Databases', 12345)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])   
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Multiple key duplicate"])   
 
