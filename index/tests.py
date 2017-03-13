@@ -85,6 +85,93 @@ class TableTestCase(TestCase):
         self.assertEqual(passed, [True])
         self.assertEqual(err_msg, [None]) 
 
+    def test_insert_singles(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(10, 'John Smith', 'M', 22)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(11, 'Hsu You-Ting', 'F', 23)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+    def test_insert_multiple(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(12, 'John Cena', 'M', 45),\
+        VALUES(14, 'Chuck Norris', 'M', 55)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+     def test_insert_duplicate_key(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(10 'Huang Hao-Wei', 'M', 26)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])   
+
+    def test_insert_data_mismatch(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(15, 'Mr. Bean', 'M', '45')"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
     
-        
+    def test_insert_string_length(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(16, 'Caitlyn Jenner', 'MF', 45)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+    def test_insert_int_size(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(17, 'Infinity Man', 'M', 2147483650)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+    def test_insert_int_size(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(18, 'Max Int Man', 'M', 2147483647)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+    def test_insert_null_key(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(, 'Null Woman', 'W', 100)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+    def test_insert_missing_paranthesis(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(19, 'Dr. Paranthesis', 'M', 67"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+    def test_insert_missing_attribute(self):
+        database = load_db("testDB")
+        sql = "INSERT INTO STUDENT \
+        VALUES(20, 'Prof. No Age', 'M')"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+
+
