@@ -225,7 +225,10 @@ def process_input_insert(DB,tokens):
 		print("value:"+str(values))
 		print("cols:"+str(cols))
 		tableObj = DB.get_table(tables)
-		return tableObj.insert(values, cols)		
+		if tableObj:
+			return tableObj.insert(values, cols)
+		else:
+			return False, "Table not exists."	
 		
 def stage1Test():
 	txt = input_file("string.txt")
