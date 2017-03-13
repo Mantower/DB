@@ -24,7 +24,20 @@
 <table class="table">
     <tr>
       {% for col in columns %}
-        <th>{{ col }}</th>
+        {% if col.datatype == 1 %}
+        <th>Int</th>
+        {% elif col.datatype == 2 %}
+        <th>Varchar({{ col.constraint.max_len }})</th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    <tr>
+      {% for col in columns %}
+        {% if col.key %}
+        <th><u>{{ col.name }}<u></th>
+        {% else %}
+        <th>{{ col.name }}</th>
+        {% endif %}
       {% endfor %}
     </tr>
     {% for row in content %}
