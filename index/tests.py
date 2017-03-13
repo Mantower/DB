@@ -26,14 +26,19 @@ class TableTestCase(TestCase):
         save_db(database, TEST_DB_NAME)
 
         database_with_student_table = miniDB.Database()
-        database = load_db(TEST_DB_NAME)
+        database = load_db(TEST_DB_WITH_STUDENT)
         sql = "CREATE TABLE STUDENT (\
             studentId int PRIMARY KEY,\
             name VARCHAR(15),\
             gender VARCHAR(1),\
             age int\
             )"
-        passed, err_msg = database_with_student_table .exec_sql(sql)
+        passed, err_msg = database_with_student_table.exec_sql(sql)
+        sql = "CREATE TABLE COURSE (\
+            name VARCHAR(40) PRIMARY KEY,\
+            id INT PRIMARY KEY\
+            )"
+        passed, err_msg = database.exec_sql(sql)
         save_db(database, TEST_DB_WITH_STUDENT)
 
 # TABLE TESTS
@@ -177,7 +182,7 @@ class TableTestCase(TestCase):
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
-     def test_insert_duplicate_key(self):
+    def test_insert_duplicate_key(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
@@ -241,5 +246,29 @@ class TableTestCase(TestCase):
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
+    def test_insert_key_combinations1(self):
+        database = load_db(TEST_DB_WITH_STUDENT)
+        sql = "INSERT INTO COURSE \
+        VALUES('Databases', 12345)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+        sql = "INSERT INTO COURSE \
+        VALUES('Databases', 54321)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
+    def test_insert_key_combinations2(self):
+        database = load_db(TEST_DB_WITH_STUDENT)
+        sql = "INSERT INTO COURSE \
+        VALUES('Databases', 12345)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+        sql = "INSERT INTO COURSE \
+        VALUES('Databases', 12345)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])   
 
