@@ -131,18 +131,18 @@ class TableTestCase(TestCase):
     def test_table_creation_with_duplicate_column_name(self):
         database = load_db(TEST_DB_NAME)
         sql = "CREATE TABLE TEACHERS (\
-            FName VARCHAR,\
-            LName VARCHAR,\
-            Fname VARCHAR\
+            FName VARCHAR(4),\
+            LName VARCHAR(4),\
+            Fname VARCHAR(4)\
             )"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
-        #self.assertEqual(err_msg, [None])
+        self.assertEqual(err_msg, [None])
 
     def test_table_creation_with_bounds_varchar_limit(self):
         database = load_db(TEST_DB_NAME)
         sql = "CREATE TABLE TEACHERS (\
-            FName VARCHAR,\
+            FName VARCHAR(4),\
             LName VARCHAR(50)\
             )"
         passed, err_msg = database.exec_sql(sql)
