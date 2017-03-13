@@ -81,6 +81,7 @@ def save_db(database):
     # dump new db into a file
     output = open(settings.DB_NAME, 'wb')
     pickle.dump(database, output)
+    
 def load_db():
     # read DB from pkl file
     with open(settings.DB_NAME, 'rb') as f:
