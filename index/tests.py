@@ -139,7 +139,7 @@ class TableTestCase(TestCase):
             )"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(err_msg, ["Columns contain duplicate name."])
 
     def test_table_creation_with_bounds_varchar_limit(self):
         database = load_db(TEST_DB_NAME)
@@ -177,7 +177,7 @@ class TableTestCase(TestCase):
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
-     def test_insert_duplicate_key(self):
+    def test_insert_duplicate_key(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(10 'Huang Hao-Wei', 'M', 26)"

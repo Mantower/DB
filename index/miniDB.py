@@ -44,11 +44,8 @@ class Database:
             return False, "Table with same name exists."
 
         # Check that the col_name are distinct
-        print("------------------")
-        print(col_name)
         if len(col_name) != len(list(set(col_name))):
             #return False, col_name
-
             return False, "Columns contain duplicate name."
 
         # Check that the column data types are either varchar or int
