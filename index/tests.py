@@ -182,7 +182,7 @@ class TableTestCase(TestCase):
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])   
+        self.assertEqual(err_msg, [None]) 
 
     def test_insert_data_mismatch(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -197,8 +197,8 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO STUDENT \
         VALUES(16, 'Caitlyn Jenner', 'MF', 45)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual(err_msg, ["Value MF exceed maximum length 1."])
 
     def test_insert_int_size(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -221,16 +221,17 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO STUDENT \
         VALUES(, 'Null Woman', 'W', 100)"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        #self.assertEqual(err_msg, [None])
 
     def test_insert_missing_paranthesis(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(19, 'Dr. Paranthesis', 'M', 67"
         passed, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        # check if the error message contains FAIL: Expected ...
+        self.assertIn("FAIL: Expected \")\"", err_msg[0])
 
     def test_insert_missing_attribute(self):
         database = load_db(TEST_DB_WITH_STUDENT)
