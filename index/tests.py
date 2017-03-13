@@ -1,17 +1,29 @@
 from django.test import TestCase
+import pickle
 import miniDB
-import views
 
 #https://docs.djangoproject.com/en/1.10/topics/testing/overview/
+
+TEST_DB_NAME = "TESTING.pkl"
+
+def save_db(database):
+    # dump new db into a file
+    output = open(TEST_DB_NAME, 'wb')
+    pickle.dump(database, output)
+
+def load_db():
+    # read DB from pkl file
+    with open(TEST_DB_NAME, 'rb') as f:
+        return pickle.load(f)
 
 # Create your tests here.
 class TableTestCase(TestCase):
     def setUp(self):
         database = miniDB.Database()
-        views.save_db(database)
+        save_db(database)
 
     def test_table_creation(self):
-        database = views.load_db()
+        database = load_db()
         sql1 = "CREATE TABLE STUDENT (\
         studentId int PRIMARY KEY,\
         name VARCHAR(15),\
