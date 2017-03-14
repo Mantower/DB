@@ -179,10 +179,11 @@ def process_input_create(DB,tokens):
 					con = int(con)
 				except:
 					return False, "FATL: the correct type of varchar :'varchar(int)'"
-			if length == 4:
+				if length == 4:
+					key = True
+			
 				#with primary key, the primary key string should have been checked during parsing
-				key = True
-			elif typeOri.lower() =="int" and length == 3:
+			if typeOri.lower() =="int" and length == 3:
 				key = True
 			elif length > 4 or length < 2 :
 				print("values error")
