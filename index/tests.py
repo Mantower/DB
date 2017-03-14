@@ -196,11 +196,28 @@ class TableTestCase(TestCase):
 
     def test_insert_duplicate_key(self):
         database = load_db(TEST_DB_WITH_STUDENT)
+
+        sql = "INSERT INTO STUDENT \
+        VALUES(10, 'John Smith', 'M', 22)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
+
+        sql = "INSERT INTO STUDENT \
+        VALUES(10, 'Huang Hao-Wei', 'M', 26)"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[False])
+        self.assertIn("Primary key pair", err_msg[0])
+        self.assertIn("duplicate", err_msg[0])
+
+    def test_insert_missing_comma(self):
+        database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertEqual(err_msg, ["Entry contains duplicate key"])   
+        self.assertEqual(err_msg, ["Comma missing"])   
 
     def test_insert_data_mismatch(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -241,7 +258,6 @@ class TableTestCase(TestCase):
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("unwanted token", err_msg[0])
-        #self.assertEqual(err_msg, ["Entry with NULL key"])
 
     def test_insert_missing_paranthesis(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -251,7 +267,6 @@ class TableTestCase(TestCase):
         self.assertEqual(passed,[False])
         # check if the error message contains FAIL: Expected ...
         self.assertIn("FAIL: Expected \")\"", err_msg[0])
-        #self.assertEqual(err_msg, ["Entry with missing paranthesis"])
 
     def test_insert_missing_attribute(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -267,7 +282,7 @@ class TableTestCase(TestCase):
         VALUES('Prof. No ID', 'M', 21)"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertEqual(err_msg, ["Entry with missing attribute"])
+        self.assertIn("Empty value for primary key", err_msg[0])
 
     def test_insert_not_exist_table(self):
         database = load_db(TEST_DB_WITH_STUDENT)
