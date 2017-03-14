@@ -188,7 +188,7 @@ def process_input_create(DB,tokens):
 			elif length > 4 or length < 2 :
 				print("values error")
 			
-			col_names.append(col.lower())
+			col_names.append(col)
 			col_datatypes.append(typeOri.lower())
 			col_constraints.append(con)
 			keys.append(key)

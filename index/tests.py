@@ -152,7 +152,7 @@ class TableTestCase(TestCase):
         sql = "CREATE TABLE TEACHERS (\
             FName VARCHAR(4),\
             LName VARCHAR(4),\
-            Fname VARCHAR(4)\
+            FName VARCHAR(4)\
             )"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
