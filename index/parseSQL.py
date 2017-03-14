@@ -12,7 +12,7 @@ import re
 import unicodedata
 from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
 	Combine, Group, alphas, nums, alphanums, ParseException, Forward, oneOf, quotedString, \
-	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, empty , printables, CharsNotIn
+	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, empty , printables, CharsNotIn, White
 
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
@@ -111,7 +111,7 @@ def def_insert(DB,text):
 	VALUES = Keyword("values", caseless = True)
 	
 	string_literal = quotedString("'")
-	columnRval = Word(alphas,alphanums+"_$") | quotedString | Word(nums) 
+	columnRval = Word(alphas,alphanums+"_$") | quotedString | Word(nums)
 	#columnRval =  Word(nums) | quotedString
 	#here ident is for table name
 	ident	= Word(alphas, alphanums + "_$").setName("identifier")
