@@ -185,6 +185,14 @@ class TableTestCase(TestCase):
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
+    def test_insert_too_many_values(self):
+        database = load_db(TEST_DB_WITH_STUDENT)
+        sql = "INSERT INTO STUDENT \
+        VALUES(11, 'Hsu You-Ting', 'F', 23, 'idk')"
+        passed, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed, [False])
+        self.assertEqual(err_msg, ["Too many values are given"])
+
     def test_insert_multiple(self):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
@@ -202,7 +210,6 @@ class TableTestCase(TestCase):
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
-
 
         sql = "INSERT INTO STUDENT \
         VALUES(10, 'Huang Hao-Wei', 'M', 26)"

@@ -195,6 +195,11 @@ class Table:
                     # convert col_name to its order in the table and append to list
                     col_ids.append(self.col_name2id[n])
         
+        # check if len(values) is less than equal to len(columns)
+        # should not accept too many value
+        if len(values) > len(self.columns):
+            return False, "Too many values are given"
+
         # create Entitiy
         if col_names:
             entity = Entity(values, col_ids)
