@@ -5,10 +5,17 @@ class Database:
         self.tables = []
   
     def exec_sql(self, sql):
+        """The fucntion to run sql
+        Args:
+            sql (String): The SQL we want to run.
+        Returns:
+            bool: The return value. True for valid, False otherwise.
+            String: The error message. None if no error.
+        """
         #Call string parsing
         return input_text(self, sql)
       
-    def can_create(self,name, col_name, col_datatypes, col_constraints):
+    def can_create(self, name, col_name, col_datatypes, col_constraints):
         """The fucntion to check whether the type or constraint is valid for table creation
         Args:
             name (String): The table name.
@@ -35,6 +42,11 @@ class Database:
         # Check that the DB doesn't constain same name table
         if self.get_table(name):
             return False, "Table with same name exists."
+
+        # Check that the col_name are distinct
+        if len(col_name) != len(list(set(col_name))):
+            #return False, col_name
+            return False, "Columns contain duplicate name."
 
         # Check that the column data types are either varchar or int
         for dtype in col_datatypes:
@@ -127,7 +139,8 @@ class Table:
         # Get all order id that the corresponding column is marked as primary key
         key_id = []
         for i, c in enumerate(self.columns):
-            key_id.append((i,c))
+            if c.key:
+                key_id.append((i,c))
         
         # Get all value that the corresponding column is marked as primary key
         entity_key_values = [v for (v, c) in zip(entity.values, self.columns) if c.key]
@@ -152,8 +165,8 @@ class Table:
         for e in self.entities:
             # Extract key column values of every entities, and compare with the one we want to test
             # If there's same combination, we say this entity is invalid
-            if entity_key_values == [e[i] for i in key_id]:
-                return False, "Same primary key pair (" + entity_key_values.join(',') + ") exists."
+            if entity_key_values == [e.values[i] for (i, c) in key_id]:
+                return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
             
         # Pass all validation 
         return True, None
@@ -174,7 +187,7 @@ class Table:
             for n in col_names:
                 if n not in self.col_name2id:
                     print(n)
-                    return False, "Column " + n + " is not in Table " + self.name
+                    return False, "Column " + str(n) + " is not in Table " + self.name
                 else:
                     # convert col_name to its order in the table and append to list
                     col_ids.append(self.col_name2id[n])
@@ -253,9 +266,9 @@ class IntConstraint:
             String: The error message. None if no error.
         """
         if not isinstance(value, int):
-            return False, "Value " + value + " is not int."
+            return False, "Value " + str(value) + " is not int."
         if value < -2147483648 or value > 2147483647:
-            return False, "Value " + value + " out of range."
+            return False, "Value " + str(value) + " out of range."
         return True, None
 
 class VarcharConstraint:
@@ -276,9 +289,9 @@ class VarcharConstraint:
             String: The error message. None if no error.
         """
         if not isinstance(value, basestring):
-            return False, "Value " + value + " is not varchar."
+            return False, "Value " + str(value) + " is not varchar."
         if len(value) > self.max_len:
-            return False, "Value " + value + " exceed maximum length " + str(self.max_len) + "."
+            return False, "Value " + str(value) + " exceed maximum length " + str(self.max_len) + "."
         return True, None
         
 

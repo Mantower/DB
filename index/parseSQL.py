@@ -187,7 +187,7 @@ def process_input_create(DB,tokens):
 			elif length > 4 or length < 2 :
 				print("values error")
 			
-			col_names.append(col)
+			col_names.append(col.lower())
 			col_datatypes.append(typeOri.lower())
 			col_constraints.append(con)
 			keys.append(key)
@@ -196,6 +196,7 @@ def process_input_create(DB,tokens):
 		print("col_datatypes:"+str(col_datatypes))
 		print("col_constraints:"+str(col_constraints))
 		print("keys:"+str(keys))
+
 		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		
 def process_input_insert(DB,tokens):
@@ -225,7 +226,10 @@ def process_input_insert(DB,tokens):
 		print("value:"+str(values))
 		print("cols:"+str(cols))
 		tableObj = DB.get_table(tables)
-		return tableObj.insert(values, cols)		
+		if tableObj:
+			return tableObj.insert(values, cols)
+		else:
+			return False, "Table not exists."	
 		
 def stage1Test():
 	txt = input_file("string.txt")

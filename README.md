@@ -8,3 +8,10 @@ To run django
 ```sh
 $ python manage.py runserver
 ```
+
+The website will be available at http://127.0.0.1:8000/
+
+To test all the testcase
+```sh
+$ python manage.py test
+```
