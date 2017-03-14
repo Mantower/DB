@@ -1,0 +1,1832 @@
+Creating test database for alias 'default'...
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(15, 'Mr. Bean', 'M', '45')"]
+act:insert
+all:insert INTO STUDENT         VALUES(15, 'Mr. Bean', 'M', '45')
+insert!
+t---insert INTO STUDENT         VALUES(15, 'Mr. Bean', 'M', '45')
+[['insert', 'into'], 'STUDENT', 'values', '(', '15', "'Mr. Bean'", "'M'", "'45'", ')']
+
+insert INTO STUDENT         VALUES(15, 'Mr. Bean', 'M', '45')
+[['insert', 'into'], 'STUDENT', 'values', '(', '15', "'Mr. Bean'", "'M'", "'45'", ')']
+- tables: STUDENT
+- val: ['15', "'Mr. Bean'", "'M'", "'45'"]
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '15', "'Mr. Bean'", "'M'", "'45'", ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:Mr. Bean
+turn the value
+type:string:M
+turn the value
+type:string:45
+no col asssigned
+values:4	 [15, 'Mr. Bean', 'M', '45']
+table:STUDENT
+value:[15, 'Mr. Bean', 'M', '45']
+cols:None
+[15, 'Mr. Bean', 'M', '45']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(10 'Huang Hao-Wei', 'M', 26)"]
+act:insert
+all:insert INTO STUDENT         VALUES(10 'Huang Hao-Wei', 'M', 26)
+insert!
+t---insert INTO STUDENT         VALUES(10 'Huang Hao-Wei', 'M', 26)
+out:::
+out.:['', "insert INTO STUDENT         VALUES(10 'Huang Hao-Wei', 'M', 26)", '                                      ^', 'FAIL: Expected ")" (at char 38), (line:1, col:39)']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(17, 'Infinity Man', 'M', 2147483650)"]
+act:insert
+all:insert INTO STUDENT         VALUES(17, 'Infinity Man', 'M', 2147483650)
+insert!
+t---insert INTO STUDENT         VALUES(17, 'Infinity Man', 'M', 2147483650)
+[['insert', 'into'], 'STUDENT', 'values', '(', '17', "'Infinity Man'", "'M'", '2147483650', ')']
+
+insert INTO STUDENT         VALUES(17, 'Infinity Man', 'M', 2147483650)
+[['insert', 'into'], 'STUDENT', 'values', '(', '17', "'Infinity Man'", "'M'", '2147483650', ')']
+- tables: STUDENT
+- val: ['17', "'Infinity Man'", "'M'", '2147483650']
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '17', "'Infinity Man'", "'M'", '2147483650', ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:Infinity Man
+turn the value
+type:string:M
+turn the value
+3
+no col asssigned
+values:4	 [17, 'Infinity Man', 'M', 2147483650L]
+table:STUDENT
+value:[17, 'Infinity Man', 'M', 2147483650L]
+cols:None
+[17, 'Infinity Man', 'M', 2147483650L]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(18, 'Max Int Man', 'M', 2147483647)"]
+act:insert
+all:insert INTO STUDENT         VALUES(18, 'Max Int Man', 'M', 2147483647)
+insert!
+t---insert INTO STUDENT         VALUES(18, 'Max Int Man', 'M', 2147483647)
+[['insert', 'into'], 'STUDENT', 'values', '(', '18', "'Max Int Man'", "'M'", '2147483647', ')']
+
+insert INTO STUDENT         VALUES(18, 'Max Int Man', 'M', 2147483647)
+[['insert', 'into'], 'STUDENT', 'values', '(', '18', "'Max Int Man'", "'M'", '2147483647', ')']
+- tables: STUDENT
+- val: ['18', "'Max Int Man'", "'M'", '2147483647']
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '18', "'Max Int Man'", "'M'", '2147483647', ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:Max Int Man
+turn the value
+type:string:M
+turn the value
+3
+no col asssigned
+values:4	 [18, 'Max Int Man', 'M', 2147483647]
+table:STUDENT
+value:[18, 'Max Int Man', 'M', 2147483647]
+cols:None
+[18, 'Max Int Man', 'M', 2147483647]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO COURSE         VALUES('Databases', 12345)"]
+act:insert
+all:insert INTO COURSE         VALUES('Databases', 12345)
+insert!
+t---insert INTO COURSE         VALUES('Databases', 12345)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+
+insert INTO COURSE         VALUES('Databases', 12345)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+- tables: COURSE
+- val: ["'Databases'", '12345']
+
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+lenght:2
+turn the value
+type:string:Databases
+turn the value
+1
+no col asssigned
+values:2	 ['Databases', 12345]
+table:COURSE
+value:['Databases', 12345]
+cols:None
+['Databases', 12345]
+sqlList:['', "insert INTO COURSE         VALUES('Databases', 54321)"]
+act:insert
+all:insert INTO COURSE         VALUES('Databases', 54321)
+insert!
+t---insert INTO COURSE         VALUES('Databases', 54321)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '54321', ')']
+
+insert INTO COURSE         VALUES('Databases', 54321)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '54321', ')']
+- tables: COURSE
+- val: ["'Databases'", '54321']
+
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '54321', ')']
+lenght:2
+turn the value
+type:string:Databases
+turn the value
+1
+no col asssigned
+values:2	 ['Databases', 54321]
+table:COURSE
+value:['Databases', 54321]
+cols:None
+['Databases', 54321]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO COURSE         VALUES('Databases', 12345)"]
+act:insert
+all:insert INTO COURSE         VALUES('Databases', 12345)
+insert!
+t---insert INTO COURSE         VALUES('Databases', 12345)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+
+insert INTO COURSE         VALUES('Databases', 12345)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+- tables: COURSE
+- val: ["'Databases'", '12345']
+
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+lenght:2
+turn the value
+type:string:Databases
+turn the value
+1
+no col asssigned
+values:2	 ['Databases', 12345]
+table:COURSE
+value:['Databases', 12345]
+cols:None
+['Databases', 12345]
+sqlList:['', "insert INTO COURSE         VALUES('Databases', 12345)"]
+act:insert
+all:insert INTO COURSE         VALUES('Databases', 12345)
+insert!
+t---insert INTO COURSE         VALUES('Databases', 12345)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+
+insert INTO COURSE         VALUES('Databases', 12345)
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+- tables: COURSE
+- val: ["'Databases'", '12345']
+
+[['insert', 'into'], 'COURSE', 'values', '(', "'Databases'", '12345', ')']
+lenght:2
+turn the value
+type:string:Databases
+turn the value
+1
+no col asssigned
+values:2	 ['Databases', 12345]
+table:COURSE
+value:['Databases', 12345]
+cols:None
+['Databases', 12345]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(20, 'Prof. No Age', 'M')"]
+act:insert
+all:insert INTO STUDENT         VALUES(20, 'Prof. No Age', 'M')
+insert!
+t---insert INTO STUDENT         VALUES(20, 'Prof. No Age', 'M')
+[['insert', 'into'], 'STUDENT', 'values', '(', '20', "'Prof. No Age'", "'M'", ')']
+
+insert INTO STUDENT         VALUES(20, 'Prof. No Age', 'M')
+[['insert', 'into'], 'STUDENT', 'values', '(', '20', "'Prof. No Age'", "'M'", ')']
+- tables: STUDENT
+- val: ['20', "'Prof. No Age'", "'M'"]
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '20', "'Prof. No Age'", "'M'", ')']
+lenght:3
+turn the value
+0
+turn the value
+type:string:Prof. No Age
+turn the value
+type:string:M
+no col asssigned
+values:3	 [20, 'Prof. No Age', 'M']
+table:STUDENT
+value:[20, 'Prof. No Age', 'M']
+cols:None
+[20, 'Prof. No Age', 'M']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(19, 'Dr. Paranthesis', 'M', 67"]
+act:insert
+all:insert INTO STUDENT         VALUES(19, 'Dr. Paranthesis', 'M', 67
+insert!
+t---insert INTO STUDENT         VALUES(19, 'Dr. Paranthesis', 'M', 67
+out:::
+out.:['', "insert INTO STUDENT         VALUES(19, 'Dr. Paranthesis', 'M', 67", '                                                                 ^', 'FAIL: Expected ")" (at char 65), (line:1, col:66)']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT (gender, name, age)        VALUES('Prof. No ID', 'M', 21)"]
+act:insert
+all:insert INTO STUDENT (gender, name, age)        VALUES('Prof. No ID', 'M', 21)
+insert!
+t---insert INTO STUDENT (gender, name, age)        VALUES('Prof. No ID', 'M', 21)
+out:::
+out.:['', "insert INTO STUDENT (gender, name, age)        VALUES('Prof. No ID', 'M', 21)", '                    ^', 'FAIL: Expected "values" (at char 20), (line:1, col:21)']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(12, 'John Cena', 'M', 45),        VALUES(14, 'Chuck Norris', 'M', 55)"]
+act:insert
+all:insert INTO STUDENT         VALUES(12, 'John Cena', 'M', 45),        VALUES(14, 'Chuck Norris', 'M', 55)
+insert!
+t---insert INTO STUDENT         VALUES(12, 'John Cena', 'M', 45),        VALUES(14, 'Chuck Norris', 'M', 55)
+[['insert', 'into'], 'STUDENT', 'values', '(', '12', "'John Cena'", "'M'", '45', ')']
+
+insert INTO STUDENT         VALUES(12, 'John Cena', 'M', 45),        VALUES(14, 'Chuck Norris', 'M', 55)
+[['insert', 'into'], 'STUDENT', 'values', '(', '12', "'John Cena'", "'M'", '45', ')']
+- tables: STUDENT
+- val: ['12', "'John Cena'", "'M'", '45']
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '12', "'John Cena'", "'M'", '45', ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:John Cena
+turn the value
+type:string:M
+turn the value
+3
+no col asssigned
+values:4	 [12, 'John Cena', 'M', 45]
+table:STUDENT
+value:[12, 'John Cena', 'M', 45]
+cols:None
+[12, 'John Cena', 'M', 45]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO NOSUCHTABLE         VALUES('Databases', 12345)"]
+act:insert
+all:insert INTO NOSUCHTABLE         VALUES('Databases', 12345)
+insert!
+t---insert INTO NOSUCHTABLE         VALUES('Databases', 12345)
+[['insert', 'into'], 'NOSUCHTABLE', 'values', '(', "'Databases'", '12345', ')']
+
+insert INTO NOSUCHTABLE         VALUES('Databases', 12345)
+[['insert', 'into'], 'NOSUCHTABLE', 'values', '(', "'Databases'", '12345', ')']
+- tables: NOSUCHTABLE
+- val: ["'Databases'", '12345']
+
+[['insert', 'into'], 'NOSUCHTABLE', 'values', '(', "'Databases'", '12345', ')']
+lenght:2
+turn the value
+type:string:Databases
+turn the value
+1
+no col asssigned
+values:2	 ['Databases', 12345]
+table:NOSUCHTABLE
+value:['Databases', 12345]
+cols:None
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(, 'Null Woman', 'W', 100)"]
+act:insert
+all:insert INTO STUDENT         VALUES(, 'Null Woman', 'W', 100)
+insert!
+t---insert INTO STUDENT         VALUES(, 'Null Woman', 'W', 100)
+out:::
+out.:['', "insert INTO STUDENT         VALUES(, 'Null Woman', 'W', 100)", '                                   ^', 'FAIL: Expected {W:(0123...) | quotedString using single or double quotes} (at char 35), (line:1, col:36)']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(10, 'John Smith', 'M', 22)"]
+act:insert
+all:insert INTO STUDENT         VALUES(10, 'John Smith', 'M', 22)
+insert!
+t---insert INTO STUDENT         VALUES(10, 'John Smith', 'M', 22)
+[['insert', 'into'], 'STUDENT', 'values', '(', '10', "'John Smith'", "'M'", '22', ')']
+
+insert INTO STUDENT         VALUES(10, 'John Smith', 'M', 22)
+[['insert', 'into'], 'STUDENT', 'values', '(', '10', "'John Smith'", "'M'", '22', ')']
+- tables: STUDENT
+- val: ['10', "'John Smith'", "'M'", '22']
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '10', "'John Smith'", "'M'", '22', ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:John Smith
+turn the value
+type:string:M
+turn the value
+3
+no col asssigned
+values:4	 [10, 'John Smith', 'M', 22]
+table:STUDENT
+value:[10, 'John Smith', 'M', 22]
+cols:None
+[10, 'John Smith', 'M', 22]
+sqlList:['', "insert INTO STUDENT         VALUES(11, 'Hsu You-Ting', 'F', 23)"]
+act:insert
+all:insert INTO STUDENT         VALUES(11, 'Hsu You-Ting', 'F', 23)
+insert!
+t---insert INTO STUDENT         VALUES(11, 'Hsu You-Ting', 'F', 23)
+[['insert', 'into'], 'STUDENT', 'values', '(', '11', "'Hsu You-Ting'", "'F'", '23', ')']
+
+insert INTO STUDENT         VALUES(11, 'Hsu You-Ting', 'F', 23)
+[['insert', 'into'], 'STUDENT', 'values', '(', '11', "'Hsu You-Ting'", "'F'", '23', ')']
+- tables: STUDENT
+- val: ['11', "'Hsu You-Ting'", "'F'", '23']
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '11', "'Hsu You-Ting'", "'F'", '23', ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:Hsu You-Ting
+turn the value
+type:string:F
+turn the value
+3
+no col asssigned
+values:4	 [11, 'Hsu You-Ting', 'F', 23]
+table:STUDENT
+value:[11, 'Hsu You-Ting', 'F', 23]
+cols:None
+[11, 'Hsu You-Ting', 'F', 23]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', "insert INTO STUDENT         VALUES(16, 'Caitlyn Jenner', 'MF', 45)"]
+act:insert
+all:insert INTO STUDENT         VALUES(16, 'Caitlyn Jenner', 'MF', 45)
+insert!
+t---insert INTO STUDENT         VALUES(16, 'Caitlyn Jenner', 'MF', 45)
+[['insert', 'into'], 'STUDENT', 'values', '(', '16', "'Caitlyn Jenner'", "'MF'", '45', ')']
+
+insert INTO STUDENT         VALUES(16, 'Caitlyn Jenner', 'MF', 45)
+[['insert', 'into'], 'STUDENT', 'values', '(', '16', "'Caitlyn Jenner'", "'MF'", '45', ')']
+- tables: STUDENT
+- val: ['16', "'Caitlyn Jenner'", "'MF'", '45']
+
+[['insert', 'into'], 'STUDENT', 'values', '(', '16', "'Caitlyn Jenner'", "'MF'", '45', ')']
+lenght:4
+turn the value
+0
+turn the value
+type:string:Caitlyn Jenner
+turn the value
+type:string:MF
+turn the value
+3
+no col asssigned
+values:4	 [16, 'Caitlyn Jenner', 'MF', 45]
+table:STUDENT
+value:[16, 'Caitlyn Jenner', 'MF', 45]
+cols:None
+[16, 'Caitlyn Jenner', 'MF', 45]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE VEHICLE (            licenseNumber VARCHAR(10),            brand VARCHAR(15),            model VARCHAR(15),            type VARCHAR(2),            engineSize int            );']
+act:create
+all:create TABLE VEHICLE (            licenseNumber VARCHAR(10),            brand VARCHAR(15),            model VARCHAR(15),            type VARCHAR(2),            engineSize int            );
+t---create TABLE VEHICLE (            licenseNumber VARCHAR(10),            brand VARCHAR(15),            model VARCHAR(15),            type VARCHAR(2),            engineSize int            );
+[['create', 'table'], 'VEHICLE', '(', ['licenseNumber', 'VARCHAR', '(10)'], ['brand', 'VARCHAR', '(15)'], ['model', 'VARCHAR', '(15)'], ['type', 'VARCHAR', '(2)'], ['engineSize', 'int'], ')']
+
+create TABLE VEHICLE (            licenseNumber VARCHAR(10),            brand VARCHAR(15),            model VARCHAR(15),            type VARCHAR(2),            engineSize int            );
+[['create', 'table'], 'VEHICLE', '(', ['licenseNumber', 'VARCHAR', '(10)'], ['brand', 'VARCHAR', '(15)'], ['model', 'VARCHAR', '(15)'], ['type', 'VARCHAR', '(2)'], ['engineSize', 'int'], ')']
+- tables: VEHICLE
+- values: [['licenseNumber', 'VARCHAR', '(10)'], ['brand', 'VARCHAR', '(15)'], ['model', 'VARCHAR', '(15)'], ['type', 'VARCHAR', '(2)'], ['engineSize', 'int']]
+  [0]:
+    ['licenseNumber', 'VARCHAR', '(10)']
+  [1]:
+    ['brand', 'VARCHAR', '(15)']
+  [2]:
+    ['model', 'VARCHAR', '(15)']
+  [3]:
+    ['type', 'VARCHAR', '(2)']
+  [4]:
+    ['engineSize', 'int']
+
+table:VEHICLE
+values:5 [['licenseNumber', 'VARCHAR', '(10)'], ['brand', 'VARCHAR', '(15)'], ['model', 'VARCHAR', '(15)'], ['type', 'VARCHAR', '(2)'], ['engineSize', 'int']]
+tables:VEHICLE
+col_names:['licenseNumber', 'brand', 'model', 'type', 'engineSize']
+col_datatypes:['varchar', 'varchar', 'varchar', 'varchar', 'int']
+col_constraints:[10, 15, 15, 2, None]
+keys:[False, False, False, False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE BOOK (        isbn VARCHAR(20) PRIMARY KEY,        title VARCHAR(20),        author VARCHAR(20),        pages int,        editorial VARCHAR(15)        )']
+act:create
+all:create TABLE BOOK (        isbn VARCHAR(20) PRIMARY KEY,        title VARCHAR(20),        author VARCHAR(20),        pages int,        editorial VARCHAR(15)        )
+t---create TABLE BOOK (        isbn VARCHAR(20) PRIMARY KEY,        title VARCHAR(20),        author VARCHAR(20),        pages int,        editorial VARCHAR(15)        )
+[['create', 'table'], 'BOOK', '(', ['isbn', 'VARCHAR', '(20)', 'PRIMARY KEY'], ['title', 'VARCHAR', '(20)'], ['author', 'VARCHAR', '(20)'], ['pages', 'int'], ['editorial', 'VARCHAR', '(15)'], ')']
+
+create TABLE BOOK (        isbn VARCHAR(20) PRIMARY KEY,        title VARCHAR(20),        author VARCHAR(20),        pages int,        editorial VARCHAR(15)        )
+[['create', 'table'], 'BOOK', '(', ['isbn', 'VARCHAR', '(20)', 'PRIMARY KEY'], ['title', 'VARCHAR', '(20)'], ['author', 'VARCHAR', '(20)'], ['pages', 'int'], ['editorial', 'VARCHAR', '(15)'], ')']
+- tables: BOOK
+- values: [['isbn', 'VARCHAR', '(20)', 'PRIMARY KEY'], ['title', 'VARCHAR', '(20)'], ['author', 'VARCHAR', '(20)'], ['pages', 'int'], ['editorial', 'VARCHAR', '(15)']]
+  [0]:
+    ['isbn', 'VARCHAR', '(20)', 'PRIMARY KEY']
+  [1]:
+    ['title', 'VARCHAR', '(20)']
+  [2]:
+    ['author', 'VARCHAR', '(20)']
+  [3]:
+    ['pages', 'int']
+  [4]:
+    ['editorial', 'VARCHAR', '(15)']
+
+table:BOOK
+values:5 [['isbn', 'VARCHAR', '(20)', 'PRIMARY KEY'], ['title', 'VARCHAR', '(20)'], ['author', 'VARCHAR', '(20)'], ['pages', 'int'], ['editorial', 'VARCHAR', '(15)']]
+tables:BOOK
+col_names:['isbn', 'title', 'author', 'pages', 'editorial']
+col_datatypes:['varchar', 'varchar', 'varchar', 'int', 'varchar']
+col_constraints:[20, 20, 20, None, 15]
+keys:[True, False, False, False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            );
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE STUDENT (            studentId int,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[False, False, False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(50)            )']
+act:create
+all:create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(50)            )
+t---create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(50)            )
+[['create', 'table'], 'TEACHERS', '(', ['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(50)'], ')']
+
+create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(50)            )
+[['create', 'table'], 'TEACHERS', '(', ['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(50)'], ')']
+- tables: TEACHERS
+- values: [['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(50)']]
+  [0]:
+    ['FName', 'VARCHAR', '(4)']
+  [1]:
+    ['LName', 'VARCHAR', '(50)']
+
+table:TEACHERS
+values:2 [['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(50)']]
+tables:TEACHERS
+col_names:['FName', 'LName']
+col_datatypes:['varchar', 'varchar']
+col_constraints:[4, 50]
+keys:[False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            FName VARCHAR(4)            )']
+act:create
+all:create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            FName VARCHAR(4)            )
+t---create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            FName VARCHAR(4)            )
+[['create', 'table'], 'TEACHERS', '(', ['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(4)'], ['FName', 'VARCHAR', '(4)'], ')']
+
+create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            FName VARCHAR(4)            )
+[['create', 'table'], 'TEACHERS', '(', ['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(4)'], ['FName', 'VARCHAR', '(4)'], ')']
+- tables: TEACHERS
+- values: [['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(4)'], ['FName', 'VARCHAR', '(4)']]
+  [0]:
+    ['FName', 'VARCHAR', '(4)']
+  [1]:
+    ['LName', 'VARCHAR', '(4)']
+  [2]:
+    ['FName', 'VARCHAR', '(4)']
+
+table:TEACHERS
+values:3 [['FName', 'VARCHAR', '(4)'], ['LName', 'VARCHAR', '(4)'], ['FName', 'VARCHAR', '(4)']]
+tables:TEACHERS
+col_names:['FName', 'LName', 'FName']
+col_datatypes:['varchar', 'varchar', 'varchar']
+col_constraints:[4, 4, 4]
+keys:[False, False, False]
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            )']
+act:create
+all:create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            )
+t---create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            )
+out:::
+out.:['', 'create TABLE TEACHERS (            FName VARCHAR(4),            LName VARCHAR(4),            )', '                                                                                ^', 'FAIL: Expected ")" (at char 80), (line:1, col:81)']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE TEACHERS        FName VARCHAR,        LName VARCHAR(20)        )']
+act:create
+all:create TABLE TEACHERS        FName VARCHAR,        LName VARCHAR(20)        )
+t---create TABLE TEACHERS        FName VARCHAR,        LName VARCHAR(20)        )
+out:::
+out.:['', 'create TABLE TEACHERS        FName VARCHAR,        LName VARCHAR(20)        )', '                             ^', 'FAIL: Expected "(" (at char 29), (line:1, col:30)']
+sqlList:['', 'create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )']
+act:create
+all:create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+t---create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+
+create TABLE STUDENT (            studentId int PRIMARY KEY,            name VARCHAR(15),            gender VARCHAR(1),            age int            )
+[['create', 'table'], 'STUDENT', '(', ['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int'], ')']
+- tables: STUDENT
+- values: [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+  [0]:
+    ['studentId', 'int', 'PRIMARY KEY']
+  [1]:
+    ['name', 'VARCHAR', '(15)']
+  [2]:
+    ['gender', 'VARCHAR', '(1)']
+  [3]:
+    ['age', 'int']
+
+table:STUDENT
+values:4 [['studentId', 'int', 'PRIMARY KEY'], ['name', 'VARCHAR', '(15)'], ['gender', 'VARCHAR', '(1)'], ['age', 'int']]
+tables:STUDENT
+col_names:['studentId', 'name', 'gender', 'age']
+col_datatypes:['int', 'varchar', 'varchar', 'int']
+col_constraints:[None, 15, 1, None]
+keys:[True, False, False, False]
+sqlList:['', 'create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )']
+act:create
+all:create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+t---create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+
+create TABLE COURSE (            name VARCHAR(40) PRIMARY KEY,            id INT PRIMARY KEY            )
+[['create', 'table'], 'COURSE', '(', ['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY'], ')']
+- tables: COURSE
+- values: [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+  [0]:
+    ['name', 'VARCHAR', '(40)', 'PRIMARY KEY']
+  [1]:
+    ['id', 'INT', 'PRIMARY KEY']
+
+table:COURSE
+values:2 [['name', 'VARCHAR', '(40)', 'PRIMARY KEY'], ['id', 'INT', 'PRIMARY KEY']]
+tables:COURSE
+col_names:['name', 'id']
+col_datatypes:['varchar', 'int']
+col_constraints:[40, None]
+keys:[True, True]
+sqlList:['', 'create TABLE TEACHERS (        FName VARCHAR(1),        LName DATE        )']
+act:create
+all:create TABLE TEACHERS (        FName VARCHAR(1),        LName DATE        )
+t---create TABLE TEACHERS (        FName VARCHAR(1),        LName DATE        )
+[['create', 'table'], 'TEACHERS', '(', ['FName', 'VARCHAR', '(1)'], ['LName', 'DATE'], ')']
+
+create TABLE TEACHERS (        FName VARCHAR(1),        LName DATE        )
+[['create', 'table'], 'TEACHERS', '(', ['FName', 'VARCHAR', '(1)'], ['LName', 'DATE'], ')']
+- tables: TEACHERS
+- values: [['FName', 'VARCHAR', '(1)'], ['LName', 'DATE']]
+  [0]:
+    ['FName', 'VARCHAR', '(1)']
+  [1]:
+    ['LName', 'DATE']
+
+table:TEACHERS
+values:2 [['FName', 'VARCHAR', '(1)'], ['LName', 'DATE']]
+tables:TEACHERS
+col_names:['FName', 'LName']
+col_datatypes:['varchar', 'date']
+col_constraints:[1, None]
+keys:[False, False]
+Destroying test database for alias 'default'...

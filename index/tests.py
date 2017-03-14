@@ -240,7 +240,7 @@ class TableTestCase(TestCase):
         VALUES(, 'Null Woman', 'W', 100)"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertIn("NULL", err_msg[0])
+        self.assertIn("unwanted token", err_msg[0])
         #self.assertEqual(err_msg, ["Entry with NULL key"])
 
     def test_insert_missing_paranthesis(self):
