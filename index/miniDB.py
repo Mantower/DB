@@ -163,16 +163,19 @@ class Table:
         # Go through all entities, and check there are no same primary key
         # Can speed up by better Data Structure
         for e in self.entities:
+            if not key_id:
+                if (e.values[:]==entity.values[:]):
+                    return False, "Duplicate data insertion"
             # Extract key column values of every entities, and compare with the one we want to test
             # If there's same combination, we say this entity is invalid
-            if entity_key_values == [e.values[i] for (i, c) in key_id]:
+            if (entity_key_values == [e.values[i] for (i, c) in key_id]) and (key_id):
                 return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
             
         # Pass all validation 
         return True, None
 
     def insert(self, values, col_names=None):
-        """The fucntion inserts a row into the table. It will check if the given parameter is valid. 
+        """The function inserts a row into the table. It will check if the given parameter is valid. 
         Args:
             values ([int || String]): The value to insert.
             col_names ([String] || None): The column names. If this value is None, we will use default sequence.
