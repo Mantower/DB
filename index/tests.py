@@ -224,7 +224,7 @@ class TableTestCase(TestCase):
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertEqual(err_msg, ["Unexpected white"])   
+        self.assertIn(err_msg,"Unexpected white" )   
 
     def test_insert_data_mismatch(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -232,7 +232,7 @@ class TableTestCase(TestCase):
         VALUES(15, 'Mr. Bean', 'M', '45')"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertIn("is not int", err_msg[0])
+        self.assertIn(err_msg,"is not int" )
     
     def test_insert_string_length(self):
         database = load_db(TEST_DB_WITH_STUDENT)
