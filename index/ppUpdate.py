@@ -1690,6 +1690,7 @@ class ParserElement(object):
                 print(t[pe.loc-1])
                 if ('")"' or '"("') in str(pe):
                     if t[pe.loc-1] == " ":
+                        print("FAAAAAAAAAAAAAAA")
                         return False, "FATL: Unexpected white space" 
                 out.append("FAIL: " + str(pe))
                 print("out.:"+str(out))
