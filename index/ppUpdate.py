@@ -1686,6 +1686,11 @@ class ParserElement(object):
                     out.append(' '*(col(pe.loc,t)-1) + '^' + fatal)
                 else:
                     out.append(' '*pe.loc + '^' + fatal)
+                print("pe loc")
+                print(t[pe.loc-1])
+                if ('")"' or '"("') in str(pe):
+                    if t[pe.loc-1] == " ":
+                        return False, "FATL: Unexpected white space" 
                 out.append("FAIL: " + str(pe))
                 print("out.:"+str(out))
                 allResults.append(out)

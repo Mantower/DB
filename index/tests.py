@@ -217,7 +217,7 @@ class TableTestCase(TestCase):
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertEqual(err_msg, ["Comma missing"])   
+        self.assertEqual(err_msg, ["Unexpected white"])   
 
     def test_insert_data_mismatch(self):
         database = load_db(TEST_DB_WITH_STUDENT)
