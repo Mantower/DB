@@ -149,7 +149,7 @@ class Table:
         # Check for empty key value
         for i, v in enumerate(entity_key_values):
             if not v:
-                return False, "Empty value for primary key Column" + self.columns[i].name + "."
+                return False, "Empty value for primary key Column " + self.columns[i].name + "."
         
         
         # Check if column values are valid
@@ -249,6 +249,7 @@ class Entity:
             values ([String|int]): The value for the corresponding column.
             col_id ([int] | None): The order of the corresponding value. 
         """
+        self.values = [None] * 10
         if col_id:
             for cid, v in zip(col_id, values):
                 self.values[cid] = v
