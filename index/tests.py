@@ -1,11 +1,13 @@
 from django.test import TestCase
 import pickle
 import miniDB
+import parseSQL
 
 #https://docs.djangoproject.com/en/1.10/topics/testing/overview/
 
 TEST_DB_NAME = "TESTING.pkl"
 TEST_DB_WITH_STUDENT = "TESTING_STUDENT.pkl"
+TEST_DB_WITH_BOOK_AUTHOR = "TESTING_BOOK_AUTHOR.pkl"
 
 def save_db(database, db_name):
     # dump new db into a file
@@ -324,3 +326,207 @@ class TableTestCase(TestCase):
         passed, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("Primary key", err_msg[0])
+
+class StageTwoTest(TestCase):
+
+    def setUp(self):
+        database_with_book_author = miniDB.Database()
+        sql = "CREATE TABLE Book (\
+            bookId int PRIMARY KEY,\
+            title VARCHAR(30),\
+            pages int,\
+            authorId int,\
+            editorial varchar(30)
+            )
+            CREATE TABLE Author (\
+            authorId int PRIMARY KEY,\
+            name varchar(30),\
+            nationality varchar(30)
+            )"
+        passed, err_msg = database_with_book_author.exec_sql(sql)
+        save_db(database_with_book_author, TEST_DB_WITH_BOOK_AUTHOR)
+
+    def loadSQLData(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        fd = open('author.sql', 'r')
+        sqlFile = fd.read()
+        fd.close()
+        passed, err_msg = database.exec_sql(sqlFile)
+        fd = open('book2.sql', 'r')
+        sqlFIle = fd.read()
+        fd.close()
+        passed, err_msg = database.exec_sql(sqlFile)
+        save_db(database, TEST_DB_WITH_BOOK_AUTHOR)
+
+    def testSelect1(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT \
+                bookId,\
+                title,\
+                pages,\
+                authorId,\
+                editorial\
+                FROM Book;"
+        passed, err_msg = database.exec_sql(sql)
+    
+    def testSelectAll(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                *\
+                FROM Author;"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testSelectSpecificTitle(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                title\
+                FROM Book\
+                WHERE\
+                bookId = 1;"
+        passed, err_msg = database.exec_sql(sql)
+
+
+    def testSelectSizeConstraints(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                b.title\
+                FROM Book AS b\
+                WHERE\
+                pages > 100\
+                AND\
+                editorial = 'Prentice Hall';"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testSelectAllSizeConstraints(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                *\
+                FROM Book\
+                WHERE\
+                authorId = 1\
+                OR\
+                pages < 200;"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testInnerJoin1(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                b.*\
+                FROM\
+                Book AS b,\
+                Author AS a\
+                WHERE\
+                b.authorId = a.authorId\
+                AND\
+                a.name = 'Michael Crichton';"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testInnerJoin2(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                bookId, title, pages, name\
+                FROM\
+                Book,\
+                Author AS a\
+                WHERE\
+                Book.authorId = a.authorId\
+                AND\
+                Book.pages > 200;"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testInnerJoin3(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                a.name\
+                FROM\
+                Author AS a,\
+                Book AS b\
+                WHERE\
+                a.authorId = b.authorId\
+                AND\
+                b.title = 'Star Wars';"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testInnerJoin4(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                a.name,\
+                b.title\
+                FROM\
+                Author AS a,\
+                Book AS b\
+                WHERE\
+                a.authorId = b.authorId\
+                AND\
+                a.nationality <> ' Taiwan';"
+        passed, err_msg = database.exec_sql(sql)
+
+    def testAggregation1(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                COUNT(*)\
+                FROM\
+                Book;"
+        passed, err_msg = database.exec_sql(sql)        
+
+    def testAggregation2(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                COUNT(editorial)\
+                FROM\
+                Book;"
+        passed, err_msg = database.exec_sql(sql)     
+
+    def testAggregation3(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                COUNT(*)\
+                FROM\
+                Author\
+                WHERE\
+                nationality = 'Taiwan';"
+        passed, err_msg = database.exec_sql(sql)                
+
+    def testAggregation4(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                SUM(pages)\
+                FROM\
+                Book\
+                WHERE\
+                authorId = 2;"
+        passed, err_msg = database.exec_sql(sql)       
+
+    def testAmbigousError(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                authorId\
+                FROM\
+                Author,\
+                Book\
+                WHERE\
+                Author.authorId = Book.authorId\
+                AND\
+                Book.title = 'Star Wars';"
+        passed, err_msg = database.exec_sql(sql)         
+
+    def testTypeMismatch(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                *\
+                FROM\
+                Author\
+                WHERE\
+                authorId = 'John';"
+        passed, err_msg = database.exec_sql(sql)         
+
+    def testComparisionMismatch(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT\
+                Book.*\
+                FROM\
+                Book,\
+                Author\
+                WHERE\
+                Book.authorId = Author.name;"
+        passed, err_msg = database.exec_sql(sql)  
