@@ -92,6 +92,77 @@ class Database:
             if t.name == name:
                 return t
         return None
+    
+    def select(self, column_names, table_names, predicates=None):
+        """Select columns from tables where predicate fulfills. 
+        Args:
+            columns ([String]): The column we want to get data from.
+            tables ([String]): The table to query on.
+            predicates ([String]): The predicate of the select query.
+        Returns:
+            bool: The return value. True for successful selection, False otherwise.
+            Table: Table that includes requested column and rows fulfilling predicate. None if selection fails.
+            String: The error message. None if no error.
+            
+        Todo: Sum() and Count() should be passed into miniDB as str and parse? 
+              Or should it be parsed in parser and passed in miniDB as function?
+        """
+        # convert table names to table object
+        tables = {}
+        aliases = []
+        # use alias of table as key to get the object
+        # if alais is not provided, use table name as key
+        for n in table_names:
+            # Todo: n can have alias. e.g. Student AS S. Need to preprocess
+            aliases.append(n)
+            table = self.get_table(n)
+            if table:
+                tables[alias] = table
+            else:
+                #no such table
+                return False, None, "No table named " + n + "." 
+        
+        # convert column names to column object
+        # [Table1_columns, Table2_columns]
+        # [[], []]
+        columns = [[] for x in range(len(tables))]
+        columns_id = [[] for x in range(len(tables))]
+        for n in column_names:
+            # Todo: n can have alias. e.g. Student AS S. Need to preprocess
+            col = None
+            # search all table to look for column named n
+            for index, key in enumerate(tables):
+                col = tables[key].get_column(n)
+                col_id = tables[key].col_name2id[n]
+                # found. Append the column and search for the next column name
+                if col:
+                    columns[index].append(col)
+                    columns_id[index].append(col_id)
+                    break
+            # column name not found in all tables
+            if not col:
+                return False, None, "No column named " + n + "." 
+
+        # form a new table to store all rows fulfill constraints
+        # Table name should be changed?!
+        result = Table("SelectQuery", columns)
+
+        # key of table
+        for fst_e in tables[aliases[0]].entities:
+            if len(tables) == 2:
+                for snd_e in tables[aliases[1]].entities:
+                    if PREDICATES_FULLFILL:
+                        # take requested column and append
+                        sub_entity = [fst_e[idx] for idx in columns_id[0]]
+                        sub_entity.extend([snd_e[idx] for idx in columns_id[1]])
+                        result.append(sub_entity)
+            else:
+                if PREDICATES_FULLFILL:
+                    # take requested column and append
+                    sub_entity = [fst_e[idx] for idx in columns_id[0]]
+                    result.append(sub_entity)
+  
+        return True, result, None 
   
 class Datatype():
     INT = 1
@@ -189,7 +260,6 @@ class Table:
         if col_names:
             for n in col_names:
                 if n not in self.col_name2id:
-                    print(n)
                     return False, "Column " + str(n) + " is not in Table " + self.name
                 else:
                     # convert col_name to its order in the table and append to list
@@ -216,7 +286,7 @@ class Table:
         self.entities.append(entity)
         return True, None  
 
-    # Getting data for specific key
+    # Getting Column for the given name
     def get_column(self, name):
         for c in self.columns:
             if c.name == name:
