@@ -93,12 +93,35 @@ class Database:
                 return t
         return None
     
-    def select(self, column_names, table_names, predicates=None):
+    def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
+        All the inputs should be String, the function will convert strings into objects.
+        None if the data is not available.
         Args:
-            columns ([String]): The column we want to get data from.
-            tables ([String]): The table to query on.
-            predicates ([String]): The predicate of the select query.
+            column_names ([(String, String, String)] || "*"): 
+                The column we want to get data from.
+                (Table prefix alias, Column name, Aggregation function)
+                Table prefix alias: Prefix of the column. None if table name is not available.
+                Column name: The column name user wants to select on.
+                Aggregation function: Aggregation function we want to apply on the column.
+
+            table_names ([(String, String)]): 
+                The table to query on.
+                (Table alias, Table name)
+                Table alias: The alias of the table.
+                Table name: The table name.
+
+            predicates ([(String, String, String)]): 
+                The predicate of the select query.
+                (Column1 or Value1, Operation, Column2 or Value2)
+                Column1 or Value1: The column or value on the left side.
+                Operation: The operation to perform on two columns or values.
+                Column2 or Value2: The column or value on the right side.
+
+            operator (String): 
+                Operator between predicates. Used when more than two predicates.
+                The value can be "AND" or "OR".
+
         Returns:
             bool: The return value. True for successful selection, False otherwise.
             Table: Table that includes requested column and rows fulfilling predicate. None if selection fails.
@@ -111,7 +134,7 @@ class Database:
         tables = {}
         aliases = []
         # use alias of table as key to get the object
-        # if alais is not provided, use table name as key
+        # if alias is not provided, use table name as key
         for n in table_names:
             # Todo: n can have alias. e.g. Student AS S. Need to preprocess
             aliases.append(n)
@@ -161,7 +184,7 @@ class Database:
                     # take requested column and append
                     sub_entity = [fst_e[idx] for idx in columns_id[0]]
                     result.append(sub_entity)
-  
+
         return True, result, None 
   
 class Datatype():
@@ -373,6 +396,19 @@ class VarcharConstraint:
             return False, "Value " + str(value) + " exceed maximum length " + str(self.max_len) + "."
         return True, None
         
+class Predicate:
+    def __init__(self, var1, op, var2):
+        """The init function of Predicate. var contains value or table and column name. 
+           op is the operation to perform on two vars.
+        Args:
+            var1 ([int|String, ]): The value to test.
+        Returns:
+            bool: The return value. True for valid, False otherwise.
+            String: The error message. None if no error.
+        """
+        pass
+    
+
 
 """
 Temporary functions that insert fake data into views
