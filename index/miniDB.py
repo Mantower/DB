@@ -111,11 +111,13 @@ class Database:
                 Table alias: The alias of the table.
                 Table name: The table name.
 
-            predicates ([(String, String, String)]): 
+            predicates ([((Bool, String|Int), String, (Bool, String|Int))]): 
                 The predicate of the select query.
-                (Column1 or Value1, Operation, Column2 or Value2)
+                ((Is value, Column1 or Value1), Operation, (Is value, Column2 or Value2))
+                Is value: To mark the following String is value or Column. True if it is value.
                 Column1 or Value1: The column or value on the left side.
                 Operation: The operation to perform on two columns or values.
+                Is value: To mark the following String is value or Column. True if it is value.
                 Column2 or Value2: The column or value on the right side.
 
             operator (String): 
