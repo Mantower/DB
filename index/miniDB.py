@@ -149,25 +149,36 @@ class Database:
         # convert table names to table id
         # tables stores ('Tablealias':tableid)
         tables = {}
+        tables_obj = []
+        aliases = {}
         # use alias of table as key to get the object
         # if alias is not provided, use table name as key
         # tn for table name
+        index = 0
         for alias, tn in table_names:
             #try to find table id in the fast look up table
             try:
                 tid = self.tab_name2id(tn)
-                tables[alias] = tid
+                if alias:
+                    tables[alias] = tid
+                    aliases[alias] = index
+                else:
+                    tables[tn] = tid
+                    aliases[tn] = index
+                tables_obj.append(self.get_table(tid))
             except:
-                return False, None, "No table named " + tn + "."  
+                return False, None, "No table named " + tn + "." 
+            index += 1
         
         # convert column names to column id
-        # [(table id, column id, aggregation function)]
+        # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
+        # Note: which table is the sequence in the query, not the real table id
         column_ids = []
         if column_names == '*':
-            for t_alias, tid in tables.iteritems():
+            for idx, t in enumerate(tables_obj):
                 for cid in range(len(self.tables[tid].columns)):
-                    col = (tid, cid, None)
+                    col = (idx, cid, None)
                     column_ids.append(col)
         else:
             # cn for column name
@@ -189,8 +200,9 @@ class Database:
                         cid = t.col_name2id[cn]
                     except:
                         return False, None, "No column named " + cn + "."
+
                     # Todo: convert aggr into object
-                    col = (tid, cid, aggr)
+                    col = (aliases[prefix], cid, aggr)
                     column_ids.append(col)
                 # prefix not provided
                 else:
@@ -200,7 +212,7 @@ class Database:
                         t = self.get_table(tid)
                         try:
                             cid = t.col_name2id[cn]
-                            col = (tid, cid, aggr)
+                            col = (aliases[t_alias], cid, aggr)
                             break;
                         except:
                             pass
@@ -212,20 +224,27 @@ class Database:
         # form a new table to store all rows fulfill constraints
         # Table name should be changed?!
         result = Table("SelectQuery", columns)
-
+        PREDICATES_FULLFILL = True
         # key of table
-        for fst_e in tables[aliases[0]].entities:
+        for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
-                for snd_e in tables[aliases[1]].entities:
+                for snd_e in tables_obj[1].entities:
                     if PREDICATES_FULLFILL:
                         # take requested column and append
-                        sub_entity = [fst_e[idx] for idx in columns_id[0]]
-                        sub_entity.extend([snd_e[idx] for idx in columns_id[1]])
+                        sub_entity = []
+                        for idx, (which_table, cid, aggr) in enumerate(column_ids):
+                            if which_table == 0:
+                                sub_entity[idx] = fst_e[cid]
+                            else:
+                                sub_entity[idx] = snd_e[cid]
+
                         result.append(sub_entity)
             else:
                 if PREDICATES_FULLFILL:
                     # take requested column and append
-                    sub_entity = [fst_e[idx] for idx in columns_id[0]]
+                    sub_entity = []
+                    for idx, (which_table, cid, aggr) in enumerate(column_ids):
+                        sub_entity[idx] = fst_e[cid]
                     result.append(sub_entity)
 
         return True, result, None 
