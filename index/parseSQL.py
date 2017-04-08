@@ -269,7 +269,7 @@ def process_input_select(DB, tokens):
 	table_alias = []
 	where_expr = []
 	for i in range(len(tokens)):
-		print(str(tokes[i]]))
+		print(str(tokes[i]))
 
 def process_input_create(DB,tokens):
 	keys = []

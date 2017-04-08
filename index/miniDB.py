@@ -180,7 +180,7 @@ class Database:
         column_objs = []
         if column_names == '*':
             for idx, t in enumerate(tables_obj):
-                for cid, col in enumerate(self.tables[tid].columns)):
+                for cid, col in enumerate(self.tables[tid].columns):
                     column_infos.append((idx, cid, None))
                     column_objs.append(col)
         else:
