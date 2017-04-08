@@ -107,13 +107,12 @@ class Database:
             if t.name == name:
                 return t
         return None
-
     def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
         All the inputs should be String, the function will convert strings into objects.
         None if the data is not available.
         Args:
-            column_names ([(String, String, String)] || '*'): 
+            column_names ([(String, String, String)]): 
                 The column we want to get data from.
                 (Table prefix alias, Column name, Aggregation function)
                 Table prefix alias: Prefix of the column. None if table name is not available.
@@ -182,7 +181,7 @@ class Database:
         column_objs = []
         if column_names == '*':
             for idx, t in enumerate(tables_obj):
-                for cid, col in enumerate(self.tables[tid].columns)):
+                for cid, col in enumerate(self.tables[tid].columns):
                     column_infos.append((idx, cid, None))
                     column_objs.append(col)
         else:

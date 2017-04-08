@@ -10,10 +10,7 @@ import shlex
 import sys
 import re
 import unicodedata
-from ppUpdate import Literal, CaselessLiteral, Word, delimitedList, Optional, \
-	Combine, Group, alphas, nums, alphanums, ParseException, Forward, oneOf, quotedString, \
-	ZeroOrMore, restOfLine, Keyword, upcaseTokens, ParserElement, OneOrMore,alphas8bit, empty , printables, CharsNotIn, White
-
+from ppUpdate import *
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
 		content = content_file.read()
@@ -28,6 +25,8 @@ def input_text(DB,sqlText):
 	st = pattern.sub("\ninsert", Uans)
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
+	pattern2 = re.compile("select", re.IGNORECASE)
+	st = pattern2.sub("\nselect", st)
 	#Make them into list
 
 	sqlList = [s.strip() for s in st.splitlines()]
@@ -35,20 +34,24 @@ def input_text(DB,sqlText):
 	#Call the specific function
 	success = []
 	errMsg = []
+	tables = []
 	for obj in sqlList:		
 		if str(obj) == "":
 			continue
 		act = obj.split(' ', 1)[0]
-		print("act:"+act)
-		print("all:"+obj)
+		print(obj)
 		sucTemp = "" 
 		errTemp = ""
+		table = None
 		if act.lower()=="create":			
 			sucTemp ,errTemp = def_create(DB,obj)
 		elif act.lower()=="insert":
 			sucTemp ,errTemp = def_insert(DB,obj)
+		elif act.lower()=="select":
+			sucTemp ,table, errTemp = def_select(DB,obj)
 		success.append(sucTemp)
 		errMsg.append(errTemp)
+		tables.append(table)
 	return success, errMsg
 
 
@@ -152,6 +155,7 @@ def def_insert(DB,text):
 	else:
 		return success, tokens
 def def_select(DB, text):
+	print("select function")
 	LPAR,RPAR,COMMA = map(Suppress,"(),")
 	select_stmt = Forward().setName("select statement")
 
@@ -253,13 +257,52 @@ def def_select(DB, text):
 	simpleSQL = select_stmt
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
+	
 	success, tokens = simpleSQL.runTests(text)
-
+	
 	if(success):
-		return process_input_insert(DB,tokens)
+		return process_input_select(DB,tokens)
 	else:
-		return success, tokens
+		return success, tokens, None
+def process_input_select(DB, tokens):
+	col_names = []
+	tables = []
+	table_alias = []
+	table_names=[]
+	where_expr = []
+	predicates = []
+	columns = []
+	print(tokens)
+	for i in range(len(tokens)):
+		tables = tokens[i]["table"]
+		col_names = tokens[i]["columns"]
+		#Not deal with table name, and "." and SUM and COUNT
+		for k in col_names:
+			columns.append([None, k, None])
+		try:
+			table_alias = tokens[i]["table_alias"]
+			for k in range(len(table_alias)):
+				table_names.append([table_alias[k], tables[k]])
+		except:
+			print("No Alias")
+			for k in range(len(table_alias)):
+				table_names.append([None, tables[k]])
+		try:
+			where_expr = tokens[i]["where_expr"]
+			#not consider the . condition
+			predicates.append([None, where_expr[0],None, where_expr[1], None, where_expr[2], None ])
+			
+		except:
+			print("No exception")
+		print("tables:"+str(tables))
+		print("col_names:"+str(columns))
+		print("table_names:"+str(table_names))
+		print("predicates:"+str(predicates))
+		return DB.select(columns, table_names, predicates, operator=None)
+		
 
+
+		
 def process_input_create(DB,tokens):
 	keys = []
 	col_names = []
@@ -300,12 +343,13 @@ def process_input_create(DB,tokens):
 			col_datatypes.append(typeOri.lower())
 			col_constraints.append(con)
 			keys.append(key)
+		"""
 		print("tables:"+tables)
 		print("col_names:"+str(col_names))
 		print("col_datatypes:"+str(col_datatypes))
 		print("col_constraints:"+str(col_constraints))
 		print("keys:"+str(keys))
-
+		"""
 		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		
 def process_input_insert(DB,tokens):
