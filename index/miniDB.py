@@ -148,7 +148,8 @@ class Database:
         Todo: Sum() and Count() should be passed into miniDB as str and parse? 
               Or should it be parsed in parser and passed in miniDB as function?
         """
-        # convert table names to table id
+
+        '''Convert table names to table id'''
         # tables stores ('Tablealias':tableid)
         tables = {}
         tables_obj = []
@@ -172,7 +173,7 @@ class Database:
                 return False, None, "No table named " + tn + "." 
             index += 1
         
-        # convert column names to column id
+        '''convert column names to column id'''
         # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
         # Note: which table is the sequence in the query, not the real table id
@@ -228,8 +229,11 @@ class Database:
                         return False, None, "No column named " + cn + "."
                     column_infos.append(col_info)
                     column_objs.append(col)
+        ''' Convert predicate to predicate objects '''
 
-        # form a new table to store all rows fulfill constraints
+        ''' Convert operator'''
+
+        ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
         result = Table("SelectQuery", column_objs)
         PREDICATES_FULLFILL = True
