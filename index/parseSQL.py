@@ -28,6 +28,8 @@ def input_text(DB,sqlText):
 	st = pattern.sub("\ninsert", Uans)
 	pattern1 = re.compile("create", re.IGNORECASE)
 	st = pattern1.sub("\ncreate", st)
+	pattern1 = re.compile("select", re.IGNORECASE)
+	st = pattern1.sub("\nselect", st)
 	#Make them into list
 
 	sqlList = [s.strip() for s in st.splitlines()]
@@ -39,14 +41,15 @@ def input_text(DB,sqlText):
 		if str(obj) == "":
 			continue
 		act = obj.split(' ', 1)[0]
-		print("act:"+act)
-		print("all:"+obj)
+
 		sucTemp = "" 
 		errTemp = ""
 		if act.lower()=="create":			
 			sucTemp ,errTemp = def_create(DB,obj)
 		elif act.lower()=="insert":
 			sucTemp ,errTemp = def_insert(DB,obj)
+		elif act.lower()=="select":
+			sucTemp ,errTemp = def_select(DB,obj)
 		success.append(sucTemp)
 		errMsg.append(errTemp)
 	return success, errMsg
@@ -152,6 +155,7 @@ def def_insert(DB,text):
 	else:
 		return success, tokens
 def def_select(DB, text):
+	print("select function")
 	LPAR,RPAR,COMMA = map(Suppress,"(),")
 	select_stmt = Forward().setName("select statement")
 
@@ -259,6 +263,13 @@ def def_select(DB, text):
 		return process_input_insert(DB,tokens)
 	else:
 		return success, tokens
+def process_input_select(DB, tokens):
+	col_names = []
+	tables = []
+	table_alias = []
+	where_expr = []
+	for i in range(len(tokens)):
+		print(str(tokes[i]))
 
 def process_input_create(DB,tokens):
 	keys = []
