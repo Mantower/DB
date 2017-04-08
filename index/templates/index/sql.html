@@ -17,6 +17,14 @@
     </form>
 </div>
 <br>
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="file" name="filesql">
+        <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
+    </form>
+</div>
+<br>
 <hr>
 {% for info_row in info %}
 {% if info_row.0 %}

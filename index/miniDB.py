@@ -157,8 +157,13 @@ class Database:
         # if alias is not provided, use table name as key
         # tn for table name
         index = 0
+        print(self.tab_name2id)
+        print('table name')
+        print(table_names)
         for alias, tn in table_names:
             #try to find table id in the fast look up table
+            print(alias)
+            print(tn)
             try:
                 tid = self.tab_name2id(tn)
                 if alias:
@@ -167,6 +172,7 @@ class Database:
                 else:
                     tables[tn] = tid
                     aliases[tn] = index
+                print('OK OK')
                 tables_obj.append(self.get_table(tid))
             except:
                 return False, None, "No table named " + tn + "." 
@@ -211,18 +217,23 @@ class Database:
 
                 # prefix not provided
                 else:
+                    print('IN')
                     col_info = None
                     col = None
                     # look into all tables and see if there's column named cn
+                    print(tables)
                     for t_alias, tid in tables.iteritems():
                         t = self.get_table(tid)
+                        print('INNNNNNNN')
                         try:
+                            print(cn)
                             cid = t.col_name2id[cn]
                             col_info = (aliases[t_alias], cid, aggr)
                             col = t.columns[cid]
                             break
                         except:
                             pass
+                    print(col_info)
                     # col not found
                     if not col_info:
                         return False, None, "No column named " + cn + "."

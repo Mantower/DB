@@ -20,6 +20,7 @@ def sql_view(request):
         sql_unicode = ""
         if request.POST.get('sql'):
             sql_unicode = request.POST['sql']
+        
         # read DB from pkl file
         database = load_db()
         
