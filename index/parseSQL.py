@@ -48,11 +48,11 @@ def input_text(DB,sqlText):
 		elif act.lower()=="insert":
 			sucTemp ,errTemp = def_insert(DB,obj)
 		elif act.lower()=="select":
-			sucTemp ,table, errTemp = def_select(DB,obj)
+			sucTemp , table, errTemp = def_select(DB,obj)
 		success.append(sucTemp)
 		errMsg.append(errTemp)
 		tables.append(table)
-	return success, errMsg
+	return success, table, errMsg
 
 
 def def_create(DB,text):

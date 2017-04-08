@@ -40,6 +40,26 @@
   <div class="panel-body">
     <p>{{ sql }}</p>
     <p class="danger">{{ info_row.2 }}</p>
+    {% if table %}
+    <table class="table">
+      <thead>
+        <tr>
+          {% for col in table.columns %}
+          <th>{{ col.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for ent in table.entities %}
+        <tr>
+          {% for e in ent.values %}
+          <td>{{ e }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
   </div>
 </div>
 {% endfor %}

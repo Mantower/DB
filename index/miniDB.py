@@ -180,7 +180,8 @@ class Database:
         # Note: which table is the sequence in the query, not the real table id
         column_infos = []
         column_objs = []
-        if column_names == '*':
+        # [[None, '*', None]] for select * from table case.
+        if column_names[0][1] == '*':
             for idx, t in enumerate(tables_obj):
                 for cid, col in enumerate(self.tables[tid].columns):
                     column_infos.append((idx, cid, None))
