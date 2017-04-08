@@ -3,7 +3,9 @@ from parseSQL import *
 class Database:
     def __init__(self):
         self.tables = []
-  
+        # dictionary for fast look up from table_name to its order in the table
+        self.tab_name2id = {}
+
     def exec_sql(self, sql):
         """The fucntion to run sql
         Args:
@@ -79,6 +81,9 @@ class Database:
             for cname, dtype, cons, key in zip(col_names, col_datatypes, col_constraints, keys):
                 columns.append(Column(cname, Datatype.str2dt[dtype], cons, key))
             table = Table(table_name, columns)
+            # register in fast look up table
+            self.tab_name2id[table_name] = len(self.tables)
+            # add newly created table into table list
             self.tables.append(table)
             return True, None
         else:
@@ -88,17 +93,26 @@ class Database:
         return [t.name for t in self.tables]
   
     def get_table(self, name):
+        # get table by id
+        if type(name) == int:
+            try:
+                t = self.tables[name]
+                return t
+            except:
+                return None
+
+        # get table by name
         for t in self.tables:
             if t.name == name:
                 return t
         return None
-    
+
     def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
         All the inputs should be String, the function will convert strings into objects.
         None if the data is not available.
         Args:
-            column_names ([(String, String, String)] || "*"): 
+            column_names ([(String, String, String)] || '*'): 
                 The column we want to get data from.
                 (Table prefix alias, Column name, Aggregation function)
                 Table prefix alias: Prefix of the column. None if table name is not available.
@@ -132,41 +146,68 @@ class Database:
         Todo: Sum() and Count() should be passed into miniDB as str and parse? 
               Or should it be parsed in parser and passed in miniDB as function?
         """
-        # convert table names to table object
+        # convert table names to table id
+        # tables stores ('Tablealias':tableid)
         tables = {}
-        aliases = []
         # use alias of table as key to get the object
         # if alias is not provided, use table name as key
-        for n in table_names:
-            # Todo: n can have alias. e.g. Student AS S. Need to preprocess
-            aliases.append(n)
-            table = self.get_table(n)
-            if table:
-                tables[alias] = table
-            else:
-                #no such table
-                return False, None, "No table named " + n + "." 
+        # tn for table name
+        for alias, tn in table_names:
+            #try to find table id in the fast look up table
+            try:
+                tid = self.tab_name2id(tn)
+                tables[alias] = tid
+            except:
+                return False, None, "No table named " + tn + "."  
         
-        # convert column names to column object
-        # [Table1_columns, Table2_columns]
-        # [[], []]
-        columns = [[] for x in range(len(tables))]
-        columns_id = [[] for x in range(len(tables))]
-        for n in column_names:
-            # Todo: n can have alias. e.g. Student AS S. Need to preprocess
-            col = None
-            # search all table to look for column named n
-            for index, key in enumerate(tables):
-                col = tables[key].get_column(n)
-                col_id = tables[key].col_name2id[n]
-                # found. Append the column and search for the next column name
-                if col:
-                    columns[index].append(col)
-                    columns_id[index].append(col_id)
-                    break
-            # column name not found in all tables
-            if not col:
-                return False, None, "No column named " + n + "." 
+        # convert column names to column id
+        # [(table id, column id, aggregation function)]
+        # [(int, int, Aggregation)]
+        column_ids = []
+        if column_names == '*':
+            for t_alias, tid in tables.iteritems():
+                for cid in range(len(self.tables[tid].columns)):
+                    col = (tid, cid, None)
+                    column_ids.append(col)
+        else:
+            # cn for column name
+            # aggr for aggregation function name
+            for prefix, cn, aggr in column_names:
+                # prefix provided
+                if prefix:
+                    # convert prefix into table id
+                    tid = None
+                    try:
+                        tid = tables[prefix]
+                    except:
+                        return False, None, "No table alias named " + prefix + "."
+                    t = self.get_table(tid)
+
+                    # convert col_name into column id
+                    cid = None
+                    try:
+                        cid = t.col_name2id[cn]
+                    except:
+                        return False, None, "No column named " + cn + "."
+                    # Todo: convert aggr into object
+                    col = (tid, cid, aggr)
+                    column_ids.append(col)
+                # prefix not provided
+                else:
+                    col = None
+                    # look into all tables and see if there's column named cn
+                    for t_alias, tid in tables.iteritems():
+                        t = self.get_table(tid)
+                        try:
+                            cid = t.col_name2id[cn]
+                            col = (tid, cid, aggr)
+                            break;
+                        except:
+                            pass
+                    # col not found
+                    if not col:
+                        return False, None, "No column named " + cn + "."
+                    column_ids.append(col)
 
         # form a new table to store all rows fulfill constraints
         # Table name should be changed?!
