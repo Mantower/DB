@@ -125,14 +125,16 @@ class Database:
                 Table alias: The alias of the table.
                 Table name: The table name.
 
-            predicates ([((Bool, String|Int), String, (Bool, String|Int))]): 
+            predicates ([((String, String, String|Int), String, (String, String, String|Int))]): 
                 The predicate of the select query.
-                ((Is value, Column1 or Value1), Operation, (Is value, Column2 or Value2))
-                Is value: To mark the following String is value or Column. True if it is value.
-                Column1 or Value1: The column or value on the left side.
+                ((Table alias1, Column1, Value1), Operation, (Table alias2, Column2, Value2))
+                Table alias1: The alias or table name on the left side.
+                Column1: The column name on the left side.
+                Value1: The value on the left side. Only evaluated when Table1 and Column1 are None.
                 Operation: The operation to perform on two columns or values.
-                Is value: To mark the following String is value or Column. True if it is value.
-                Column2 or Value2: The column or value on the right side.
+                Table alias2: The alias or table name on the right side.
+                Column2: The column name on the right side.
+                Value2: The value on the right side. Only evaluated when Table2 and Column2 are None.
 
             operator (String): 
                 Operator between predicates. Used when more than two predicates.
@@ -237,7 +239,6 @@ class Database:
                                 sub_entity[idx] = fst_e[cid]
                             else:
                                 sub_entity[idx] = snd_e[cid]
-
                         result.append(sub_entity)
             else:
                 if PREDICATES_FULLFILL:
