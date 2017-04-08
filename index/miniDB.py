@@ -1,5 +1,7 @@
 # db that stores everything
 from parseSQL import *
+import operator as Libop
+
 class Database:
     def __init__(self):
         self.tables = []
@@ -123,7 +125,7 @@ class Database:
                 (Table alias, Table name)
                 Table alias: The alias of the table.
                 Table name: The table name.
-
+            
             predicates ([((String, String, String|Int), String, (String, String, String|Int))]): 
                 The predicate of the select query.
                 ((Table alias1, Column1, Value1), Operation, (Table alias2, Column2, Value2))
@@ -162,10 +164,12 @@ class Database:
         print(table_names)
         for alias, tn in table_names:
             #try to find table id in the fast look up table
+            print('hi')
             print(alias)
             print(tn)
             try:
-                tid = self.tab_name2id(tn)
+                tid = self.tab_name2id[tn]
+                print('OK???')
                 if alias:
                     tables[alias] = tid
                     aliases[alias] = index
@@ -240,41 +244,54 @@ class Database:
                     column_infos.append(col_info)
                     column_objs.append(col)
         ''' Convert predicate to predicate objects '''
-
-        ''' Convert operator'''
+        preds = []
+        for pred1, op, pred2 in predicates:
+            preds.append(Predicate(pred1, op, pred2))
 
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
         result = Table("SelectQuery", column_objs)
-        PREDICATES_FULLFILL = True
         # key of table
         for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
-                    if PREDICATES_FULLFILL:
+                    if self.predicate_check(preds, operator,fst_e, snd_e): 
                         # take requested column and append
-                        sub_entity = []
+                        sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
                             if which_table == 0:
-                                sub_entity[idx] = fst_e[cid]
+                                sub_entity[idx] = fst_e.values[cid]
                             else:
-                                sub_entity[idx] = snd_e[cid]
+                                sub_entity[idx] = snd_e.values[cid]
                         result.insert(sub_entity)
             else:
-                if PREDICATES_FULLFILL:
+                if self.predicate_check(preds, operator, fst_e, None):
                     # take requested column and append
-                    sub_entity = []
+                    sub_entity = [None] * len(column_infos)
                     for idx, (which_table, cid, aggr) in enumerate(column_infos):
-                        sub_entity[idx] = fst_e[cid]
+                        sub_entity[idx] = fst_e.values[cid]
                     result.insert(sub_entity)
 
         return True, result, None 
-  
+
+    def predicate_check(self, predicates, operator, entity1, entity2):
+        if not len(predicates):
+            return True
+        if operator == None:
+            return predicates[0].evaluate_predicates(entity1, entity2)
+        else: 
+            return Operator.str2dt[operator](predicates[0].evaluate_predicates(entity1, entity2),predicates[1].evaluate_predicates(entity1, entity2))
+
 class Datatype():
     INT = 1
     VARCHAR = 2
     # mapping string to datatype
     str2dt = {'int':INT, 'varchar':VARCHAR}
+
+class Operator():
+    AND = Libop.and_
+    OR = Libop.or_
+    str2dt = {'and' : AND, 'or' : OR}
     
 # each table
 class Table:
@@ -478,9 +495,29 @@ class VarcharConstraint:
         if len(value) > self.max_len:
             return False, "Value " + str(value) + " exceed maximum length " + str(self.max_len) + "."
         return True, None
-        
+
+class Aggragation:
+    def __init(self):
+        pass
+
+    @staticmethod
+    def aggregate(self, type, data):
+
+        funcs = {
+            'sum': summation,
+            'count' : count
+        }
+
+        return funcs[type](data)
+
+    def summation(self, data):
+        return sum(data)
+
+    def count(self, data):
+        return len(data)
+      
 class Predicate:
-    def __init__(self, var1, op, var2):
+    def __init__(self, predicates1, op, predicates2):
         """The init function of Predicate. var contains value or table and column name. 
            op is the operation to perform on two vars.
         Args:
@@ -489,7 +526,45 @@ class Predicate:
             bool: The return value. True for valid, False otherwise.
             String: The error message. None if no error.
         """
-        pass
+        self.tab_id1, self.col_id1, self.value1 = predicates1
+        self.tab_id2, self.col_id2, self.value2 = predicates2
+        self.op = op
+        
+        funcs = {
+            '=' : equal,
+            '>' : greater_than,
+            '<' : less_than,
+            '<>' : not_equal
+        }
+    
+
+    def evaluate_predicates(self, entity1, entity2):
+        var1, var2, err_msg = convert(entity1, entity2)
+        return funcs[op](var1, var2)
+
+    def convert(self, entity1, entity2):
+        if((tab_id1 == None and col_id1 == None and value1 != None) and (col_id2 != None and value2 == None)):
+            return value1, entity2.values[col_id2]
+        elif ((col_id1 != None and value1 == None) and (tab_id2 == None and col_id2 == None and value2 != None)):
+            return entity1.values[col_id1], value2
+        elif ((col_id1 != None and value1 == None) and (col_id2 != None and value2 == None)):
+            return entity1.values[col_id1], entity2.values[col_id2]
+        elif ((col_id1 == None and value1 != None) and (col_id2 == None and value2 != None)):
+            return value1, value2
+        else:
+            return None, None, 'Invalid WHERE'
+
+    def equal(self, entity1, entity2):
+        return entity1 == entity2
+
+    def greater_than(self, entity1, entity2):
+        return entity1 > entity2
+
+    def less_than(self, entity1, entity2):
+        return entity1 < entity2
+
+    def not_equal(self, entity1, entity2):
+        return entity1 != entity2
 
 """
 Temporary functions that insert fake data into views

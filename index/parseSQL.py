@@ -275,6 +275,8 @@ def process_input_select(DB, tokens):
 	print(tokens)
 	for i in range(len(tokens)):
 		tables = tokens[i]["table"]
+		print("tables")
+		print(tables)
 		col_names = tokens[i]["columns"]
 		#Not deal with table name, and "." and SUM and COUNT
 		for k in col_names:
@@ -285,7 +287,7 @@ def process_input_select(DB, tokens):
 				table_names.append([table_alias[k], tables[k]])
 		except:
 			print("No Alias")
-			for k in range(len(table_alias)):
+			for k in range(len(tables)):
 				table_names.append([None, tables[k]])
 		try:
 			where_expr = tokens[i]["where_expr"]
