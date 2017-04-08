@@ -176,12 +176,13 @@ class Database:
         # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
         # Note: which table is the sequence in the query, not the real table id
-        column_ids = []
+        column_infos = []
+        column_objs = []
         if column_names == '*':
             for idx, t in enumerate(tables_obj):
-                for cid in range(len(self.tables[tid].columns)):
-                    col = (idx, cid, None)
-                    column_ids.append(col)
+                for cid, col in enumerate(self.tables[tid].columns)):
+                    column_infos.append((idx, cid, None))
+                    column_objs.append(col)
         else:
             # cn for column name
             # aggr for aggregation function name
@@ -204,28 +205,33 @@ class Database:
                         return False, None, "No column named " + cn + "."
 
                     # Todo: convert aggr into object
-                    col = (aliases[prefix], cid, aggr)
-                    column_ids.append(col)
+                    col_info = (aliases[prefix], cid, aggr)
+                    column_infos.append(col_info)
+                    column_objs.append(t.columns[cid])
+
                 # prefix not provided
                 else:
+                    col_info = None
                     col = None
                     # look into all tables and see if there's column named cn
                     for t_alias, tid in tables.iteritems():
                         t = self.get_table(tid)
                         try:
                             cid = t.col_name2id[cn]
-                            col = (aliases[t_alias], cid, aggr)
-                            break;
+                            col_info = (aliases[t_alias], cid, aggr)
+                            col = t.columns[cid]
+                            break
                         except:
                             pass
                     # col not found
-                    if not col:
+                    if not col_info:
                         return False, None, "No column named " + cn + "."
-                    column_ids.append(col)
+                    column_infos.append(col_info)
+                    column_objs.append(col)
 
         # form a new table to store all rows fulfill constraints
         # Table name should be changed?!
-        result = Table("SelectQuery", columns)
+        result = Table("SelectQuery", column_objs)
         PREDICATES_FULLFILL = True
         # key of table
         for fst_e in tables_obj[0].entities:
@@ -234,19 +240,19 @@ class Database:
                     if PREDICATES_FULLFILL:
                         # take requested column and append
                         sub_entity = []
-                        for idx, (which_table, cid, aggr) in enumerate(column_ids):
+                        for idx, (which_table, cid, aggr) in enumerate(column_infos):
                             if which_table == 0:
                                 sub_entity[idx] = fst_e[cid]
                             else:
                                 sub_entity[idx] = snd_e[cid]
-                        result.append(sub_entity)
+                        result.insert(sub_entity)
             else:
                 if PREDICATES_FULLFILL:
                     # take requested column and append
                     sub_entity = []
-                    for idx, (which_table, cid, aggr) in enumerate(column_ids):
+                    for idx, (which_table, cid, aggr) in enumerate(column_infos):
                         sub_entity[idx] = fst_e[cid]
-                    result.append(sub_entity)
+                    result.insert(sub_entity)
 
         return True, result, None 
   
