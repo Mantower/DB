@@ -289,9 +289,9 @@ def process_input_select(DB, tokens):
 			table = tables["table"]
 			try:
 				table_alias = tables["table_alias"]
-				table_names.append([table_alias, table)
+				table_names.append([table_alias, table])
 			except:
-				table_names.append([None, table)
+				table_names.append([None, table])
 
 		"""try:
 			table_alias = tokens[i]["various"]
