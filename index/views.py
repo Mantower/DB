@@ -20,13 +20,14 @@ def sql_view(request):
         sql_unicode = ""
         if request.POST.get('sql'):
             sql_unicode = request.POST['sql']
+
         # read DB from pkl file
         database = load_db()
         
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
-        success, err_msgs = database.exec_sql(sql_str)
+        success, table, err_msgs = database.exec_sql(sql_str)
         print(success)
         # additional message to indicate the execution is successful or not
         panel_msgs = []
@@ -40,7 +41,8 @@ def sql_view(request):
         save_db(database)
 
         data = {'sql':sql_str,
-                'info':zip(success, panel_msgs, err_msgs)
+                'info':zip(success, panel_msgs, err_msgs),
+                'table':table
                 }
 
         return render(request,'index/sql.html', data)

@@ -1,5 +1,6 @@
 # db that stores everything
 from parseSQL import *
+import operator as Libop
 
 class Database:
     def __init__(self):
@@ -161,7 +162,7 @@ class Database:
         for alias, tn in table_names:
             #try to find table id in the fast look up table
             try:
-                tid = self.tab_name2id(tn)
+                tid = self.tab_name2id[tn]
                 if alias:
                     tables[alias] = tid
                     aliases[alias] = index
@@ -179,7 +180,8 @@ class Database:
         # Note: which table is the sequence in the query, not the real table id
         column_infos = []
         column_objs = []
-        if column_names == '*':
+        # [[None, '*', None]] for select * from table case.
+        if column_names[0][1] == '*':
             for idx, t in enumerate(tables_obj):
                 for cid, col in enumerate(self.tables[tid].columns):
                     column_infos.append((idx, cid, None))
@@ -241,30 +243,32 @@ class Database:
         for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
-                    if predicate_check(fst_e, snd_e): 
+                    if self.predicate_check(preds, operator,fst_e, snd_e): 
                         # take requested column and append
-                        sub_entity = []
+                        sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
                             if which_table == 0:
-                                sub_entity[idx] = fst_e[cid]
+                                sub_entity[idx] = fst_e.values[cid]
                             else:
-                                sub_entity[idx] = snd_e[cid]
+                                sub_entity[idx] = snd_e.values[cid]
                         result.insert(sub_entity)
             else:
-                if predicate_check(fst_e, None):
+                if self.predicate_check(preds, operator, fst_e, None):
                     # take requested column and append
-                    sub_entity = []
+                    sub_entity = [None] * len(column_infos)
                     for idx, (which_table, cid, aggr) in enumerate(column_infos):
-                        sub_entity[idx] = fst_e[cid]
+                        sub_entity[idx] = fst_e.values[cid]
                     result.insert(sub_entity)
 
         return True, result, None 
 
     def predicate_check(self, predicates, operator, entity1, entity2):
+        if not len(predicates):
+            return True
         if operator == None:
             return predicates[0].evaluate_predicates(entity1, entity2)
         else: 
-            return predicates[0].evaluate_predicates(entity1, entity2) Operator.str2dt[operator] predicates[1].evaluate_predicates(entity1, entity2)
+            return Operator.str2dt[operator](predicates[0].evaluate_predicates(entity1, entity2),predicates[1].evaluate_predicates(entity1, entity2))
 
 class Datatype():
     INT = 1
@@ -273,8 +277,8 @@ class Datatype():
     str2dt = {'int':INT, 'varchar':VARCHAR}
 
 class Operator():
-    AND = and
-    OR = or
+    AND = Libop.and_
+    OR = Libop.or_
     str2dt = {'and' : AND, 'or' : OR}
     
 # each table
@@ -383,7 +387,6 @@ class Table:
         else:
             entity = Entity(values)
 
-        print(values)
         # validate entity
         passed, err_msg = self.entity_is_vaild(entity)
         if not passed:
@@ -529,11 +532,11 @@ class Predicate:
     def convert(self, entity1, entity2):
         if((tab_id1 == None and col_id1 == None and value1 != None) and (col_id2 != None and value2 == None)):
             return value1, entity2.values[col_id2]
-        else if ((col_id1 != None and value1 == None) and (tab_id2 == None and col_id2 == None and value2 != None)):
+        elif ((col_id1 != None and value1 == None) and (tab_id2 == None and col_id2 == None and value2 != None)):
             return entity1.values[col_id1], value2
-        else if ((col_id1 != None and value1 == None) and (col_id2 != None and value2 == None)):
+        elif ((col_id1 != None and value1 == None) and (col_id2 != None and value2 == None)):
             return entity1.values[col_id1], entity2.values[col_id2]
-        else if ((col_id1 == None and value1 != None) and (col_id2 == None and value2 != None))
+        elif ((col_id1 == None and value1 != None) and (col_id2 == None and value2 != None)):
             return value1, value2
         else:
             return None, None, 'Invalid WHERE'

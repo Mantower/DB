@@ -17,6 +17,14 @@
     </form>
 </div>
 <br>
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="file" name="filesql">
+        <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
+    </form>
+</div>
+<br>
 <hr>
 {% for info_row in info %}
 {% if info_row.0 %}
@@ -32,6 +40,26 @@
   <div class="panel-body">
     <p>{{ sql }}</p>
     <p class="danger">{{ info_row.2 }}</p>
+    {% if table %}
+    <table class="table">
+      <thead>
+        <tr>
+          {% for col in table.columns %}
+          <th>{{ col.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for ent in table.entities %}
+        <tr>
+          {% for e in ent.values %}
+          <td>{{ e }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
   </div>
 </div>
 {% endfor %}
