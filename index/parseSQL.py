@@ -234,15 +234,20 @@ def def_select(DB, text):
 	join_op = COMMA | (Optional(NATURAL) + Optional(INNER | CROSS | LEFT + OUTER | LEFT | OUTER) + JOIN)
 
 	join_source = Forward()
-	single_source = ( (Group(database_name("database") + "." + table_name("table")) | table_name("table")) + 
-						Optional(Optional(AS) + table_alias("table_alias")) +
-						Optional(INDEXED + BY + index_name("name") | NOT + INDEXED)("index") | 
-					(LPAR + select_stmt + RPAR + Optional(Optional(AS) + table_alias)) | 
-					(LPAR + join_source + RPAR) )
+	single_source = ( Group(delimitedList(Group(database_name("database") + "." + table_name("table")) | table_name("table"))).setResultsName("tables") + 
+						Optional(Optional(AS) + Group(delimitedList(table_alias("table_alias")))).setResultsName("various") )
+	'''+ Optional(INDEXED + BY + index_name("name") | NOT + INDEXED)("index") | 
+	(LPAR + select_stmt + RPAR + Optional(Optional(AS) + table_alias)) | 
+	(LPAR + join_source + RPAR) )
+	'''
 
 	join_source << single_source + ZeroOrMore(join_op + single_source + join_constraint)
 
-	result_column = "*" | table_name + "." + "*" | (expr + Optional(Optional(AS) + column_alias))
+	#here ident is for table name
+	ident   = Word( alphas, alphanums + "_$")
+
+	result_column =  Group(table_name + "."+ ident) | "*" | Group(table_name + "." + "*") | (expr + Optional(Optional(AS) + column_alias)) 
+
 	select_core = (SELECT + Optional(DISTINCT | ALL) + Group(delimitedList(result_column))("columns") +
 					Optional(FROM + join_source) +
 					Optional(WHERE + expr("where_expr")) +
@@ -252,7 +257,6 @@ def def_select(DB, text):
 	select_stmt << (select_core + ZeroOrMore(compound_operator + select_core) +
 					Optional(ORDER + BY + Group(delimitedList(ordering_term))("order_by_terms")) +
 					Optional(LIMIT + (integer + OFFSET + integer | integer + COMMA + integer)))
-
 	# define Oracle comment format, and ignore them
 	simpleSQL = select_stmt
 	oracleSqlComment = "--" + restOfLine
@@ -274,17 +278,19 @@ def process_input_select(DB, tokens):
 	columns = []
 	print(tokens)
 	for i in range(len(tokens)):
-		tables = tokens[i]["table"]
-		print("tables")
-		print(tables)
+		tables = tokens[i]["tables"]
+
 		col_names = tokens[i]["columns"]
 		#Not deal with table name, and "." and SUM and COUNT
-		for k in col_names:
-			columns.append([None, k, None])
+		for k in range(len(col_names)):
+			if(len(col_names[k])==3):
+				columns.append([col_names[k][0], col_names[k][1], None])
+			else:
+				columns.append([None, col_names[k], None])
 		try:
-			table_alias = tokens[i]["table_alias"]
-			for k in range(len(table_alias)):
-				table_names.append([table_alias[k], tables[k]])
+			table_alias = tokens[i]["various"]
+			for k in range(len(table_alias[1])):
+				table_names.append([table_alias[1][k], tables[k]])
 		except:
 			print("No Alias")
 			for k in range(len(tables)):
