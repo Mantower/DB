@@ -234,22 +234,19 @@ def def_select(DB, text):
 	join_op = COMMA | (Optional(NATURAL) + Optional(INNER | CROSS | LEFT + OUTER | LEFT | OUTER) + JOIN)
 
 	join_source = Forward()
-	single_source = ( Group(delimitedList(Group(database_name("database") + "." + table_name("table")) | table_name("table"))).setResultsName("tables") + 
-						Optional(Optional(AS) + Group(delimitedList(table_alias("table_alias")))).setResultsName("various") )
+	select_table =  Group(Group(database_name("database") + "." + table_name("table"))+ Optional(Optional(AS) + table_alias("table_alias")))  | Group(table_name("table")  + Optional(Optional(AS) + table_alias("table_alias")))   
+	#single_source = ( Group(delimitedList( Group(Group(database_name("database") + "." + table_name("table")) | table_name("table")).setResultsName("tables")     +   Optional(Group(AS + table_alias("table_alias"))).setResultsName("various"))))
 	'''+ Optional(INDEXED + BY + index_name("name") | NOT + INDEXED)("index") | 
 	(LPAR + select_stmt + RPAR + Optional(Optional(AS) + table_alias)) | 
 	(LPAR + join_source + RPAR) )
 	'''
-
-	join_source << single_source + ZeroOrMore(join_op + single_source + join_constraint)
-
 	#here ident is for table name
 	ident   = Word( alphas, alphanums + "_$")
 
 	result_column =  Group(table_name + "."+ ident) | "*" | Group(table_name + "." + "*") | (expr + Optional(Optional(AS) + column_alias)) 
 
 	select_core = (SELECT + Optional(DISTINCT | ALL) + Group(delimitedList(result_column))("columns") +
-					Optional(FROM + join_source) +
+					Optional(FROM + Group(delimitedList(select_table))("tables")) +
 					Optional(WHERE + expr("where_expr")) +
 					Optional(GROUP + BY + Group(delimitedList(ordering_term)("group_by_terms")) + 
 							Optional(HAVING + expr("having_expr"))))
@@ -287,23 +284,32 @@ def process_input_select(DB, tokens):
 				columns.append([col_names[k][0], col_names[k][2], None])
 			else:
 				columns.append([None, col_names[k], None])
-		try:
+		
+		for k in range(len(tables)):
+			table = tables["table"]
+			try:
+				table_alias = tables["table_alias"]
+				table_names.append([table_alias, table)
+			except:
+				table_names.append([None, table)
+
+		"""try:
 			table_alias = tokens[i]["various"]
 			for k in range(len(table_alias[1])):
-				print("alias")
-				print(table_alias[1][k])
+				#print("alias")
+				#print(table_alias[1][k])
 				table_names.append([table_alias[1][k], tables[k]])
 		except:
-			print("No Alias")
+			#print("No Alias")
 			for k in range(len(tables)):
-				table_names.append([None, tables[k]])
+				table_names.append([None, tables[k]])"""
 		try:
 			where_expr = tokens[i]["where_expr"]
 			#not consider the . condition
 			predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
 			
 		except:
-			print("No exception")
+			print("No where exception")
 		print("tables:"+str(tables))
 		print("col_names:"+str(columns))
 		print("table_names:"+str(table_names))
