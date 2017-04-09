@@ -286,9 +286,9 @@ def process_input_select(DB, tokens):
 				columns.append([None, col_names[k], None])
 		
 		for k in range(len(tables)):
-			table = tables["table"]
+			table = tables[k]["table"]
 			try:
-				table_alias = tables["table_alias"]
+				table_alias = tables[k]["table_alias"]
 				table_names.append([table_alias, table])
 			except:
 				table_names.append([None, table])
