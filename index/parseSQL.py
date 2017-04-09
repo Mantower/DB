@@ -276,7 +276,6 @@ def process_input_select(DB, tokens):
 	print(tokens)
 	for i in range(len(tokens)):
 		tables = tokens[i]["tables"]
-
 		col_names = tokens[i]["columns"]
 		#Not deal with table name, and "." and SUM and COUNT
 		for k in range(len(col_names)):
@@ -285,10 +284,10 @@ def process_input_select(DB, tokens):
 			else:
 				columns.append([None, col_names[k], None])
 		
-		for k in range(len(tables)):
-			table = tables[k]["table"]
+		for k in tables:
+			table = k["table"][0]
 			try:
-				table_alias = tables[k]["table_alias"]
+				table_alias = k["table_alias"][0]
 				table_names.append([table_alias, table])
 			except:
 				table_names.append([None, table])
