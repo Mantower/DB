@@ -284,12 +284,14 @@ def process_input_select(DB, tokens):
 		#Not deal with table name, and "." and SUM and COUNT
 		for k in range(len(col_names)):
 			if(len(col_names[k])==3):
-				columns.append([col_names[k][0], col_names[k][1], None])
+				columns.append([col_names[k][0], col_names[k][2], None])
 			else:
 				columns.append([None, col_names[k], None])
 		try:
 			table_alias = tokens[i]["various"]
 			for k in range(len(table_alias[1])):
+				print("alias")
+				print(table_alias[1][k])
 				table_names.append([table_alias[1][k], tables[k]])
 		except:
 			print("No Alias")
@@ -298,7 +300,7 @@ def process_input_select(DB, tokens):
 		try:
 			where_expr = tokens[i]["where_expr"]
 			#not consider the . condition
-			predicates.append([None, where_expr[0],None, where_expr[1], None, where_expr[2], None ])
+			predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
 			
 		except:
 			print("No exception")
