@@ -279,7 +279,7 @@ def process_input_select(DB, tokens):
 		col_names = tokens[i]["columns"]
 		#Not deal with table name, and "." and SUM and COUNT
 		for k in range(len(col_names)):
-			if(len(col_names[k])==3):
+			if(len(col_names[k])==3) and col_names[k][1]==".":
 				columns.append([col_names[k][0], col_names[k][2], None])
 			else:
 				columns.append([None, col_names[k], None])
@@ -302,6 +302,17 @@ def process_input_select(DB, tokens):
 			#print("No Alias")
 			for k in range(len(tables)):
 				table_names.append([None, tables[k]])"""
+		
+		try:
+			and_expr = tokens[i]["and_expr"]
+		except:
+			print("No and expression")
+		
+		try: 
+			or_expr = tokens[i]["or_expr"]
+		except:
+			print("no OR expression")
+
 		try:
 			where_expr = tokens[i]["where_expr"]
 			#not consider the . condition
@@ -309,6 +320,7 @@ def process_input_select(DB, tokens):
 			
 		except:
 			print("No where exception")
+
 		print("tables:"+str(tables))
 		print("col_names:"+str(columns))
 		print("table_names:"+str(table_names))
