@@ -246,7 +246,7 @@ def def_select(DB, text):
 	result_column =  Group(table_name + "."+ ident).setResultsName("col") | Group("*").setResultsName("col") | Group(table_name + "." + "*").setResultsName("col") | Group(expr + Optional(Optional(AS) + column_alias)).setResultsName("col") 
 	whereRvalprev = Group(Word(alphas,alphanums+"_$" ) + Optional("." +Word(alphas,alphanums+"_$" )))
 	whereRvalforw = Group(Word(alphas,alphanums+"_$" ) + Optional("." +Word(alphas,alphanums+"_$" ))) | Group(quotedString) | Group(Word(nums))
-	whereRval = whereRvalprev + Optional("=" + whereRvalforw)
+	whereRval = whereRvalprev + Optional("=" + whereRvalforw | ">" + whereRvalforw|"<" + whereRvalforw|"<>" + whereRvalforw)
 	counSumRval =  Group(table_name + "."+ ident) | "*" | Group(table_name + "." + "*") |  Group(table_name)
 	counSum = Group(SUM + "("+ counSumRval.setResultsName("agre_value") + ")").setResultsName("agre_expr") | Group(COUNT + "("+ counSumRval.setResultsName("agre_value") + ")").setResultsName("agre_expr")
 
@@ -360,6 +360,9 @@ def process_input_select(DB, tokens):
 	for i in range(len(tokens)):
 		tables = tokens[i]["tables"]
 		col_names = tokens[i]["columns"]
+		print("++++++++++++++++++++++++++++++")
+		print(col_names.dump())
+		
 		#Not deal with table name, and "." and SUM and COUNT
 		try:
 			agre = col_names["agre_expr"]
@@ -372,10 +375,13 @@ def process_input_select(DB, tokens):
 			print("no aggregation function")
 		try:
 			col = col_names["col"]
+			print("+++++++++++++++++++++++++++++++")
+			print(len(col))
+			print("____________")
 			if len(col)==3 and col[1]=='.':				
-				columns.append([name[0], name[2],None])
+				columns.append([col[0], col[2],None])
 			elif len(col) == 1:
-				columns.append([None, name[0],None])	
+				columns.append([None, col[0],None])	
 		except:
 			print("no col selected")
 		'''	
