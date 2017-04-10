@@ -360,10 +360,11 @@ def process_input_select(DB, tokens):
 	for i in range(len(tokens)):
 		tables = tokens[i]["tables"]
 		col_names = tokens[i]["columns"]
-		print("++++++++++++++++++++++++++++++")
+
 		print(col_names.dump())
 		
 		#Not deal with table name, and "." and SUM and COUNT
+		'''
 		try:
 			agre = col_names["agre_expr"]
 			name = agre["agre_value"]
@@ -381,13 +382,48 @@ def process_input_select(DB, tokens):
 			elif len(col) == 1:
 				columns.append([None, col[0],None])	
 		except:
-			print("no col selected")
-		'''	
-		for k in range(len(col_names)):
-			if(len(col_names[k])==3) and col_names[k][1]==".":
-				columns.append([col_names[k][0], col_names[k][2], None])
+			print("no col selected")'''
+		
+		for k in col_names:
+			if(k[0]=="COUNT" or k[0]=="SUM"):
+				if len(k[2])==3:
+					if k[2][1]=='.':
+						columns.append([k[2][0], k[2][2], k[0]])
+						print("in count with dot")
+					else:
+						print("in count three character but no dot")
+						columns.append([None, k[2][0], k[0]])
+				else:
+					columns.append([None, k[2][0], k[0]])
 			else:
-				columns.append([None, col_names[k], None])'''
+				if len(k) == 3:
+					if k[1] == ".":
+						columns.append([k[0], k[2], None])
+					else:
+						columns.append([None, k[0], None])	
+				else:
+					columns.append([None, k[0], None])
+		'''for k in col_names:
+            if k[0].lower()=="count" or k[0].lower()=="sum":
+                if len(k[2])==3:
+                    if k[2][1] == ".":
+						columns.append([k[2][0], k[2][2], k[0]])
+                        print("in count with dot")
+                    else:
+                        print("in count three character but no dot")
+						columns.append(None, k[2][0], k[0]])
+                else:
+                    print("in count only column")
+            else:
+                if len(k) == 3:
+                    if k[1] == ".":
+                        print("with dot")
+						columns.append([k[0], k[2], None])
+                    else:
+                        print("three character but no dot")
+						columns.append(None, k[2], None])
+                else:
+                    print("only column")'''
 		
 		for k in tables:
 			table = k["table"][0]
