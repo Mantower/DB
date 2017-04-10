@@ -238,6 +238,7 @@ class Database:
         # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
         # Note: which table is the sequence in the query, not the real table id
+        # converted column information from column_names for future use
         column_infos = []
         # [Columns]
         # The column objects
@@ -302,11 +303,19 @@ class Database:
                         sub_entity[idx] = fst_e.values[cid]
                     result.insert(sub_entity)
 
+        ####### TODO: implement Aggregation function ########
+        #### generate new table from the result table above ####
+        #### Maybe assign the table back to result variable when all work are done?####
         aggr_cols = []
         aggr_entities = []
+        # loop for possible serveral aggregations
         for col_info in column_infos:
             # apply aggregation function
+            # Can utilize Aggregation Class defined below
             pass
+
+
+        ######## END TODO #########
 
         return True, result, None 
 
@@ -536,6 +545,11 @@ class VarcharConstraint:
 
 class Aggregation:
     def __init__(self, func_name):
+        """The init function of Aggregation. Set the function to apply on later.
+        Args:
+            func_name (String): The aggregation to apply. 
+        """
+        # map functions from String to functions
         funcs = {
             'sum': self.summation,
             'count': self.count,
@@ -543,19 +557,25 @@ class Aggregation:
         }
         self.func = funcs[func_name]
 
-    def aggregate(self, data):
-        return self.func(data)
+    def aggregate(self, table):
+        """To apply the function on table. 
+        Args:
+            table (Table): The table to apply aggregation function.
+        Returns:
+            Table|Value: ?? Not sure here
+        """
+        return self.func(table)
 
-    def summation(self, data):
-        return sum(data)
+    def summation(self, table):
+        return sum(table)
 
-    def count(self, data):
-        return len(data)
+    def count(self, table):
+        return len(table)
       
 class Predicate:
     def __init__(self, rule1, op, rule2):
-        """The init function of Predicate. var contains value or table and column name. 
-           op is the operation to perform on two vars.
+        """The init function of Predicate. rule contains value or table and column name. 
+           op is the operation to perform on two rules.
         Args:
             rule1 (String, String, String):
                 (Table id, column id, value)
