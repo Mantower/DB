@@ -160,9 +160,9 @@ def def_select(DB, text):
 	select_stmt = Forward().setName("select statement")
 
 	# keywords
-	(OR, UNION, ALL, AND, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
+	(COUNT, SUM, OR, UNION, ALL, AND, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
 	CROSS, LEFT, OUTER, JOIN, AS, INDEXED, NOT, SELECT, DISTINCT, FROM, WHERE, GROUP, BY,
-	HAVING, ORDER, BY, LIMIT, OFFSET) =  map(CaselessKeyword, """OR, UNION, ALL, AND, INTERSECT, 
+	HAVING, ORDER, BY, LIMIT, OFFSET) =  map(CaselessKeyword, """COUNT, SUM, OR, UNION, ALL, AND, INTERSECT, 
 	EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, CROSS, LEFT, OUTER, JOIN, AS, INDEXED, NOT, SELECT, 
 	DISTINCT, FROM, WHERE, GROUP, BY, HAVING, ORDER, BY, LIMIT, OFFSET""".replace(",","").split())
 	(CAST, ISNULL, NOTNULL, NULL, IS, BETWEEN, ELSE, END, CASE, WHEN, THEN, EXISTS,
@@ -170,7 +170,7 @@ def def_select(DB, text):
 	CURRENT_TIMESTAMP) = map(CaselessKeyword, """CAST, ISNULL, NOTNULL, NULL, IS, BETWEEN, ELSE, 
 	END, CASE, WHEN, THEN, EXISTS, COLLATE, IN, LIKE, GLOB, REGEXP, MATCH, ESCAPE, 
 	CURRENT_TIME, CURRENT_DATE, CURRENT_TIMESTAMP""".replace(",","").split())
-	keyword = MatchFirst((OR, UNION, ALL, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
+	keyword = MatchFirst((COUNT, SUM,OR, UNION, ALL, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
 	CROSS, LEFT, OUTER, JOIN, AS, INDEXED, NOT, SELECT, DISTINCT, FROM, WHERE, GROUP, BY,
 	HAVING, ORDER, BY, LIMIT, OFFSET, CAST, ISNULL, NOTNULL, NULL, IS, BETWEEN, ELSE, END, CASE, WHEN, THEN, EXISTS,
 	COLLATE, IN, LIKE, GLOB, REGEXP, MATCH, ESCAPE, CURRENT_TIME, CURRENT_DATE, 
@@ -243,11 +243,14 @@ def def_select(DB, text):
 	#here ident is for table name
 	ident   = Word( alphas, alphanums + "_$")
 
-	result_column =  Group(table_name + "."+ ident) | "*" | Group(table_name + "." + "*") | (expr + Optional(Optional(AS) + column_alias)) 
+	result_column =  Group(table_name + "."+ ident).setResultsName("col") | Group("*").setResultsName("col") | Group(table_name + "." + "*").setResultsName("col") | Group(expr + Optional(Optional(AS) + column_alias)).setResultsName("col") 
 	whereRvalprev = Group(Word(alphas,alphanums+"_$" ) + Optional("." +Word(alphas,alphanums+"_$" )))
 	whereRvalforw = Group(Word(alphas,alphanums+"_$" ) + Optional("." +Word(alphas,alphanums+"_$" ))) | Group(quotedString) | Group(Word(nums))
 	whereRval = whereRvalprev + Optional("=" + whereRvalforw)
-	select_core = (SELECT + Optional(DISTINCT | ALL) + Group(delimitedList(result_column))("columns") +
+	counSumRval =  Group(table_name + "."+ ident) | "*" | Group(table_name + "." + "*") |  Group(table_name)
+	counSum = Group(SUM + "("+ counSumRval.setResultsName("agre_value") + ")").setResultsName("agre_expr") | Group(COUNT + "("+ counSumRval.setResultsName("agre_value") + ")").setResultsName("agre_expr")
+
+	select_core = (SELECT + Optional(DISTINCT | ALL) + Group(delimitedList(result_column|counSum))("columns") +
 					Optional(FROM + Group(delimitedList(select_table))("tables")) +
 					Optional(WHERE + whereRval.setResultsName("where_expr") ) +
 					Optional(AND + whereRval.setResultsName("and_expr")) + 
@@ -358,11 +361,29 @@ def process_input_select(DB, tokens):
 		tables = tokens[i]["tables"]
 		col_names = tokens[i]["columns"]
 		#Not deal with table name, and "." and SUM and COUNT
+		try:
+			agre = col_names["agre_expr"]
+			name = agre["agre_value"]
+			if len(name)==3 and name[1]=='.':				
+				columns.append([name[0], name[2],agre[0]])
+			elif len(name) == 1:
+				columns.append([None, name[0],agre[0]])			
+		except:
+			print("no aggregation function")
+		try:
+			col = col_names["col"]
+			if len(col)==3 and col[1]=='.':				
+				columns.append([name[0], name[2],None])
+			elif len(col) == 1:
+				columns.append([None, name[0],None])	
+		except:
+			print("no col selected")
+		'''	
 		for k in range(len(col_names)):
 			if(len(col_names[k])==3) and col_names[k][1]==".":
 				columns.append([col_names[k][0], col_names[k][2], None])
 			else:
-				columns.append([None, col_names[k], None])
+				columns.append([None, col_names[k], None])'''
 		
 		for k in tables:
 			table = k["table"][0]
