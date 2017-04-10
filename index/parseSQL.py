@@ -276,23 +276,39 @@ def process_where_expression(arrayContent):
 		else:
 			return [None, arrayContent[0][0],None], None, [None, None, None ]
 	elif len(arrayContent) == 3:
-		word1 = arrayContent[0]
-		word2 = arrayContent[2]
 		pre1 = None
-		Pre2 = None
+		pre2 = None
 		value1 = None
 		forw1 = None
 		forw2 = None
 		value2 = None
+		word1 = ""
+		word2 = ""
+		print("where parameters:3")
+
+		word1 = arrayContent[0]
+		word2 = arrayContent[2]
+		print(len(word1))
+		
+		#print("2:"+word2)
+	
+		
+		
 		#word1 type will be table.column , no value
-		if len(word1[0]) == 3 and word1[0][1]=='.':
-			pre1 = word1[0]
-			forw1 = word1[2]
+		print(word1)
+		if len(word1) == 3:
+			if word1[1]=='.':
+				pre1 = word1[0]
+				forw1 = word1[2]
+			else:
+				forw1 = word1
 		else:
 			try:
 				# int value: 123
 				value1 = int(word1[0])
 			except:
+				print("not int")
+				print(word1[0][0])
 				# string value:"abc" 
 				if word1[0][0] == '"' or word1[0][0] == "'":
 					value1 = word1[0]
@@ -300,10 +316,13 @@ def process_where_expression(arrayContent):
 				else:
 					forw1 = word1[0]
 
-			
+		print("11 done")
 		if len(word2) == 3:
-			pre2 = word2[0]
-			forw2 = word2[2]
+			if word2[1] == '.':
+				pre2 = word2[0]
+				forw2 = word2[2]
+			else:
+				forw2 = word2
 		else:
 			try:
 				value2 = int(word2[0])
@@ -312,13 +331,19 @@ def process_where_expression(arrayContent):
 					value2 = word2[0]
 				else:
 					forw2 = word2[0]
-
-		return [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]
-
-
-
+		print("2 done")
+		#result = [ [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]]
+		print(pre1)
+		print(forw1)
+		print(value1)
 		
-			
+		print(pre2)
+
+		print(forw2)
+		print(value2)
+		print(arrayContent[1])
+		#print(result)
+		return [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]
 	else:
 		return "Error: two words after where expression"
 
@@ -360,13 +385,17 @@ def process_input_select(DB, tokens):
 			#print("No Alias")
 			for k in range(len(tables)):
 				table_names.append([None, tables[k]])"""
+		#Where expression
 		try:
+			#tokens[i]["tables"]
 			where_expr = tokens[i]["where_expr"]
-			ans = process_where_expression(where_expr)
-			predicates.append(ans)
+			#print("____")
+			#print(where_expr)
+			ans1 , ans2, ans3 = process_where_expression(where_expr)
+			#predicates.append(ans)
 			#not consider the . condition
 		except:
-			print("No where exception")
+			print("No where expresstion")
 
 		try:
 			and_expr = tokens[i]["and_expr"]
