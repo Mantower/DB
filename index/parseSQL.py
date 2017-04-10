@@ -265,6 +265,59 @@ def def_select(DB, text):
 		return process_input_select(DB,tokens)
 	else:
 		return success, tokens, None
+def process_where_expression(arrayContent):
+	if len(arrayContent) == 1:
+		if(len(arrayContent[0])==3 and arrayContent[0][1]=='.'):
+			return [arrayContent[0][1], arrayContent[0][2],None], None, [None, None, None ]
+		else:
+			return [None, arrayContent[0][0],None], None, [None, None, None ]
+	elif len(arrayContent) == 3:
+		word1 = arrayContent[0]
+		word2 = arrayContent[2]
+		pre1 = None
+		Pre2 = None
+		value1 = None
+		forw1 = None
+		forw2 = None
+		value2 = None
+		#word1 type will be table.column , no value
+		if len(word1[0]) == 3 and word1[0][1]=='.':
+			pre1 = word1[0]
+			forw1 = word1[2]
+		else:
+			try:
+				# int value: 123
+				value1 = int(word1[0])
+			except:
+				# string value:"abc" 
+				if word1[0][0] == '"' or word1[0][0] == "'":
+					value1 = word1[0]
+				# colun , no value
+				else:
+					forw1 = word1[0]
+
+			
+		if len(word2) == 3:
+			pre2 = word2[0]
+			forw2 = word2[2]
+		else:
+			try:
+				value2 = int(word2[0])
+			except:
+				if word2[0][0] == '"' or word2[0][0] == "'":
+					value2 = word2[0]
+				else:
+					forw2 = word2[0]
+
+		return [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]
+
+
+
+		
+			
+	else:
+		return "Error: two words after where expression"
+
 def process_input_select(DB, tokens):
 	col_names = []
 	tables = []
@@ -273,6 +326,7 @@ def process_input_select(DB, tokens):
 	where_expr = []
 	predicates = []
 	columns = []
+	operator = None
 	print(tokens)
 	for i in range(len(tokens)):
 		tables = tokens[i]["tables"]
@@ -302,30 +356,40 @@ def process_input_select(DB, tokens):
 			#print("No Alias")
 			for k in range(len(tables)):
 				table_names.append([None, tables[k]])"""
-		
+		try:
+			where_expr = tokens[i]["where_expr"]
+			ans = process_where_expression(where_expr)
+			predicates.append(ans)
+			#not consider the . condition
+		except:
+			print("No where exception")
+
 		try:
 			and_expr = tokens[i]["and_expr"]
+			operator = "AND"
+			ans = process_where_expression(and_expr)
+			predicates.append(ans)
+			#predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
+	
 		except:
 			print("No and expression")
-		
+			
 		try: 
 			or_expr = tokens[i]["or_expr"]
+			operator = "OR"
+			ans = process_where_expression(or_expr)
+			predicates.append(ans)
+			
 		except:
 			print("no OR expression")
 
-		try:
-			where_expr = tokens[i]["where_expr"]
-			#not consider the . condition
-			predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
-			
-		except:
-			print("No where exception")
+		
 
 		print("tables:"+str(tables))
 		print("col_names:"+str(columns))
 		print("table_names:"+str(table_names))
 		print("predicates:"+str(predicates))
-		return DB.select(columns, table_names, predicates, operator=None)
+		return DB.select(columns, table_names, predicates, operator)
 		
 
 
