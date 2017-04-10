@@ -311,7 +311,7 @@ def process_where_expression(arrayContent):
 				print(word1[0][0])
 				# string value:"abc" 
 				if word1[0][0] == '"' or word1[0][0] == "'":
-					value1 = word1[0]
+					value1 = word1[0][1:-1]
 				# colun , no value
 				else:
 					forw1 = word1[0]
@@ -328,7 +328,7 @@ def process_where_expression(arrayContent):
 				value2 = int(word2[0])
 			except:
 				if word2[0][0] == '"' or word2[0][0] == "'":
-					value2 = word2[0]
+					value2 = word2[0][1:-1]
 				else:
 					forw2 = word2[0]
 		
@@ -375,9 +375,7 @@ def process_input_select(DB, tokens):
 			print("no aggregation function")
 		try:
 			col = col_names["col"]
-			print("+++++++++++++++++++++++++++++++")
-			print(len(col))
-			print("____________")
+			
 			if len(col)==3 and col[1]=='.':				
 				columns.append([col[0], col[2],None])
 			elif len(col) == 1:
