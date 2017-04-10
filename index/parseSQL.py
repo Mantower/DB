@@ -160,9 +160,9 @@ def def_select(DB, text):
 	select_stmt = Forward().setName("select statement")
 
 	# keywords
-	(UNION, ALL, AND, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
+	(OR, UNION, ALL, AND, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
 	CROSS, LEFT, OUTER, JOIN, AS, INDEXED, NOT, SELECT, DISTINCT, FROM, WHERE, GROUP, BY,
-	HAVING, ORDER, BY, LIMIT, OFFSET) =  map(CaselessKeyword, """UNION, ALL, AND, INTERSECT, 
+	HAVING, ORDER, BY, LIMIT, OFFSET) =  map(CaselessKeyword, """OR, UNION, ALL, AND, INTERSECT, 
 	EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, CROSS, LEFT, OUTER, JOIN, AS, INDEXED, NOT, SELECT, 
 	DISTINCT, FROM, WHERE, GROUP, BY, HAVING, ORDER, BY, LIMIT, OFFSET""".replace(",","").split())
 	(CAST, ISNULL, NOTNULL, NULL, IS, BETWEEN, ELSE, END, CASE, WHEN, THEN, EXISTS,
@@ -170,7 +170,7 @@ def def_select(DB, text):
 	CURRENT_TIMESTAMP) = map(CaselessKeyword, """CAST, ISNULL, NOTNULL, NULL, IS, BETWEEN, ELSE, 
 	END, CASE, WHEN, THEN, EXISTS, COLLATE, IN, LIKE, GLOB, REGEXP, MATCH, ESCAPE, 
 	CURRENT_TIME, CURRENT_DATE, CURRENT_TIMESTAMP""".replace(",","").split())
-	keyword = MatchFirst((UNION, ALL, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
+	keyword = MatchFirst((OR, UNION, ALL, INTERSECT, EXCEPT, COLLATE, ASC, DESC, ON, USING, NATURAL, INNER, 
 	CROSS, LEFT, OUTER, JOIN, AS, INDEXED, NOT, SELECT, DISTINCT, FROM, WHERE, GROUP, BY,
 	HAVING, ORDER, BY, LIMIT, OFFSET, CAST, ISNULL, NOTNULL, NULL, IS, BETWEEN, ELSE, END, CASE, WHEN, THEN, EXISTS,
 	COLLATE, IN, LIKE, GLOB, REGEXP, MATCH, ESCAPE, CURRENT_TIME, CURRENT_DATE, 
@@ -244,10 +244,14 @@ def def_select(DB, text):
 	ident   = Word( alphas, alphanums + "_$")
 
 	result_column =  Group(table_name + "."+ ident) | "*" | Group(table_name + "." + "*") | (expr + Optional(Optional(AS) + column_alias)) 
-
+	whereRvalprev = Group(Word(alphas,alphanums+"_$" ) + Optional("." +Word(alphas,alphanums+"_$" )))
+	whereRvalforw = Group(Word(alphas,alphanums+"_$" ) + Optional("." +Word(alphas,alphanums+"_$" ))) | Group(quotedString) | Group(Word(nums))
+	whereRval = whereRvalprev + Optional("=" + whereRvalforw)
 	select_core = (SELECT + Optional(DISTINCT | ALL) + Group(delimitedList(result_column))("columns") +
 					Optional(FROM + Group(delimitedList(select_table))("tables")) +
-					Optional(WHERE + expr("where_expr")) +
+					Optional(WHERE + whereRval.setResultsName("where_expr") ) +
+					Optional(AND + whereRval.setResultsName("and_expr")) + 
+					Optional(OR + whereRval.setResultsName("or_expr")) +
 					Optional(GROUP + BY + Group(delimitedList(ordering_term)("group_by_terms")) + 
 							Optional(HAVING + expr("having_expr"))))
 
