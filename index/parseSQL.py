@@ -284,14 +284,11 @@ def process_where_expression(arrayContent):
 		value2 = None
 		word1 = ""
 		word2 = ""
-		print("where parameters:3")
+		
 
 		word1 = arrayContent[0]
 		word2 = arrayContent[2]
 		print(len(word1))
-		
-		#print("2:"+word2)
-	
 		
 		
 		#word1 type will be table.column , no value
@@ -316,7 +313,7 @@ def process_where_expression(arrayContent):
 				else:
 					forw1 = word1[0]
 
-		print("11 done")
+	
 		if len(word2) == 3:
 			if word2[1] == '.':
 				pre2 = word2[0]
@@ -331,9 +328,9 @@ def process_where_expression(arrayContent):
 					value2 = word2[0]
 				else:
 					forw2 = word2[0]
-		print("2 done")
+		
 		#result = [ [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]]
-		print(pre1)
+		'''print(pre1)
 		print(forw1)
 		print(value1)
 		
@@ -341,9 +338,9 @@ def process_where_expression(arrayContent):
 
 		print(forw2)
 		print(value2)
-		print(arrayContent[1])
+		print(arrayContent[1])'''
 		#print(result)
-		return [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]
+		return [[pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]]
 	else:
 		return "Error: two words after where expression"
 
@@ -391,8 +388,8 @@ def process_input_select(DB, tokens):
 			where_expr = tokens[i]["where_expr"]
 			#print("____")
 			#print(where_expr)
-			ans1 , ans2, ans3 = process_where_expression(where_expr)
-			#predicates.append(ans)
+			ans = process_where_expression(where_expr)
+			predicates.append(ans)
 			#not consider the . condition
 		except:
 			print("No where expresstion")
