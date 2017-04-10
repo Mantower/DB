@@ -108,6 +108,66 @@ class Database:
             if t.name == name:
                 return t
         return None
+        
+    def get_column_by_names(self, prefix=None, cn=None, aggr=None, table_aliases=None, tables=None):
+        """
+        Helper function that converts column name into column id and Column objects.
+        Args:
+            prefix (String): Table name prefix of the column.
+            cn (String): Column name to convert.
+            aggr (String): Aggregation function to convert.
+            table_aliases ({String:Int}): Dictionary of alias and index value of SQL sequence.
+            tables ({String:Int}): Dictionary of table name and index value in DB.
+
+        Returns:
+            (Int, Int, Aggregation): (which table, column id, aggregation function)
+                which table: index value of SQL sequence.
+                column id: index value of the column in the table.
+                aggregation function: the Aggregation objects.
+            Column: The Column object.
+            String: The error message. None if no error.
+        """
+        # prefix provided
+        if prefix:
+            # convert prefix into table id
+            tid = None
+            try:
+                tid = tables[prefix]
+            except:
+                return None, None, "No table alias named " + prefix + "."
+            t = self.get_table(tid)
+
+            # convert col_name into column id
+            cid = None
+            try:
+                cid = t.col_name2id[cn]
+            except:
+                return None, None, "No column named " + cn + "."
+
+            # Todo: convert aggr into object
+            col_info = (table_aliases[prefix], cid, Aggregation(aggr))
+            col_obj = t.columns[cid]
+            return col_info, col_obj, None
+        # prefix not provided
+        else:
+            col_info = None
+            col_obj = None
+            # look into all tables and see if there's column named cn
+            for t_alias, tid in tables.iteritems():
+                t = self.get_table(tid)
+                try:
+                    cid = t.col_name2id[cn]
+                    # Todo: convert aggr into object
+                    col_info = (table_aliases[t_alias], cid, Aggregation(aggr))
+                    col_obj = t.columns[cid]
+                    break
+                except:
+                    pass
+            # col not found
+            if not col_obj:
+                return None, None, "No column named " + cn + "."
+            return col_info, col_obj, None
+
     def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
         All the inputs should be String, the function will convert strings into objects.
@@ -150,7 +210,7 @@ class Database:
               Or should it be parsed in parser and passed in miniDB as function?
         """
 
-        '''Convert table names to table id'''
+        ''' Convert table names to table id'''
         # tables stores ('Tablealias':tableid)
         tables = {}
         tables_obj = []
@@ -174,11 +234,13 @@ class Database:
                 return False, None, "No table named " + tn + "." 
             index += 1
         
-        '''convert column names to column id'''
+        ''' Convert column names to column id'''
         # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
         # Note: which table is the sequence in the query, not the real table id
         column_infos = []
+        # [Columns]
+        # The column objects
         column_objs = []
         # [[None, '*', None]] for select * from table case.
         if column_names[0][1] == '*':
@@ -190,51 +252,31 @@ class Database:
             # cn for column name
             # aggr for aggregation function name
             for prefix, cn, aggr in column_names:
-                # prefix provided
-                if prefix:
-                    # convert prefix into table id
-                    tid = None
-                    try:
-                        tid = tables[prefix]
-                    except:
-                        return False, None, "No table alias named " + prefix + "."
-                    t = self.get_table(tid)
-
-                    # convert col_name into column id
-                    cid = None
-                    try:
-                        cid = t.col_name2id[cn]
-                    except:
-                        return False, None, "No column named " + cn + "."
-
-                    # Todo: convert aggr into object
-                    col_info = (aliases[prefix], cid, aggr)
+                col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
+                if not err_msg:
                     column_infos.append(col_info)
-                    column_objs.append(t.columns[cid])
-
-                # prefix not provided
+                    column_objs.append(col_obj)
                 else:
-                    col_info = None
-                    col = None
-                    # look into all tables and see if there's column named cn
-                    for t_alias, tid in tables.iteritems():
-                        t = self.get_table(tid)
-                        try:
-                            cid = t.col_name2id[cn]
-                            col_info = (aliases[t_alias], cid, aggr)
-                            col = t.columns[cid]
-                            break
-                        except:
-                            pass
-                    # col not found
-                    if not col_info:
-                        return False, None, "No column named " + cn + "."
-                    column_infos.append(col_info)
-                    column_objs.append(col)
+                    return False, None, err_msg
+
         ''' Convert predicate to predicate objects '''
         preds = []
-        for pred1, op, pred2 in predicates:
-            preds.append(Predicate(pred1, op, pred2))
+        for rule1, op, rule2 in predicates:
+            rules = [None] * 2
+            for idx, (prefix, cn, value) in enumerate([rule1, rule2]):
+                # with table name and column name
+                if cn:
+                    col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, value, aliases, tables)
+                # with value
+                else:
+                    col_info = (None, None, value)
+
+                if not err_msg:
+                    rules[idx] = col_info
+                else:
+                    return False, None, err_msg
+            
+            preds.append(Predicate(rules[0], op, rules[1]))
 
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
@@ -243,7 +285,7 @@ class Database:
         for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
-                    if self.predicate_check(preds, operator,fst_e, snd_e): 
+                    if self.predicate_check(preds, operator, fst_e, snd_e): 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
@@ -260,6 +302,12 @@ class Database:
                         sub_entity[idx] = fst_e.values[cid]
                     result.insert(sub_entity)
 
+        aggr_cols = []
+        aggr_entities = []
+        for col_info in column_infos:
+            # apply aggregation function
+            pass
+
         return True, result, None 
 
     def predicate_check(self, predicates, operator, entity1, entity2):
@@ -267,8 +315,11 @@ class Database:
             return True
         if operator == None:
             return predicates[0].evaluate_predicates(entity1, entity2)
-        else: 
-            return Operator.str2dt[operator](predicates[0].evaluate_predicates(entity1, entity2),predicates[1].evaluate_predicates(entity1, entity2))
+        else:
+            operator = operator.lower()
+            bool1 = predicates[0].evaluate_predicates(entity1, entity2)
+            bool2 = predicates[1].evaluate_predicates(entity1, entity2)
+            return Operator.str2dt[operator](bool1, bool2)
 
 class Datatype():
     INT = 1
@@ -483,19 +534,17 @@ class VarcharConstraint:
             return False, "Value " + str(value) + " exceed maximum length " + str(self.max_len) + "."
         return True, None
 
-class Aggragation:
-    def __init(self):
-        pass
-
-    @staticmethod
-    def aggregate(self, type, data):
-
+class Aggregation:
+    def __init__(self, func_name):
         funcs = {
-            'sum': summation,
-            'count' : count
+            'sum': self.summation,
+            'count': self.count,
+            None: id
         }
+        self.func = funcs[func_name]
 
-        return funcs[type](data)
+    def aggregate(self, data):
+        return self.func(data)
 
     def summation(self, data):
         return sum(data)
@@ -504,54 +553,60 @@ class Aggragation:
         return len(data)
       
 class Predicate:
-    def __init__(self, predicates1, op, predicates2):
+    def __init__(self, rule1, op, rule2):
         """The init function of Predicate. var contains value or table and column name. 
            op is the operation to perform on two vars.
         Args:
-            var1 ([int|String, ]): The value to test.
+            rule1 (String, String, String):
+                (Table id, column id, value)
+                First Column or Value of the predicates
+            op (String): The operation to perform.
+            rule2 (String, String, String):
+                (Table id, column id, value)
+                Second Column or Value of the predicates
         Returns:
             bool: The return value. True for valid, False otherwise.
             String: The error message. None if no error.
         """
-        self.tab_id1, self.col_id1, self.value1 = predicates1
-        self.tab_id2, self.col_id2, self.value2 = predicates2
+        self.rule1 = rule1
+        self.rule2 = rule2
         self.op = op
-        
-        funcs = {
-            '=' : equal,
-            '>' : greater_than,
-            '<' : less_than,
-            '<>' : not_equal
-        }
-    
 
     def evaluate_predicates(self, entity1, entity2):
-        var1, var2, err_msg = convert(entity1, entity2)
-        return funcs[op](var1, var2)
+        var1 = self.convert(entity1, self.rule1)
+        var2 = self.convert(entity2, self.rule2)
+        funcs = {
+            '=' : self.equal,
+            '>' : self.greater_than,
+            '<' : self.less_than,
+            '<>' : self.not_equal
+        }
+        if var2 is None:
+            return var1
+        if type(var1) != type(var2):
+            return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
+        return funcs[self.op](var1, var2)
 
-    def convert(self, entity1, entity2):
-        if((tab_id1 == None and col_id1 == None and value1 != None) and (col_id2 != None and value2 == None)):
-            return value1, entity2.values[col_id2]
-        elif ((col_id1 != None and value1 == None) and (tab_id2 == None and col_id2 == None and value2 != None)):
-            return entity1.values[col_id1], value2
-        elif ((col_id1 != None and value1 == None) and (col_id2 != None and value2 == None)):
-            return entity1.values[col_id1], entity2.values[col_id2]
-        elif ((col_id1 == None and value1 != None) and (col_id2 == None and value2 != None)):
-            return value1, value2
+    # convert entity to single value
+    def convert(self, entity, rule):
+        # table id, column id, value
+        tid, cid, value = rule
+        if tid is None and cid is None:
+            return value
         else:
-            return None, None, 'Invalid WHERE'
+            return entity.values[cid]
 
-    def equal(self, entity1, entity2):
-        return entity1 == entity2
+    def equal(self, val1, val2):
+        return val1 == val2
 
-    def greater_than(self, entity1, entity2):
-        return entity1 > entity2
+    def greater_than(self, val1, val2):
+        return val1 > val2
 
-    def less_than(self, entity1, entity2):
-        return entity1 < entity2
+    def less_than(self, val1, val2):
+        return val1 < val2
 
-    def not_equal(self, entity1, entity2):
-        return entity1 != entity2
+    def not_equal(self, val1, val2):
+        return val1 != val2
 
 """
 Temporary functions that insert fake data into views
