@@ -381,8 +381,12 @@ class Database:
             return predicates[0].evaluate_predicates(entity1, entity2)
         else:
             operator = operator.lower()
-            bool1 = predicates[0].evaluate_predicates(entity1, entity2)
-            bool2 = predicates[1].evaluate_predicates(entity1, entity2)
+            bool1, err_msg = predicates[0].evaluate_predicates(entity1, entity2)
+            if err_msg:
+                return False, err_msg
+            bool2, err_msg = predicates[1].evaluate_predicates(entity1, entity2)
+            if err_msg:
+                return False, err_msg
             return Operator.str2dt[operator](bool1, bool2), None
 
 class Datatype():
@@ -675,19 +679,19 @@ class Predicate:
         self.op = op
 
     def evaluate_predicates(self, entity1, entity2):
-        var1 = self.convert(entity1, entity2, self.rule1)
-        var2 = self.convert(entity1, entity2, self.rule2)
+        val1 = self.convert(entity1, entity2, self.rule1)
+        val2 = self.convert(entity1, entity2, self.rule2)
         funcs = {
             '=' : self.equal,
             '>' : self.greater_than,
             '<' : self.less_than,
             '<>' : self.not_equal
         }
-        if var2 is None:
-            return var1
-        if isinstance(var1, basestring) != isinstance(var2, basestring):
-            return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
-        return funcs[self.op](var1, var2)
+        if val2 is None:
+            return val1, None
+        if isinstance(val1, basestring) != isinstance(val2, basestring):
+            return False, "Type mismatch in Where for " + str(val1) + " and " + str(val2) 
+        return funcs[self.op](val1, val2)
 
     # convert entity to single value
     def convert(self, entity1, entity2, rule):
@@ -702,16 +706,20 @@ class Predicate:
                 return entity2.values[cid]
 
     def equal(self, val1, val2):
-        return val1 == val2
+        return val1 == val2, None
 
     def greater_than(self, val1, val2):
-        return val1 > val2
+        if isinstance(val1, basestring) or isinstance(val2, basestring):
+            return False, "Cannot apply > on " + str(val1) + " and " + str(val2)
+        return val1 > val2, None
 
     def less_than(self, val1, val2):
-        return val1 < val2
+        if isinstance(val1, basestring) or isinstance(val2, basestring):
+            return False, "Cannot apply < on " + str(val1) + " and " + str(val2)
+        return val1 < val2, None
 
     def not_equal(self, val1, val2):
-        return val1 != val2
+        return val1 != val2, None
 
 """
 Temporary functions that insert fake data into views
