@@ -679,19 +679,19 @@ class Predicate:
         self.op = op
 
     def evaluate_predicates(self, entity1, entity2):
-        var1 = self.convert(entity1, entity2, self.rule1)
-        var2 = self.convert(entity1, entity2, self.rule2)
+        val1 = self.convert(entity1, entity2, self.rule1)
+        val2 = self.convert(entity1, entity2, self.rule2)
         funcs = {
             '=' : self.equal,
             '>' : self.greater_than,
             '<' : self.less_than,
             '<>' : self.not_equal
         }
-        if var2 is None:
-            return var1, None
-        if isinstance(var1, basestring) != isinstance(var2, basestring):
-            return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
-        return funcs[self.op](var1, var2)
+        if val2 is None:
+            return val1, None
+        if isinstance(val1, basestring) != isinstance(val2, basestring):
+            return False, "Type mismatch in Where for " + str(val1) + " and " + str(val2) 
+        return funcs[self.op](val1, val2)
 
     # convert entity to single value
     def convert(self, entity1, entity2, rule):
@@ -709,13 +709,13 @@ class Predicate:
         return val1 == val2, None
 
     def greater_than(self, val1, val2):
-        if isinstance(var1, basestring) or isinstance(var2, basestring):
-            return False, "Cannot apply > on " + str(var1) + " and " + str(var2)
+        if isinstance(val1, basestring) or isinstance(val2, basestring):
+            return False, "Cannot apply > on " + str(val1) + " and " + str(val2)
         return val1 > val2, None
 
     def less_than(self, val1, val2):
-        if isinstance(var1, basestring) or isinstance(var2, basestring):
-            return False, "Cannot apply < on " + str(var1) + " and " + str(var2)
+        if isinstance(val1, basestring) or isinstance(val2, basestring):
+            return False, "Cannot apply < on " + str(val1) + " and " + str(val2)
         return val1 < val2, None
 
     def not_equal(self, val1, val2):
