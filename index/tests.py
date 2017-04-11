@@ -477,6 +477,8 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
+        self.assertEqual(len(table.entities), 1)
+        self.assertEqual(table.entities[0].values,['George Lucas'])
 
     def testInnerJoin4(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -493,6 +495,8 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
+        self.assertEqual(len(table.entities), 7)
+        self.assertEqual(table.entities[1].values,['Michael Crichton','Jurassic Park'])
 
     def testAggregation1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -502,7 +506,9 @@ class StageTwoTest(TestCase):
                 Book;"
         passed, table, err_msg = database.exec_sql(sql)   
         self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])     
+        self.assertEqual(err_msg, [None])
+        self.assertEqual(len(table.entities), 1)
+        self.assertEqual(table.entities[0].values,10)     
 
     def testAggregation2(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -513,6 +519,8 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)     
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
+        self.assertEqual(len(table.entities), 1)
+        self.assertEqual(table.entities[0].values,10)  
 
     def testAggregation3(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -525,6 +533,8 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)                
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
+        self.assertEqual(len(table.entities), 1)
+        self.assertEqual(table.entities[0].values,2)  
 
     def testAggregation4(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -537,6 +547,8 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)       
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
+        self.assertEqual(len(table.entities), 1)
+        self.assertEqual(table.entities[0].values,650)  
 
     def testAmbigousError(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
