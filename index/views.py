@@ -39,8 +39,9 @@ def sql_view(request):
         pattern = re.compile(";", re.IGNORECASE)
         st = pattern.sub(";\n", Uans)
         sqlList = [s.strip() for s in st.splitlines()]
-        #print(sqlList)
+        print(sqlList)
 
+        
         success, table, err_msgs = [], [], []
         for small_sql in sqlList:
             s, t, err = database.exec_sql(small_sql)
@@ -59,7 +60,8 @@ def sql_view(request):
 
         save_db(database)
 
-        data = {'info':zip(success, panel_msgs, sqlList, err_msgs),
+        data = {'sql':sql_str,
+                'info':zip(success, panel_msgs, sqlList, err_msgs),
                 'table':table
                 }
 
