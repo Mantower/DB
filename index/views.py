@@ -22,6 +22,7 @@ def sql_view(request):
         if request.FILES.get('filesql'):
             sqlfile = request.FILES.get('filesql')
             sql_unicode = sqlfile.read()
+            
         elif request.POST.get('sql'):
             sql_unicode = request.POST['sql']
 

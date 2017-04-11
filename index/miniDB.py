@@ -288,6 +288,8 @@ class Database:
         preds = []
         for rule1, op, rule2 in predicates:
             rules = [None] * 2
+            prefixs = [None] * 2
+            cns = [None] * 2
             for idx, (prefix, cn, value) in enumerate([rule1, rule2]):
                 # with table name and column name
                 if cn:
@@ -298,10 +300,12 @@ class Database:
 
                 if not err_msg:
                     rules[idx] = col_info
+                    prefixs[idx] = prefix
+                    cns[idx] = cn
                 else:
                     return False, None, err_msg
             
-            preds.append(Predicate(rules[0], op, rules[1]))
+            preds.append(Predicate(rules[0], op, rules[1], prefixs, cns))
 
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
@@ -311,6 +315,8 @@ class Database:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
+                    if err_msg:
+                        return False, None, err_msg
                     if check: 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
@@ -319,15 +325,18 @@ class Database:
                                 sub_entity[idx] = fst_e.values[cid]
                             else:
                                 sub_entity[idx] = snd_e.values[cid]
-                        result.insert(sub_entity)
+                        result.insert_without_check(sub_entity)
+
             else:
                 check, err_msg = self.predicate_check(preds, operator, fst_e, None)
+                if err_msg:
+                        return False, None, err_msg
                 if check:
                     # take requested column and append
                     sub_entity = [None] * len(column_infos)
                     for idx, (which_table, cid, aggr) in enumerate(column_infos):
                         sub_entity[idx] = fst_e.values[cid]
-                    result.insert(sub_entity)
+                    result.insert_without_check(sub_entity)
 
         ''' Create new table if aggregation exists '''
         # check only the first column for the aggregation function
@@ -352,11 +361,7 @@ class Database:
             # get the aggr function
             aggr_func = col_info[2]
             # apply aggregation function on the result table
-            
-            
-            
-            
-            
+        
             aggr_value, err_msg = aggr_func.aggregate(result, col_id)
 
             if err_msg:
@@ -474,6 +479,36 @@ class Table:
             
         # Pass all validation 
         return True, None
+
+    def insert_without_check(self, values, col_names=None):
+        """The function inserts a row into the table. Without checking anything. 
+        Args:
+            values ([int || String]): The value to insert.
+            col_names ([String] || None): The column names. If this value is None, we will use default sequence.
+        Returns:
+            bool: The return value. True for successful insertion, False otherwise.
+            String: The error message. None if no error.
+        """
+        # check if the col_name is in column
+        # and convert the whole list to their order in the table
+        col_ids = []
+        if col_names:
+            for n in col_names:
+                if n not in self.col_name2id:
+                    return False, "Column " + str(n) + " is not in Table " + self.name
+                else:
+                    # convert col_name to its order in the table and append to list
+                    col_ids.append(self.col_name2id[n])
+
+        # create Entitiy
+        if col_names:
+            entity = Entity(values, col_ids)
+        else:
+            entity = Entity(values)
+        
+        # insert entity
+        self.entities.append(entity)
+        return True, None 
 
     def insert(self, values, col_names=None):
         """The function inserts a row into the table. It will check if the given parameter is valid. 
@@ -628,6 +663,7 @@ class Aggregation:
         return self.func(table, column_id)
 
     def summation(self, table, column_id):
+        sum_of_col = None
         # sum can only apply on int column
         # not ok to apply sum on all columns
         if column_id == '*':
@@ -647,27 +683,28 @@ class Aggregation:
         return sum_of_col, None
 
     def count(self, table, column_id):
+        count_of_col = None
         # count row
         if column_id == '*':
-            count_of_col = len([table.entities])
+            count_of_col = len(table.entities)
         # count rows with non-None value of that column 
         else:
-            count_of_col = len([table.entities[columnid]])
+            count_of_col = len([e.values[column_id] for e in table.entities if e.values[column_id]])
 
             #for ent in table.entities[column_id]:
         return count_of_col, None
 
 
 class Predicate:
-    def __init__(self, rule1, op, rule2):
+    def __init__(self, rule1, op, rule2, table_names, column_names):
         """The init function of Predicate. rule contains value or table and column name. 
            op is the operation to perform on two rules.
         Args:
-            rule1 (String, String, String):
+            rule1 (int, int, String|int):
                 (Table id, column id, value)
                 First Column or Value of the predicates
             op (String): The operation to perform.
-            rule2 (String, String, String):
+            rule2 (int, int, String|int):
                 (Table id, column id, value)
                 Second Column or Value of the predicates
         Returns:
@@ -677,6 +714,20 @@ class Predicate:
         self.rule1 = rule1
         self.rule2 = rule2
         self.op = op
+        self.table_names = table_names
+        self.column_names = column_names
+
+    def rule_format(self, num):
+        rule = self.rule1
+        if num == 2:
+            rule = self.rule2
+        num -= 1
+        if self.table_names[num] != None and self.column_names[num] != None:
+            return self.table_names[num] + '.' + self.column_names[num]
+        elif self.column_names[num] != None:
+            return self.column_names[num]
+        else:
+            return str(rule[2])
 
     def evaluate_predicates(self, entity1, entity2):
         val1 = self.convert(entity1, entity2, self.rule1)
@@ -689,8 +740,8 @@ class Predicate:
         }
         if val2 is None:
             return val1, None
-        if isinstance(val1, basestring) != isinstance(val2, basestring):
-            return False, "Type mismatch in Where for " + str(val1) + " and " + str(val2) 
+        if type(val1) != type(val2):
+            return False, "Type mismatch for " + self.rule_format(1) + " and " + self.rule_format(2)
         return funcs[self.op](val1, val2)
 
     # convert entity to single value
@@ -706,19 +757,23 @@ class Predicate:
                 return entity2.values[cid]
 
     def equal(self, val1, val2):
+        if type(val1) != type(val2):
+           return False, "Type mismatch for " + self.rule_format(1) + " and " + self.rule_format(2)
         return val1 == val2, None
 
     def greater_than(self, val1, val2):
         if isinstance(val1, basestring) or isinstance(val2, basestring):
-            return False, "Cannot apply > on " + str(val1) + " and " + str(val2)
+            return False, "Cannot apply > on " + self.rule_format(1) + " and " + self.rule_format(2)
         return val1 > val2, None
 
     def less_than(self, val1, val2):
         if isinstance(val1, basestring) or isinstance(val2, basestring):
-            return False, "Cannot apply < on " + str(val1) + " and " + str(val2)
+            return False, "Cannot apply < on " + self.rule_format(1) + " and " + self.rule_format(2)
         return val1 < val2, None
 
     def not_equal(self, val1, val2):
+        if type(val1) != type(val2):
+           return False, "Type mismatch for " + self.rule_format(1) + " and " + self.rule_format(2)
         return val1 != val2, None
 
 """

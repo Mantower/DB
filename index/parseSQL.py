@@ -109,7 +109,6 @@ def def_create(DB,text):
 		return success, tokens
 
 def def_insert(DB,text):
-	print("insert!")
 	insertStmt = Forward()
 	INSERT = Keyword("insert", caseless = True)
 	INTO = Keyword("into",caseless = True)
