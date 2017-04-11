@@ -162,9 +162,9 @@ class Database:
                     col_info = (table_aliases[t_alias], cid, Aggregation(aggr))
                     col_obj = t.columns[cid]
                     break
-                except:
-                    print("exception error")
-                    pass
+                except exception as err:
+                    print("exception:"+err)
+                    
             # col not found
            
             if not col_obj:
@@ -255,12 +255,8 @@ class Database:
         else:
             # cn for column name
             # aggr for aggregation function name
-            for prefix, cn, aggr in column_names:
-                print("-----------------")
-                print("prefix, cn, aggr:", prefix, cn, aggr)
+            for prefix, cn, aggr in column_names:               
                 col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
-                print("-----------------")
-                print("col_info, col_obj", col_info, col_obj)
   
                 if not err_msg:
                     column_infos.append(col_info)
@@ -318,8 +314,6 @@ class Database:
         aggr_entities = []
         # loop for possible serveral aggregations
         for col_info in column_infos:
-            print("-----------------------")
-            print(col_info)
             
             # apply aggregation function
             # Can utilize Aggregation Class defined below
@@ -582,7 +576,6 @@ class Aggregation:
 
     def count(self, table):
         return len(table)
-
 
 class Predicate:
     def __init__(self, rule1, op, rule2):
