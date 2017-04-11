@@ -649,19 +649,14 @@ class Aggregation:
     def count(self, table, column_id):
         # count row
         if column_id == '*':
-            pass
+            count_of_col = len([table.entities])
         # count rows with non-None value of that column 
         else:
+            count_of_col = len([table.entities[columnid]])
+
             #for ent in table.entities[column_id]:
+        return count_of_col, None
 
-            count_of_col = len([o.values[column_id] is not None for o in table.entities])
-            return count_of_col, None
-            #print((table.columns[column_id].name))
-            #count_of_col= len([table.columns])
-           
-            #print(count_of_col)
-
-        #return len(table)
 
 class Predicate:
     def __init__(self, rule1, op, rule2):
