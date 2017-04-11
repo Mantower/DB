@@ -310,8 +310,8 @@ class Database:
         for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
-
-                    if self.predicate_check(preds, operator, fst_e, snd_e): 
+                    check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
+                    if check: 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
@@ -321,7 +321,8 @@ class Database:
                                 sub_entity[idx] = snd_e.values[cid]
                         result.insert(sub_entity)
             else:
-                if self.predicate_check(preds, operator, fst_e, None):
+                check, err_msg = self.predicate_check(preds, operator, fst_e, None)
+                if check:
                     # take requested column and append
                     sub_entity = [None] * len(column_infos)
                     for idx, (which_table, cid, aggr) in enumerate(column_infos):
@@ -375,14 +376,14 @@ class Database:
 
     def predicate_check(self, predicates, operator, entity1, entity2):
         if not len(predicates):
-            return True
+            return True, None
         if operator == None:
             return predicates[0].evaluate_predicates(entity1, entity2)
         else:
             operator = operator.lower()
             bool1 = predicates[0].evaluate_predicates(entity1, entity2)
             bool2 = predicates[1].evaluate_predicates(entity1, entity2)
-            return Operator.str2dt[operator](bool1, bool2)
+            return Operator.str2dt[operator](bool1, bool2), None
 
 class Datatype():
     INT = 1
@@ -688,7 +689,7 @@ class Predicate:
         }
         if var2 is None:
             return var1
-        if type(var1) != type(var2):
+        if isinstance(var1, basestring) != isinstance(var2, basestring):
             return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
         return funcs[self.op](var1, var2)
 
@@ -699,7 +700,7 @@ class Predicate:
         if tid is None and cid is None:
             return value
         else:
-            if tid == 0:
+            if tid == 0 and entity1 != None:
                 return entity1.values[cid]
             else:
                 return entity2.values[cid]
