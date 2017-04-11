@@ -4,6 +4,7 @@ import unicodedata
 import pickle
 import miniDB
 import sql
+import re
 
 # Create your views here.
 def index(request):
@@ -26,11 +27,23 @@ def sql_view(request):
 
         # read DB from pkl file
         database = load_db()
-        
+
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
-        success, table, err_msgs = database.exec_sql(sql_str)
+        print(sql_str)
+        Uans = re.sub(r"\r\n"," ",sql_str)
+        pattern = re.compile(";", re.IGNORECASE)
+        st = pattern.sub(";\n", Uans)
+        sqlList = [s.strip() for s in st.splitlines()]
+        print(sqlList)
+
+        success, table, err_msgs = [], [], []
+        for small_sql in sqlList:
+            s, t, err = database.exec_sql(small_sql)
+            success.extend(s)
+            t.extend(t)
+            err_msgs.extend(err)
 
         # additional message to indicate the execution is successful or not
         panel_msgs = []
@@ -43,8 +56,7 @@ def sql_view(request):
 
         save_db(database)
 
-        data = {'sql':sql_str,
-                'info':zip(success, panel_msgs, err_msgs),
+        data = {'info':zip(success, panel_msgs, sqlList, err_msgs),
                 'table':table
                 }
 

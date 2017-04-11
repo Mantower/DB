@@ -52,7 +52,7 @@ def input_text(DB,sqlText):
 		success.append(sucTemp)
 		errMsg.append(errTemp)
 		tables.append(table)
-	return success, table, errMsg
+	return success, tables, errMsg
 
 
 def def_create(DB,text):
