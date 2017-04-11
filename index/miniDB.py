@@ -381,8 +381,12 @@ class Database:
             return predicates[0].evaluate_predicates(entity1, entity2)
         else:
             operator = operator.lower()
-            bool1 = predicates[0].evaluate_predicates(entity1, entity2)
-            bool2 = predicates[1].evaluate_predicates(entity1, entity2)
+            bool1, err_msg = predicates[0].evaluate_predicates(entity1, entity2)
+            if err_msg:
+                return False, err_msg
+            bool2, err_msg = predicates[1].evaluate_predicates(entity1, entity2)
+            if err_msg:
+                return False, err_msg
             return Operator.str2dt[operator](bool1, bool2), None
 
 class Datatype():
@@ -689,7 +693,7 @@ class Predicate:
             '<>' : self.not_equal
         }
         if var2 is None:
-            return var1
+            return var1, None
         if isinstance(var1, basestring) != isinstance(var2, basestring):
             return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
         return funcs[self.op](var1, var2)
@@ -707,16 +711,20 @@ class Predicate:
                 return entity2.values[cid]
 
     def equal(self, val1, val2):
-        return val1 == val2
+        return val1 == val2, None
 
     def greater_than(self, val1, val2):
-        return val1 > val2
+        if isinstance(var1, basestring) or isinstance(var2, basestring):
+            return False, "Cannot apply > on " + str(var1) + " and " + str(var2)
+        return val1 > val2, None
 
     def less_than(self, val1, val2):
-        return val1 < val2
+        if isinstance(var1, basestring) or isinstance(var2, basestring):
+            return False, "Cannot apply < on " + str(var1) + " and " + str(var2)
+        return val1 < val2, None
 
     def not_equal(self, val1, val2):
-        return val1 != val2
+        return val1 != val2, None
 
 """
 Temporary functions that insert fake data into views
