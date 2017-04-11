@@ -647,7 +647,13 @@ class Aggregation:
             count_of_col = len([table.entities])
         # count rows with non-None value of that column 
         else:
+<<<<<<< HEAD
             count_of_col = len([table.entities[columnid]])
+=======
+            #for ent in table.entities[column_id]:
+
+            count_of_col = len([o.values[column_id] is not None for o in table.entities])
+>>>>>>> c462595268e319a7248ac6d975b1c2a3376e76a5
             return count_of_col, None
 
 

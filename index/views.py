@@ -18,7 +18,10 @@ def sql_view(request):
         return render(request,'index/sql.html', data)
     elif request.method == 'POST':
         sql_unicode = ""
-        if request.POST.get('sql'):
+        if request.FILES.get('filesql'):
+            sqlfile = request.FILES.get('filesql')
+            sql_unicode = sqlfile.read()
+        elif request.POST.get('sql'):
             sql_unicode = request.POST['sql']
 
         # read DB from pkl file
@@ -28,7 +31,7 @@ def sql_view(request):
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
         success, table, err_msgs = database.exec_sql(sql_str)
-        print(success)
+
         # additional message to indicate the execution is successful or not
         panel_msgs = []
         for s in success:

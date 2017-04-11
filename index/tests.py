@@ -373,14 +373,17 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
-        self.assertEqual(table, [None])
-    
+        #for obj in table.entities:
+        for 
+
     def testSelectAll(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "SELECT\
                 *\
                 FROM Author;"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testSelectSpecificTitle(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -390,7 +393,8 @@ class StageTwoTest(TestCase):
                 WHERE\
                 bookId = 1;"
         passed, table, err_msg = database.exec_sql(sql)
-
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testSelectSizeConstraints(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -402,6 +406,8 @@ class StageTwoTest(TestCase):
                 AND\
                 editorial = 'Prentice Hall';"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testSelectAllSizeConstraints(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -413,6 +419,8 @@ class StageTwoTest(TestCase):
                 OR\
                 pages < 200;"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testInnerJoin1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -426,6 +434,8 @@ class StageTwoTest(TestCase):
                 AND\
                 a.name = 'Michael Crichton';"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testInnerJoin2(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -439,6 +449,8 @@ class StageTwoTest(TestCase):
                 AND\
                 Book.pages > 200;"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testInnerJoin3(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -452,6 +464,8 @@ class StageTwoTest(TestCase):
                 AND\
                 b.title = 'Star Wars';"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testInnerJoin4(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -466,6 +480,8 @@ class StageTwoTest(TestCase):
                 AND\
                 a.nationality <> ' Taiwan';"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testAggregation1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -473,7 +489,9 @@ class StageTwoTest(TestCase):
                 COUNT(*)\
                 FROM\
                 Book;"
-        passed, table, err_msg = database.exec_sql(sql)        
+        passed, table, err_msg = database.exec_sql(sql)   
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])     
 
     def testAggregation2(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -482,6 +500,8 @@ class StageTwoTest(TestCase):
                 FROM\
                 Book;"
         passed, table, err_msg = database.exec_sql(sql)     
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testAggregation3(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -492,6 +512,8 @@ class StageTwoTest(TestCase):
                 WHERE\
                 nationality = 'Taiwan';"
         passed, table, err_msg = database.exec_sql(sql)                
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testAggregation4(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -502,6 +524,8 @@ class StageTwoTest(TestCase):
                 WHERE\
                 authorId = 2;"
         passed, table, err_msg = database.exec_sql(sql)       
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def testAmbigousError(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -515,6 +539,9 @@ class StageTwoTest(TestCase):
                 AND\
                 Book.title = 'Star Wars';"
         passed, table, err_msg = database.exec_sql(sql)         
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+
 
     def testTypeMismatch(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -525,6 +552,9 @@ class StageTwoTest(TestCase):
                 WHERE\
                 authorId = 'John';"
         passed, table, err_msg = database.exec_sql(sql)         
+        self.assertEqual(passed,[False])
+        self.assertIn("attribute type error", err_msg[0])
+
 
     def testComparisionMismatch(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -535,4 +565,6 @@ class StageTwoTest(TestCase):
                 Author\
                 WHERE\
                 Book.authorId = Author.name;"
-        passed, table, err_msg = database.exec_sql(sql)  
+        passed, table, err_msg = database.exec_sql(sql) 
+        self.assertEqual(passed,[False])
+        self.assertIn("comparing type mismatched", err_msg[0]) 
