@@ -40,12 +40,13 @@ def sql_view(request):
         sqlList = [s.strip() for s in st.splitlines()]
         #print(sqlList)
 
-        success, table, err_msgs = [], [], []
+        success, table, err_msgs = database.exec_sql(sql_str)
+        '''success, table, err_msgs = [], [], []
         for small_sql in sqlList:
             s, t, err = database.exec_sql(small_sql)
             success.extend(s)
             t.extend(t)
-            err_msgs.extend(err)
+            err_msgs.extend(err)'''
 
         # additional message to indicate the execution is successful or not
         panel_msgs = []
