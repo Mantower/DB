@@ -345,8 +345,6 @@ class StageTwoTest(TestCase):
             )"
         passed, table, err_msg = database_with_book_author.exec_sql(sql)
         save_db(database_with_book_author, TEST_DB_WITH_BOOK_AUTHOR)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
 
     def loadSQLData(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)

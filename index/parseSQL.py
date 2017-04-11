@@ -49,13 +49,11 @@ def input_text(DB,sqlText):
 			sucTemp ,errTemp = def_insert(DB,obj)
 		elif act.lower()=="select":
 			sucTemp , table, errTemp = def_select(DB,obj)
-			print("select test")
-			print(len(table.entities))
-			print(table.entities[5].values)
 			
 		success.append(sucTemp)
 		errMsg.append(errTemp)
 		tables.append(table)
+
 	return success, tables, errMsg
 
 

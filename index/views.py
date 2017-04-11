@@ -42,13 +42,14 @@ def sql_view(request):
         print(sqlList)
 
         
-        success, table, err_msgs = [], [], []
+        success, tables, err_msgs = [], [], []
         for small_sql in sqlList:
             s, t, err = database.exec_sql(small_sql)
             success.extend(s)
-            t.extend(t)
+            tables.extend(t)
             err_msgs.extend(err)
 
+        print(tables)
         # additional message to indicate the execution is successful or not
         panel_msgs = []
         for s in success:
@@ -61,8 +62,7 @@ def sql_view(request):
         save_db(database)
 
         data = {'sql':sql_str,
-                'info':zip(success, panel_msgs, sqlList, err_msgs),
-                'table':table
+                'info':zip(success, panel_msgs, sqlList, err_msgs, tables),
                 }
 
         return render(request,'index/sql.html', data)
