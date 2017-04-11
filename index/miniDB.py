@@ -344,6 +344,11 @@ class Database:
             # get the aggr function
             aggr_func = col_info[2]
             # apply aggregation function on the result table
+            
+            
+            
+            
+            
             aggr_value, err_msg = aggr_func.aggregate(result, col_id)
 
             if err_msg:
@@ -634,12 +639,11 @@ class Aggregation:
     def count(self, table, column_id):
         # count row
         if column_id == '*':
-            pass
+           pass
+            
         # count rows with non-None value of that column 
         else:
-            pass
-
-        return len(table)
+           pass
 
 class Predicate:
     def __init__(self, rule1, op, rule2):
