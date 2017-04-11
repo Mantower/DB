@@ -33,12 +33,12 @@ def sql_view(request):
         sql_str = sql_unicode.encode('ascii','ignore')
         
         Uans = re.sub(r"\r\n"," ",sql_str)
-        #print(Uans)
+        print(Uans)
         #print("++++++++++++++")
         pattern = re.compile(";", re.IGNORECASE)
         st = pattern.sub(";\n", Uans)
         sqlList = [s.strip() for s in st.splitlines()]
-        #print(sqlList)
+        print(sqlList)
 
         success, table, err_msgs = database.exec_sql(sql_str)
         '''success, table, err_msgs = [], [], []
@@ -59,7 +59,8 @@ def sql_view(request):
 
         save_db(database)
 
-        data = {'info':zip(success, panel_msgs, sqlList, err_msgs),
+        data = {'sql':sql_str,
+                'info':zip(success, panel_msgs, sqlList, err_msgs),
                 'table':table
                 }
 
