@@ -223,9 +223,9 @@ class Database:
 
         ''' Convert table names to table id'''
         # tables stores ('Tablealias':tableid)
-        tables = {None:None}
+        tables = {}
         tables_obj = []
-        aliases = {None:None}
+        aliases = {}
         # use alias of table as key to get the object
         # if alias is not provided, use table name as key
         # tn for table name
@@ -260,19 +260,19 @@ class Database:
             if cn == '*':
                 table_search_scope = None
                 # with prefix, search only one table
-                if tables.get(prefix):
+                if tables.get(prefix) != None:
                     table_search_scope = [self.tables[tables[prefix]]]
                 # no prefix, search all table
                 else:
                     table_search_scope = [self.tables[tid] for key, tid in tables.iteritems() if key is not None]
-
                 for searching_table in table_search_scope:
+                    if prefix == None:
+                        prefix = searching_table.name
                     for cid, col in enumerate(searching_table.columns):
                         # convert aggr into object
                         aggr_obj = None 
                         if aggr:
                             aggr_obj = Aggregation(aggr)
-
                         column_infos.append((tables[prefix], cid, aggr_obj))
                         column_objs.append(col)
             else:
@@ -310,6 +310,7 @@ class Database:
         for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
+
                     if self.predicate_check(preds, operator, fst_e, snd_e): 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
@@ -680,8 +681,8 @@ class Predicate:
         self.op = op
 
     def evaluate_predicates(self, entity1, entity2):
-        var1 = self.convert(entity1, self.rule1)
-        var2 = self.convert(entity2, self.rule2)
+        var1 = self.convert(entity1, entity2, self.rule1)
+        var2 = self.convert(entity1, entity2, self.rule2)
         funcs = {
             '=' : self.equal,
             '>' : self.greater_than,
@@ -695,13 +696,16 @@ class Predicate:
         return funcs[self.op](var1, var2)
 
     # convert entity to single value
-    def convert(self, entity, rule):
+    def convert(self, entity1, entity2, rule):
         # table id, column id, value
         tid, cid, value = rule
         if tid is None and cid is None:
             return value
         else:
-            return entity.values[cid]
+            if tid == 0:
+                return entity1.values[cid]
+            else:
+                return entity2.values[cid]
 
     def equal(self, val1, val2):
         return val1 == val2
