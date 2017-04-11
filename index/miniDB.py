@@ -349,6 +349,7 @@ class Database:
         ''' Create new table if aggregation exists '''
         # check only the first column for the aggregation function
         col_id = 0
+        
         col_info = column_infos[col_id]
         col_obj = column_objs[col_id]
         # if Aggregation in column_infos exist
