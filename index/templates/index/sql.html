@@ -8,18 +8,11 @@
 
 {% block body_block %}
 <div class="form-group">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="sql">SQL</label>
         <textarea class="form-control" name="sql" id="sql" placeholder="Insert SQL here..."></textarea>
         <br>
-        <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
-    </form>
-</div>
-<br>
-<div class="form-group">
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
         <input type="file" name="filesql" id="filesql">
         <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
     </form>
