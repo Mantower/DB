@@ -649,8 +649,6 @@ class Aggregation:
         # count rows with non-None value of that column 
         else:
             #for ent in table.entities[column_id]:
-            print("----------------")
-            print(table.entities.values.__dict__)
 
             count_of_col = len([o.values[column_id] is not None for o in table.entities])
             return count_of_col, None
