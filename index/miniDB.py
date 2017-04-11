@@ -310,6 +310,9 @@ class Database:
         aggr_entities = []
         # loop for possible serveral aggregations
         for col_info in column_infos:
+            print("-----------------------")
+            print(col_info)
+            
             # apply aggregation function
             # Can utilize Aggregation Class defined below
             pass
@@ -571,7 +574,39 @@ class Aggregation:
 
     def count(self, table):
         return len(table)
-      
+class AggregationUpdate:
+    def __init__(self, func_name):
+        """The init function of Aggregation. Set the function to apply on later.
+        Args:
+            func_name (String): The aggregation to apply. 
+        """
+        # map functions from String to functions
+        funcs = {
+            'sum': self.summation,
+            'count': self.count,
+            None: id
+        }
+        self.func = funcs[func_name]
+
+    def aggregate(self, table):
+        """To apply the function on table. 
+        Args:
+            table (Table): The table to apply aggregation function.
+        Returns:
+            Table|Value: ?? Not sure here
+        """
+        return self.func(table)
+
+    def summation(self, table):
+        return sum(table)
+
+    def count(self, tableItems):
+        for i in tableItems:
+            #get the columns 
+            tempSum = tempSum + tableItems['item'].count()
+
+        return len(table)
+
 class Predicate:
     def __init__(self, rule1, op, rule2):
         """The init function of Predicate. rule contains value or table and column name. 
