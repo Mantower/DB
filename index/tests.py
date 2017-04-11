@@ -371,7 +371,7 @@ class StageTwoTest(TestCase):
         passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
-        self.assertEqual(len(table.entities), 7)
+        self.assertEqual(len(table[0].entities), 7)
         self.assertEqual(table.entities[5].values,[6, 'Romeo and Juliet', 300, 4, 'English Books'])
         #for obj in table.entities:
         #for table.entity:
