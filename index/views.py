@@ -31,12 +31,14 @@ def sql_view(request):
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
-        print(sql_str)
+        
         Uans = re.sub(r"\r\n"," ",sql_str)
+        #print(Uans)
+        #print("++++++++++++++")
         pattern = re.compile(";", re.IGNORECASE)
         st = pattern.sub(";\n", Uans)
         sqlList = [s.strip() for s in st.splitlines()]
-        print(sqlList)
+        #print(sqlList)
 
         success, table, err_msgs = [], [], []
         for small_sql in sqlList:
