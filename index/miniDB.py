@@ -562,19 +562,35 @@ class Aggregation:
         }
         self.func = funcs[func_name]
 
-    def aggregate(self, table):
+    def aggregate(self, table, column_name):
         """To apply the function on table. 
         Args:
             table (Table): The table to apply aggregation function.
+            column_name (String): The column to apply aggregation function.
         Returns:
-            Table|Value: ?? Not sure here
+            Entity: The return value after applying the aggregation function.
         """
-        return self.func(table)
+        return self.func(table, column_name)
 
-    def summation(self, table):
+    def summation(self, table, column_name):
+        # sum can only apply on int column
+        # not ok to apply sum on all columns
+        if column_name == '*':
+            pass
+        # sum up rows with non-None value of that column 
+        # None is not added
+        else:
+            pass
         return sum(table)
 
-    def count(self, table):
+    def count(self, table, column_name):
+        # count row
+        if column_name == '*':
+            pass
+        # count rows with non-None value of that column 
+        else:
+            pass
+
         return len(table)
 
 class Predicate:
