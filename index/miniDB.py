@@ -378,11 +378,12 @@ class Database:
         if not len(predicates):
             return True, None
         if operator == None:
+            bool1, err_msg = predicates[0].evaluate_predicates(entity1, entity2)
             return predicates[0].evaluate_predicates(entity1, entity2)
         else:
             operator = operator.lower()
-            bool1 = predicates[0].evaluate_predicates(entity1, entity2)
-            bool2 = predicates[1].evaluate_predicates(entity1, entity2)
+            bool1, err_msg1 = predicates[0].evaluate_predicates(entity1, entity2)
+            bool2, err_msg2 = predicates[1].evaluate_predicates(entity1, entity2)
             return Operator.str2dt[operator](bool1, bool2), None
 
 class Datatype():
@@ -701,22 +702,22 @@ class Predicate:
         if tid is None and cid is None:
             return value
         else:
-            if tid == 0 and entity1 != None:
+            if tid == 0:
                 return entity1.values[cid]
             else:
                 return entity2.values[cid]
 
     def equal(self, val1, val2):
-        return val1 == val2
+        return val1 == val2, None
 
     def greater_than(self, val1, val2):
-        return val1 > val2
+        return val1 > val2, None
 
     def less_than(self, val1, val2):
-        return val1 < val2
+        return val1 < val2, None
 
     def not_equal(self, val1, val2):
-        return val1 != val2
+        return val1 != val2, None
 
 """
 Temporary functions that insert fake data into views
