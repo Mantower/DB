@@ -157,6 +157,7 @@ class Database:
         else:
             col_info = None
             col_obj = None
+            # look into all tables and see if there's column named cn
             i = 0
             if len(tables) > 1:
                 for (t_alias, tid), (alias, index) in zip(tables.iteritems(), table_aliases.iteritems()):
@@ -165,7 +166,6 @@ class Database:
                         i += 1
                 if i > 1:
                     return None, None, "Ambiguous request"
-            # look into all tables and see if there's column named cn
             for t_alias, tid in tables.iteritems():
                 t = self.get_table(tid)
                 try:
@@ -320,8 +320,8 @@ class Database:
                 for snd_e in tables_obj[1].entities:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
                     if err_msg:
-                        return False, None, err_msg
-                    if check : 
+                        return False, None, err_msg                   
+                    if check: 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
@@ -333,7 +333,7 @@ class Database:
             else:
                 check, err_msg = self.predicate_check(preds, operator, fst_e, None)
                 if err_msg:
-                        return False, None, err_msg
+                    return False, None, err_msg
                 if check:
                     # take requested column and append
                     sub_entity = [None] * len(column_infos)
@@ -665,11 +665,10 @@ class Aggregation:
             count_of_col = len([table.entities])
         # count rows with non-None value of that column 
         else:
-            count_of_col = len([table.entities[columnid]])
+            count_of_col = len([table.entities[column_id]])
 
             #for ent in table.entities[column_id]:
         return count_of_col, None
-
 
 class Predicate:
     def __init__(self, rule1, op, rule2):
@@ -692,19 +691,19 @@ class Predicate:
         self.op = op
 
     def evaluate_predicates(self, entity1, entity2):
-        val1 = self.convert(entity1, entity2, self.rule1)
-        val2 = self.convert(entity1, entity2, self.rule2)
+        var1 = self.convert(entity1, entity2, self.rule1)
+        var2 = self.convert(entity1, entity2, self.rule2)
         funcs = {
             '=' : self.equal,
             '>' : self.greater_than,
             '<' : self.less_than,
             '<>' : self.not_equal
         }
-        if val2 is None:
-            return val1, None
-        if isinstance(val1, basestring) != isinstance(val2, basestring):
-            return False, "Type mismatch in Where for " + str(val1) + " and " + str(val2) 
-        return funcs[self.op](val1, val2)
+        if var2 is None:
+            return var1
+        if isinstance(var1, basestring) != isinstance(var2, basestring):
+            return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
+        return funcs[self.op](var1, var2)
 
     # convert entity to single value
     def convert(self, entity1, entity2, rule):
