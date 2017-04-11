@@ -233,7 +233,6 @@ class Database:
             except:
                 return False, None, "No table named " + tn + "." 
             index += 1
-        
         ''' Convert column names to column id'''
         # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
@@ -244,15 +243,33 @@ class Database:
         # The column objects
         column_objs = []
         # [[None, '*', None]] for select * from table case.
-        if column_names[0][1] == '*':
-            for idx, t in enumerate(tables_obj):
-                for cid, col in enumerate(self.tables[tid].columns):
-                    column_infos.append((idx, cid, None))
-                    column_objs.append(col)
-        else:
-            # cn for column name
-            # aggr for aggregation function name
-            for prefix, cn, aggr in column_names:
+        # cn for column name
+        # aggr for aggregation function name
+        for prefix, cn, aggr in column_names:
+            if cn == '*':
+                if tables.get(prefix) != None:
+                    for cid, col in enumerate(self.tables[tables[prefix]].columns):
+                        column_infos.append((tables[prefix], cid, Aggregation(aggr)))
+                        column_objs.append(col)
+                else:
+                    if len(table_names) == 2 and table_names[0][0] == None and table_names[1][0] == None:
+                        for key in tables:
+                            tab_id = tables[key] 
+                            for cid, col in enumerate(self.tables[tab_id].columns):
+                                column_infos.append((tab_id, cid, Aggregation(aggr)))
+                                column_objs.append(col)
+                    else:
+                        if table_names[0][0] == None:
+                            tab_id = 0 
+                            for cid, col in enumerate(self.tables[tab_id].columns):
+                                column_infos.append((tab_id, cid, Aggregation(aggr)))
+                                column_objs.append(col)
+                        elif table_names[1][0] == None:
+                            tab_id = 1 
+                            for cid, col in enumerate(self.tables[tab_id].columns):
+                                column_infos.append((tab_id, cid, Aggregation(aggr)))
+                                column_objs.append(col)
+            else:
                 col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
                 if not err_msg:
                     column_infos.append(col_info)
@@ -278,7 +295,6 @@ class Database:
                     return False, None, err_msg
             
             preds.append(Predicate(rules[0], op, rules[1]))
-
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
         result = Table("SelectQuery", column_objs)
