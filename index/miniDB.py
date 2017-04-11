@@ -319,6 +319,8 @@ class Database:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
+                    if err_msg:
+                        return False, None, err_msg
                     if check : 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
@@ -330,6 +332,8 @@ class Database:
                         result.insert(sub_entity)
             else:
                 check, err_msg = self.predicate_check(preds, operator, fst_e, None)
+                if err_msg:
+                        return False, None, err_msg
                 if check:
                     # take requested column and append
                     sub_entity = [None] * len(column_infos)
@@ -389,8 +393,13 @@ class Database:
             return predicates[0].evaluate_predicates(entity1, entity2)
         else:
             operator = operator.lower()
-            bool1, err_msg1 = predicates[0].evaluate_predicates(entity1, entity2)
-            bool2, err_msg2 = predicates[1].evaluate_predicates(entity1, entity2)
+
+            bool1, err_msg = predicates[0].evaluate_predicates(entity1, entity2)
+            if err_msg:
+                return False, err_msg
+            bool2, err_msg = predicates[1].evaluate_predicates(entity1, entity2)
+            if err_msg:
+                return False, err_msg
             return Operator.str2dt[operator](bool1, bool2), None
 
 class Datatype():
@@ -683,19 +692,19 @@ class Predicate:
         self.op = op
 
     def evaluate_predicates(self, entity1, entity2):
-        var1 = self.convert(entity1, entity2, self.rule1)
-        var2 = self.convert(entity1, entity2, self.rule2)
+        val1 = self.convert(entity1, entity2, self.rule1)
+        val2 = self.convert(entity1, entity2, self.rule2)
         funcs = {
             '=' : self.equal,
             '>' : self.greater_than,
             '<' : self.less_than,
             '<>' : self.not_equal
         }
-        if var2 is None:
-            return var1
-        if isinstance(var1, basestring) != isinstance(var2, basestring):
-            return False, "Type mismatch in Where for " + str(var1) + " and " + str(var2) 
-        return funcs[self.op](var1, var2)
+        if val2 is None:
+            return val1, None
+        if isinstance(val1, basestring) != isinstance(val2, basestring):
+            return False, "Type mismatch in Where for " + str(val1) + " and " + str(val2) 
+        return funcs[self.op](val1, val2)
 
     # convert entity to single value
     def convert(self, entity1, entity2, rule):
@@ -713,9 +722,13 @@ class Predicate:
         return val1 == val2, None
 
     def greater_than(self, val1, val2):
+        if isinstance(val1, basestring) or isinstance(val2, basestring):
+            return False, "Cannot apply > on " + str(val1) + " and " + str(val2)
         return val1 > val2, None
 
     def less_than(self, val1, val2):
+        if isinstance(val1, basestring) or isinstance(val2, basestring):
+            return False, "Cannot apply < on " + str(val1) + " and " + str(val2)
         return val1 < val2, None
 
     def not_equal(self, val1, val2):
