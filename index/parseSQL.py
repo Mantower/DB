@@ -373,7 +373,7 @@ def process_input_select(DB, tokens):
 				else:
 					print("in colnmae")
 					print(k[2][0])
-					columns.append([None, k[2][0], k[0]])
+					columns.append([None, k[2][0], k[0].lower()])
 			else:
 				if len(k) == 3:
 					if k[1] == ".":
@@ -436,7 +436,7 @@ def process_input_select(DB, tokens):
 
 		try:
 			and_expr = tokens[i]["and_expr"]
-			operator = "AND"
+			operator = "and"
 			ans = process_where_expression(and_expr)
 			predicates.append(ans)
 			#predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
@@ -446,7 +446,7 @@ def process_input_select(DB, tokens):
 			
 		try: 
 			or_expr = tokens[i]["or_expr"]
-			operator = "OR"
+			operator = "or"
 			ans = process_where_expression(or_expr)
 			predicates.append(ans)
 			
