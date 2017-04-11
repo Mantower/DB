@@ -368,7 +368,7 @@ class StageTwoTest(TestCase):
                 editorial\
                 FROM Book;"
         passed, table, err_msg = database.exec_sql(sql)
-    
+
     def testSelectAll(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "SELECT\

@@ -18,9 +18,9 @@
 </div>
 <br>
 <div class="form-group">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="filesql">
+        <input type="file" name="filesql" id="filesql">
         <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
     </form>
 </div>
