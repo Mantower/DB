@@ -150,6 +150,7 @@ class Database:
             return col_info, col_obj, None
         # prefix not provided
         else:
+            
             col_info = None
             col_obj = None
             # look into all tables and see if there's column named cn
@@ -162,8 +163,10 @@ class Database:
                     col_obj = t.columns[cid]
                     break
                 except:
+                    print("exception error")
                     pass
             # col not found
+           
             if not col_obj:
                 return None, None, "No column named " + cn + "."
             return col_info, col_obj, None
@@ -253,7 +256,12 @@ class Database:
             # cn for column name
             # aggr for aggregation function name
             for prefix, cn, aggr in column_names:
+                print("-----------------")
+                print("prefix, cn, aggr:", prefix, cn, aggr)
                 col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
+                print("-----------------")
+                print("col_info, col_obj", col_info, col_obj)
+  
                 if not err_msg:
                     column_infos.append(col_info)
                     column_objs.append(col_obj)

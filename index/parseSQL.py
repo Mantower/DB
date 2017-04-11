@@ -365,12 +365,14 @@ def process_input_select(DB, tokens):
 			if(k[0]=="COUNT" or k[0]=="SUM"):
 				if len(k[2])==3:
 					if k[2][1]=='.':
-						columns.append([k[2][0], k[2][2], k[0]])
+						columns.append([k[2][0], k[2][2], k[0].lower()])
 						print("in count with dot")
 					else:
 						print("in count three character but no dot")
-						columns.append([None, k[2][0], k[0]])
+						columns.append([None, k[2][0], k[0].lower()])
 				else:
+					print("in colnmae")
+					print(k[2][0])
 					columns.append([None, k[2][0], k[0]])
 			else:
 				if len(k) == 3:
