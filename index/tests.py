@@ -34,12 +34,12 @@ class TableTestCase(TestCase):
             gender VARCHAR(1),\
             age int\
             )"
-        passed, err_msg = database_with_student_table.exec_sql(sql)
+        passed, table, err_msg = database_with_student_table.exec_sql(sql)
         sql = "CREATE TABLE COURSE (\
             name VARCHAR(40) PRIMARY KEY,\
             id INT PRIMARY KEY\
             )"
-        passed, err_msg = database_with_student_table.exec_sql(sql)
+        passed, table, err_msg = database_with_student_table.exec_sql(sql)
         save_db(database_with_student_table, TEST_DB_WITH_STUDENT)
 
 # TABLE TESTS
@@ -53,7 +53,7 @@ class TableTestCase(TestCase):
             gender VARCHAR(1),\
             age int\
             )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [True])
         self.assertEqual(err_msg, [None])
 
@@ -66,7 +66,7 @@ class TableTestCase(TestCase):
             gender VARCHAR(1),\
             age int\
             )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [True])
         self.assertEqual(err_msg, [None])
 
@@ -79,7 +79,7 @@ class TableTestCase(TestCase):
             gender VARCHAR(1),\
             age int\
             );"
-        passed, err_msg = database.exec_sql(sql+sql)
+        passed, table, err_msg = database.exec_sql(sql+sql)
         self.assertEqual(passed, [True, False])
         self.assertEqual(err_msg, [None, "Table with same name exists."])
 
@@ -92,7 +92,7 @@ class TableTestCase(TestCase):
             type VARCHAR(2),\
             engineSize int\
             );"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [True])
         self.assertEqual(err_msg, [None])
     
@@ -105,7 +105,7 @@ class TableTestCase(TestCase):
         pages int,\
         editorial VARCHAR(15)\
         )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [True])
         self.assertEqual(err_msg, [None])
 
@@ -115,7 +115,7 @@ class TableTestCase(TestCase):
             name VARCHAR(40) PRIMARY KEY,\
             id INT PRIMARY KEY\
             )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [True])
         self.assertEqual(err_msg, [None]) 
 
@@ -125,7 +125,7 @@ class TableTestCase(TestCase):
         FName VARCHAR,\
         LName VARCHAR(20)\
         )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
         #self.assertEqual(err_msg, [None]) 
 
@@ -135,7 +135,7 @@ class TableTestCase(TestCase):
         FName VARCHAR(1),\
         LName DATE\
         )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
         #self.assertEqual(err_msg, [None]) 
 
@@ -145,7 +145,7 @@ class TableTestCase(TestCase):
             FName VARCHAR(4),\
             LName VARCHAR(4),\
             )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
         #self.assertEqual(err_msg, [None])
 
@@ -156,7 +156,7 @@ class TableTestCase(TestCase):
             LName VARCHAR(4),\
             FName VARCHAR(4)\
             )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
         self.assertEqual(err_msg, ["Columns contain duplicate name."])
 
@@ -166,7 +166,7 @@ class TableTestCase(TestCase):
             FName VARCHAR(4),\
             LName VARCHAR(50)\
             )"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
         #self.assertEqual(err_msg, [None])
 
@@ -176,14 +176,14 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(10, 'John Smith', 'M', 22)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(11, 'Hsu You-Ting', 'F', 23)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
@@ -191,7 +191,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(11, 'Hsu You-Ting', 'F', 23, 'idk')"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed, [False])
         self.assertEqual(err_msg, ["Too many values are given"])
 
@@ -200,7 +200,7 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO STUDENT \
         VALUES(12, 'John Cena', 'M', 45),\
         VALUES(14, 'Chuck Norris', 'M', 55)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
@@ -209,13 +209,13 @@ class TableTestCase(TestCase):
 
         sql = "INSERT INTO STUDENT \
         VALUES(10, 'John Smith', 'M', 22)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
         sql = "INSERT INTO STUDENT \
         VALUES(10, 'Huang Hao-Wei', 'M', 26)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("Primary key pair", err_msg[0])
         self.assertIn("duplicate", err_msg[0])
@@ -224,7 +224,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(10 'Huang Hao-Wei', 'M', 26)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("Unexpected white",err_msg[0])   
 
@@ -232,7 +232,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(15, 'Mr. Bean', 'M', '45')"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("is not int", err_msg[0] )
     
@@ -240,7 +240,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(16, 'Caitlyn Jenner', 'MF', 45)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertEqual(err_msg, ["Value MF exceed maximum length 1."])
 
@@ -248,7 +248,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(17, 'Infinity Man', 'M', 2147483650)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("out of range", err_msg[0])
 
@@ -256,7 +256,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(18, 'Max Int Man', 'M', 2147483647)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
@@ -264,7 +264,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(, 'Null Woman', 'W', 100)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("unwanted token", err_msg[0])
 
@@ -272,7 +272,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(19, 'Dr. Paranthesis', 'M', 67"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         # check if the error message contains FAIL: Expected ...
         self.assertIn("FAIL: Expected \")\"", err_msg[0])
@@ -281,7 +281,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT \
         VALUES(20, 'Prof. No Age', 'M')"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
@@ -289,7 +289,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO STUDENT (gender, name, age)\
         VALUES('Prof. No ID', 'M', 21)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("Empty value for primary key", err_msg[0])
 
@@ -297,7 +297,7 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO NOSUCHTABLE \
         VALUES('Databases', 12345)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertEqual(err_msg, ["Table not exists."])
 
@@ -305,12 +305,12 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO COURSE \
         VALUES('Databases', 12345)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
         sql = "INSERT INTO COURSE \
         VALUES('Databases', 54321)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
 
@@ -318,12 +318,12 @@ class TableTestCase(TestCase):
         database = load_db(TEST_DB_WITH_STUDENT)
         sql = "INSERT INTO COURSE \
         VALUES('Databases', 12345)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
         sql = "INSERT INTO COURSE \
         VALUES('Databases', 12345)"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
         self.assertIn("Primary key", err_msg[0])
 
@@ -336,14 +336,14 @@ class StageTwoTest(TestCase):
             title VARCHAR(30),\
             pages int,\
             authorId int,\
-            editorial varchar(30)
-            )
+            editorial varchar(30)\
+            );\
             CREATE TABLE Author (\
             authorId int PRIMARY KEY,\
             name varchar(30),\
-            nationality varchar(30)
+            nationality varchar(30)\
             )"
-        passed, err_msg = database_with_book_author.exec_sql(sql)
+        passed, table, err_msg = database_with_book_author.exec_sql(sql)
         save_db(database_with_book_author, TEST_DB_WITH_BOOK_AUTHOR)
 
     def loadSQLData(self):
@@ -351,11 +351,11 @@ class StageTwoTest(TestCase):
         fd = open('author.sql', 'r')
         sqlFile = fd.read()
         fd.close()
-        passed, err_msg = database.exec_sql(sqlFile)
+        passed, table, err_msg = database.exec_sql(sqlFile)
         fd = open('book2.sql', 'r')
         sqlFIle = fd.read()
         fd.close()
-        passed, err_msg = database.exec_sql(sqlFile)
+        passed, table, err_msg = database.exec_sql(sqlFile)
         save_db(database, TEST_DB_WITH_BOOK_AUTHOR)
 
     def testSelect1(self):
@@ -367,14 +367,14 @@ class StageTwoTest(TestCase):
                 authorId,\
                 editorial\
                 FROM Book;"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
     
     def testSelectAll(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "SELECT\
                 *\
                 FROM Author;"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testSelectSpecificTitle(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -383,7 +383,7 @@ class StageTwoTest(TestCase):
                 FROM Book\
                 WHERE\
                 bookId = 1;"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
 
     def testSelectSizeConstraints(self):
@@ -395,7 +395,7 @@ class StageTwoTest(TestCase):
                 pages > 100\
                 AND\
                 editorial = 'Prentice Hall';"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testSelectAllSizeConstraints(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -406,7 +406,7 @@ class StageTwoTest(TestCase):
                 authorId = 1\
                 OR\
                 pages < 200;"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testInnerJoin1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -419,7 +419,7 @@ class StageTwoTest(TestCase):
                 b.authorId = a.authorId\
                 AND\
                 a.name = 'Michael Crichton';"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testInnerJoin2(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -432,7 +432,7 @@ class StageTwoTest(TestCase):
                 Book.authorId = a.authorId\
                 AND\
                 Book.pages > 200;"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testInnerJoin3(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -445,7 +445,7 @@ class StageTwoTest(TestCase):
                 a.authorId = b.authorId\
                 AND\
                 b.title = 'Star Wars';"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testInnerJoin4(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -459,7 +459,7 @@ class StageTwoTest(TestCase):
                 a.authorId = b.authorId\
                 AND\
                 a.nationality <> ' Taiwan';"
-        passed, err_msg = database.exec_sql(sql)
+        passed, table, err_msg = database.exec_sql(sql)
 
     def testAggregation1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -467,7 +467,7 @@ class StageTwoTest(TestCase):
                 COUNT(*)\
                 FROM\
                 Book;"
-        passed, err_msg = database.exec_sql(sql)        
+        passed, table, err_msg = database.exec_sql(sql)        
 
     def testAggregation2(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -475,7 +475,7 @@ class StageTwoTest(TestCase):
                 COUNT(editorial)\
                 FROM\
                 Book;"
-        passed, err_msg = database.exec_sql(sql)     
+        passed, table, err_msg = database.exec_sql(sql)     
 
     def testAggregation3(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -485,7 +485,7 @@ class StageTwoTest(TestCase):
                 Author\
                 WHERE\
                 nationality = 'Taiwan';"
-        passed, err_msg = database.exec_sql(sql)                
+        passed, table, err_msg = database.exec_sql(sql)                
 
     def testAggregation4(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -495,7 +495,7 @@ class StageTwoTest(TestCase):
                 Book\
                 WHERE\
                 authorId = 2;"
-        passed, err_msg = database.exec_sql(sql)       
+        passed, table, err_msg = database.exec_sql(sql)       
 
     def testAmbigousError(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -508,7 +508,7 @@ class StageTwoTest(TestCase):
                 Author.authorId = Book.authorId\
                 AND\
                 Book.title = 'Star Wars';"
-        passed, err_msg = database.exec_sql(sql)         
+        passed, table, err_msg = database.exec_sql(sql)         
 
     def testTypeMismatch(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -518,7 +518,7 @@ class StageTwoTest(TestCase):
                 Author\
                 WHERE\
                 authorId = 'John';"
-        passed, err_msg = database.exec_sql(sql)         
+        passed, table, err_msg = database.exec_sql(sql)         
 
     def testComparisionMismatch(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -529,4 +529,4 @@ class StageTwoTest(TestCase):
                 Author\
                 WHERE\
                 Book.authorId = Author.name;"
-        passed, err_msg = database.exec_sql(sql)  
+        passed, table, err_msg = database.exec_sql(sql)  

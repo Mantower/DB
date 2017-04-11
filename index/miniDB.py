@@ -145,13 +145,16 @@ class Database:
             except:
                 return None, None, "No column named " + cn + "."
 
-            # Todo: convert aggr into object
-            col_info = (table_aliases[prefix], cid, Aggregation(aggr))
+            # convert aggr into object
+            aggr_obj = None 
+            if aggr:
+                aggr_obj = Aggregation(aggr)
+            col_info = (table_aliases[prefix], cid, aggr_obj)
             col_obj = t.columns[cid]
             return col_info, col_obj, None
+        
         # prefix not provided
         else:
-            
             col_info = None
             col_obj = None
             # look into all tables and see if there's column named cn
@@ -159,12 +162,16 @@ class Database:
                 t = self.get_table(tid)
                 try:
                     cid = t.col_name2id[cn]
-                    col_info = (table_aliases[t_alias], cid, Aggregation(aggr))
+                    # convert aggr into object
+                    aggr_obj = None 
+                    if aggr:
+                        aggr_obj = Aggregation(aggr)
+                    col_info = (table_aliases[t_alias], cid, aggr_obj)
                     col_obj = t.columns[cid]
                     break
                 # table name not found in this table, go on next table
-                except exception as err:
-                    print("exception:"+err)
+                except:
+                    pass
                     
             # col not found
            
@@ -216,9 +223,9 @@ class Database:
 
         ''' Convert table names to table id'''
         # tables stores ('Tablealias':tableid)
-        tables = {}
+        tables = {None:None}
         tables_obj = []
-        aliases = {}
+        aliases = {None:None}
         # use alias of table as key to get the object
         # if alias is not provided, use table name as key
         # tn for table name
@@ -251,28 +258,23 @@ class Database:
         # aggr for aggregation function name
         for prefix, cn, aggr in column_names:
             if cn == '*':
-                if tables.get(prefix) != None:
-                    for cid, col in enumerate(self.tables[tables[prefix]].columns):
-                        column_infos.append((tables[prefix], cid, Aggregation(aggr)))
-                        column_objs.append(col)
+                table_search_scope = None
+                # with prefix, search only one table
+                if tables.get(prefix):
+                    table_search_scope = [self.tables[tables[prefix]]]
+                # no prefix, search all table
                 else:
-                    if len(table_names) == 2 and table_names[0][0] == None and table_names[1][0] == None:
-                        for key in tables:
-                            tab_id = tables[key] 
-                            for cid, col in enumerate(self.tables[tab_id].columns):
-                                column_infos.append((tab_id, cid, Aggregation(aggr)))
-                                column_objs.append(col)
-                    else:
-                        if table_names[0][0] == None:
-                            tab_id = 0 
-                            for cid, col in enumerate(self.tables[tab_id].columns):
-                                column_infos.append((tab_id, cid, Aggregation(aggr)))
-                                column_objs.append(col)
-                        elif table_names[1][0] == None:
-                            tab_id = 1 
-                            for cid, col in enumerate(self.tables[tab_id].columns):
-                                column_infos.append((tab_id, cid, Aggregation(aggr)))
-                                column_objs.append(col)
+                    table_search_scope = [self.tables[tid] for key, tid in tables.iteritems() if key is not None]
+
+                for searching_table in table_search_scope:
+                    for cid, col in enumerate(searching_table.columns):
+                        # convert aggr into object
+                        aggr_obj = None 
+                        if aggr:
+                            aggr_obj = Aggregation(aggr)
+
+                        column_infos.append((tables[prefix], cid, aggr_obj))
+                        column_objs.append(col)
             else:
                 col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
   
@@ -300,6 +302,7 @@ class Database:
                     return False, None, err_msg
             
             preds.append(Predicate(rules[0], op, rules[1]))
+
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
         result = Table("SelectQuery", column_objs)
@@ -324,14 +327,17 @@ class Database:
                         sub_entity[idx] = fst_e.values[cid]
                     result.insert(sub_entity)
 
-        ####### TODO: implement Aggregation function ########
-        #### generate new table from the result table above ####
-        #### Maybe assign the table back to result variable when all work are done?####
-        aggr_cols = []
-        aggr_entity = []
-        # loop for possible serveral aggregations
-        # col_id is the column id in result table
-        for col_id, (col_info, col_obj) in enumerate(zip(column_infos, column_objs)):
+        ''' Create new table if aggregation exists '''
+        # check only the first column for the aggregation function
+        col_id = 0
+        col_info = column_infos[col_id]
+        col_obj = column_objs[col_id]
+        # if Aggregation in column_infos exist
+        # do nothing if no Aggregation
+        if col_info[2]:
+            # container to save new columns
+            aggr_cols = []
+            aggr_entity = []
             # apply aggregation function
             # get a copy of column, and modify the name to aggr_name(col_name)
             aggr_col = copy.deepcopy(col_obj)
@@ -354,11 +360,10 @@ class Database:
                 aggr_cols.append(aggr_col)
                 aggr_entity.append(aggr_value)
 
-        aggr_result = Table("SelectAggrQuery", aggr_cols)
-        aggr_result.insert(aggr_entity)
+            aggr_result = Table("SelectAggrQuery", aggr_cols)
+            aggr_result.insert(aggr_entity)
 
-        result = aggr_result    
-        ######## END TODO #########
+            result = aggr_result
 
         return True, result, None 
 
@@ -596,7 +601,6 @@ class Aggregation:
         funcs = {
             'sum': self.summation,
             'count': self.count,
-            None: id
         }
         self.func = funcs[func_name]
         self.func_name = func_name
@@ -639,7 +643,7 @@ class Aggregation:
         else:
             pass
 
-        return len(table)
+        return 0, None
 
 class Predicate:
     def __init__(self, rule1, op, rule2):
