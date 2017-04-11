@@ -157,6 +157,14 @@ class Database:
         else:
             col_info = None
             col_obj = None
+            i = 0
+            if len(tables) > 1:
+                for (t_alias, tid), (alias, index) in zip(tables.iteritems(), table_aliases.iteritems()):
+                    t = self.get_table(tid)
+                    if cn in t.col_name2id and t.name == alias:
+                        i += 1
+                if i > 1:
+                    return None, None, "Ambiguous request"
             # look into all tables and see if there's column named cn
             for t_alias, tid in tables.iteritems():
                 t = self.get_table(tid)
@@ -311,7 +319,7 @@ class Database:
             if len(tables) == 2:
                 for snd_e in tables_obj[1].entities:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
-                    if check: 
+                    if check : 
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
@@ -378,7 +386,6 @@ class Database:
         if not len(predicates):
             return True, None
         if operator == None:
-            bool1, err_msg = predicates[0].evaluate_predicates(entity1, entity2)
             return predicates[0].evaluate_predicates(entity1, entity2)
         else:
             operator = operator.lower()
