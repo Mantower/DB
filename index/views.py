@@ -33,6 +33,7 @@ def sql_view(request):
         sql_str = sql_unicode.encode('ascii','ignore')
         
         Uans = re.sub(r"\r\n"," ",sql_str)
+        Uans = Uans.replace('\n', ' ')
         #print(Uans)
         #print("++++++++++++++")
         pattern = re.compile(";", re.IGNORECASE)
