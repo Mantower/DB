@@ -1,6 +1,7 @@
 # db that stores everything
 from parseSQL import *
 import operator as Libop
+import copy
 
 class Database:
     def __init__(self):
@@ -150,6 +151,7 @@ class Database:
             return col_info, col_obj, None
         # prefix not provided
         else:
+            
             col_info = None
             col_obj = None
             # look into all tables and see if there's column named cn
@@ -157,13 +159,15 @@ class Database:
                 t = self.get_table(tid)
                 try:
                     cid = t.col_name2id[cn]
-                    # Todo: convert aggr into object
                     col_info = (table_aliases[t_alias], cid, Aggregation(aggr))
                     col_obj = t.columns[cid]
                     break
-                except:
-                    pass
+                # table name not found in this table, go on next table
+                except exception as err:
+                    print("exception:"+err)
+                    
             # col not found
+           
             if not col_obj:
                 return None, None, "No column named " + cn + "."
             return col_info, col_obj, None
@@ -271,6 +275,7 @@ class Database:
                                 column_objs.append(col)
             else:
                 col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
+  
                 if not err_msg:
                     column_infos.append(col_info)
                     column_objs.append(col_obj)
@@ -323,14 +328,36 @@ class Database:
         #### generate new table from the result table above ####
         #### Maybe assign the table back to result variable when all work are done?####
         aggr_cols = []
-        aggr_entities = []
+        aggr_entity = []
         # loop for possible serveral aggregations
-        for col_info in column_infos:
+        # col_id is the column id in result table
+        for col_id, (col_info, col_obj) in enumerate(zip(column_infos, column_objs)):
             # apply aggregation function
-            # Can utilize Aggregation Class defined below
-            pass
+            # get a copy of column, and modify the name to aggr_name(col_name)
+            aggr_col = copy.deepcopy(col_obj)
+            # remove column constraint
+            # e.g. Count(Name):
+            # the constraint is VarcharConstraint at first
+            # but the value becomes int after aggregation
+            # remove or intconstraint()?!?!?!
+            aggr_col.constraint = IntConstraint()
+            # get the aggr function
+            aggr_func = col_info[2]
+            # apply aggregation function on the result table
+            aggr_value, err_msg = aggr_func.aggregate(result, col_id)
 
+            if err_msg:
+                return False, None, err_msg
+            else:
+                # modify the column name
+                aggr_col.name = aggr_func.func_name + "(" + aggr_col.name + ")"
+                aggr_cols.append(aggr_col)
+                aggr_entity.append(aggr_value)
 
+        aggr_result = Table("SelectAggrQuery", aggr_cols)
+        aggr_result.insert(aggr_entity)
+
+        result = aggr_result    
         ######## END TODO #########
 
         return True, result, None 
@@ -422,7 +449,7 @@ class Table:
         # Can speed up by better Data Structure
         for e in self.entities:
             if not key_id:
-                if (e.values[:]==entity.values[:]):
+                if (e.values[:] == entity.values[:]):
                     return False, "Duplicate data insertion"
             # Extract key column values of every entities, and compare with the one we want to test
             # If there's same combination, we say this entity is invalid
@@ -572,22 +599,48 @@ class Aggregation:
             None: id
         }
         self.func = funcs[func_name]
+        self.func_name = func_name
 
-    def aggregate(self, table):
+    def aggregate(self, table, column_id):
         """To apply the function on table. 
         Args:
             table (Table): The table to apply aggregation function.
+            column_id (Int | '*'): The column to apply aggregation function.
         Returns:
-            Table|Value: ?? Not sure here
+            Int: The return value after applying the aggregation function. None if error.
+            String: The error message. None if no error.
         """
-        return self.func(table)
+        return self.func(table, column_id)
 
-    def summation(self, table):
-        return sum(table)
+    def summation(self, table, column_id):
+        # sum can only apply on int column
+        # not ok to apply sum on all columns
+        if column_id == '*':
+            return None, "Can not apply Sum() on '*'"
+        # sum up rows with non-None value of that column 
+        # None is not added
+        else:
+            # cannot apply sum on varchar column
+            # use some int to test if valid for this column
+            some_int = 34
+            valid, err_msg = table.columns[column_id].constraint.is_valid(some_int)
+            if not valid:
+                return None, "Can not apply Sum() on '" + table.columns[column_id].name + "'"
 
-    def count(self, table):
+            sum_of_col = sum([ent.values[column_id] for ent in table.entities])
+
+        return sum_of_col, None
+
+    def count(self, table, column_id):
+        # count row
+        if column_id == '*':
+            pass
+        # count rows with non-None value of that column 
+        else:
+            pass
+
         return len(table)
-      
+
 class Predicate:
     def __init__(self, rule1, op, rule2):
         """The init function of Predicate. rule contains value or table and column name. 

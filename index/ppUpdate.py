@@ -1670,37 +1670,37 @@ class ParserElement(object):
                 continue
             if not t:
                 continue
-            print("t---"+t)
+        
             out = ['\n'.join(comments), t]
             comments = []
             ans = ""
             try:
                 out.append(self.parseString(t, parseAll=parseAll).dump())
                 ans = (self.parseString(t, parseAll=parseAll))
-                print(ans)
+                #print(ans)
             except ParseBaseException as pe:
                 fatal = "(FATAL)" if isinstance(pe, ParseFatalException) else ""
-                print("out:::"+str(fatal))
+                #print("out:::"+str(fatal))
                 if '\n' in t:
                     out.append(line(pe.loc, t))
                     out.append(' '*(col(pe.loc,t)-1) + '^' + fatal)
                 else:
                     out.append(' '*pe.loc + '^' + fatal)
-                print("pe loc")
-                print(t[pe.loc-1])
+                #print("pe loc")
+                #print(t[pe.loc-1])
                 if ('")"' or '"("') in str(pe):
                     if t[pe.loc-1] == " ":
-                        print("FAAAAAAAAAAAAAAA")
+                        #print("FAAAAAAAAAAAAAAA")
                         return False, "FATL: Unexpected white space" 
                 out.append("FAIL: " + str(pe))
-                print("out.:"+str(out))
+                #print("out.:"+str(out))
                 allResults.append(out)
                 success = False
                 return success, "FAIL: " + str(pe)
                 
             if printResults:
                 out.append('')
-                print('\n'.join(out))
+                #print('\n'.join(out))
                 #Added
                 allResults.append(out)
             else:

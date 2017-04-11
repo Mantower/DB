@@ -30,7 +30,7 @@ def input_text(DB,sqlText):
 	#Make them into list
 
 	sqlList = [s.strip() for s in st.splitlines()]
-	print("sqlList:"+str(sqlList))
+	#print("sqlList:"+str(sqlList))
 	#Call the specific function
 	success = []
 	errMsg = []
@@ -39,7 +39,7 @@ def input_text(DB,sqlText):
 		if str(obj) == "":
 			continue
 		act = obj.split(' ', 1)[0]
-		print(obj)
+		#print(obj)
 		sucTemp = "" 
 		errTemp = ""
 		table = None
@@ -115,12 +115,9 @@ def def_insert(DB,text):
 	
 	string_literal = quotedString("'")
 	columnRval = Word(alphas,alphanums+"_$") | quotedString | Word(nums)
-	#columnRval =  Word(nums) | quotedString
-	#here ident is for table name
+
 	ident	= Word(alphas, alphanums + "_$").setName("identifier")
-	'''valueCondition = Group(
-		 "(" + delimitedList( columnRval ) + ")" 
-		)'''
+
 	valueCondition = delimitedList( columnRval )
 		
 	#for brackets
@@ -128,15 +125,6 @@ def def_insert(DB,text):
 	
 
 	#define the grammar
-	"""
-	insertStmt  << ( Group(INSERT + INTO)  + 
-					ident.setResultsName("tables")+
-					Optional(valueCondition.setResultsName("col")) +VALUES +
-					 valueCondition.setResultsName("val")
-					)
-
-	"""
-
 	insertStmt  << ( Group(INSERT + INTO)  + 
 					ident.setResultsName("tables")+
 					Optional( "(" + (delimitedList(valueCondition).setResultsName("col")| (CharsNotIn(")")- ~Word(printables).setName("<unknown>") )) + ")") +
@@ -155,7 +143,7 @@ def def_insert(DB,text):
 	else:
 		return success, tokens
 def def_select(DB, text):
-	print("select function")
+	#print("select function")
 	LPAR,RPAR,COMMA = map(Suppress,"(),")
 	select_stmt = Forward().setName("select statement")
 
@@ -235,11 +223,7 @@ def def_select(DB, text):
 
 	join_source = Forward()
 	select_table =  Group(Group(database_name("database") + "." + table_name("table"))+ Optional(Optional(AS) + table_alias("table_alias")))  | Group(table_name("table")  + Optional(Optional(AS) + table_alias("table_alias")))   
-	#single_source = ( Group(delimitedList( Group(Group(database_name("database") + "." + table_name("table")) | table_name("table")).setResultsName("tables")     +   Optional(Group(AS + table_alias("table_alias"))).setResultsName("various"))))
-	'''+ Optional(INDEXED + BY + index_name("name") | NOT + INDEXED)("index") | 
-	(LPAR + select_stmt + RPAR + Optional(Optional(AS) + table_alias)) | 
-	(LPAR + join_source + RPAR) )
-	'''
+
 	#here ident is for table name
 	ident   = Word( alphas, alphanums + "_$")
 
@@ -285,17 +269,13 @@ def process_where_expression(arrayContent):
 		forw1 = None
 		forw2 = None
 		value2 = None
-		word1 = ""
-		word2 = ""
-		
-
 		word1 = arrayContent[0]
 		word2 = arrayContent[2]
-		print(len(word1))
+
 		
 		
 		#word1 type will be table.column , no value
-		print(word1)
+
 		if len(word1) == 3:
 			if word1[1]=='.':
 				pre1 = word1[0]
@@ -307,8 +287,6 @@ def process_where_expression(arrayContent):
 				# int value: 123
 				value1 = int(word1[0])
 			except:
-				print("not int")
-				print(word1[0][0])
 				# string value:"abc" 
 				if word1[0][0] == '"' or word1[0][0] == "'":
 					value1 = word1[0][1:-1]
@@ -332,7 +310,6 @@ def process_where_expression(arrayContent):
 				else:
 					forw2 = word2[0]
 		
-		#result = [ [pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]]
 		'''print(pre1)
 		print(forw1)
 		print(value1)
@@ -342,7 +319,7 @@ def process_where_expression(arrayContent):
 		print(forw2)
 		print(value2)
 		print(arrayContent[1])'''
-		#print(result)
+
 		return [[pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]]
 	else:
 		return "Error: two words after where expression"
@@ -356,12 +333,12 @@ def process_input_select(DB, tokens):
 	predicates = []
 	columns = []
 	operator = None
-	print(tokens)
+	
 	for i in range(len(tokens)):
 		tables = tokens[i]["tables"]
 		col_names = tokens[i]["columns"]
 
-		print(col_names.dump())
+		#print(col_names.dump())
 		
 		#Not deal with table name, and "." and SUM and COUNT
 		'''
@@ -388,13 +365,15 @@ def process_input_select(DB, tokens):
 			if(k[0]=="COUNT" or k[0]=="SUM"):
 				if len(k[2])==3:
 					if k[2][1]=='.':
-						columns.append([k[2][0], k[2][2], k[0]])
+						columns.append([k[2][0], k[2][2], k[0].lower()])
 						print("in count with dot")
 					else:
 						print("in count three character but no dot")
-						columns.append([None, k[2][0], k[0]])
+						columns.append([None, k[2][0], k[0].lower()])
 				else:
-					columns.append([None, k[2][0], k[0]])
+					print("in colnmae")
+					print(k[2][0])
+					columns.append([None, k[2][0], k[0].lower()])
 			else:
 				if len(k) == 3:
 					if k[1] == ".":
@@ -457,7 +436,7 @@ def process_input_select(DB, tokens):
 
 		try:
 			and_expr = tokens[i]["and_expr"]
-			operator = "AND"
+			operator = "and"
 			ans = process_where_expression(and_expr)
 			predicates.append(ans)
 			#predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
@@ -467,7 +446,7 @@ def process_input_select(DB, tokens):
 			
 		try: 
 			or_expr = tokens[i]["or_expr"]
-			operator = "OR"
+			operator = "or"
 			ans = process_where_expression(or_expr)
 			predicates.append(ans)
 			
@@ -476,10 +455,10 @@ def process_input_select(DB, tokens):
 
 		
 
-		print("tables:"+str(tables))
+		#print("tables:"+str(tables))
 		print("col_names:"+str(columns))
-		print("table_names:"+str(table_names))
-		print("predicates:"+str(predicates))
+		#print("table_names:"+str(table_names))
+		#print("predicates:"+str(predicates))
 		return DB.select(columns, table_names, predicates, operator)
 		
 
@@ -496,10 +475,7 @@ def process_input_create(DB,tokens):
 			tables = tokens[i]["tables"]
 			values = tokens[i]["values"]
 		except:
-			print("TABLE INCORRECT SQL")
 			return False, "FAT: Illegal value type or table name"
-		print("table:"+tables)
-		print("values:"+str(len(values))+" "+str(values))
 		for k in values:
 			length = len(k)
 			col = k[0]
@@ -525,93 +501,24 @@ def process_input_create(DB,tokens):
 			col_datatypes.append(typeOri.lower())
 			col_constraints.append(con)
 			keys.append(key)
-		"""
-		print("tables:"+tables)
-		print("col_names:"+str(col_names))
-		print("col_datatypes:"+str(col_datatypes))
-		print("col_constraints:"+str(col_constraints))
-		print("keys:"+str(keys))
-		"""
 		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		
 def process_input_insert(DB,tokens):
-	for i in range(len(tokens)):
-		print(str(tokens[i]))
+	for i in range(len(tokens)):		
 		tables = tokens[i]["tables"]
-		#cols = tokens[i]["col"]
 		values = tokens[i]["val"]
-		print("lenght:"+str(len(values)))
 		for k in range(len(values)):
-			try:
-				print("turn the value")
-				values[k] = int(values[k])
-				print(int(k))
+			try:				
+				values[k] = int(values[k])				
 			except:				
-				values[k] = values[k].replace("'","").replace('"', '')
-				print("type:string:"+values[k])
+				values[k] = values[k].replace("'","").replace('"', '')	
 		try:
-			cols = tokens[i]["col"]		
-			print("cols:"+str(cols))	
+			cols = tokens[i]["col"]					
 		except:
-			cols = None
-			print("no col asssigned")
-
-		print("values:"+str(len(values))+"\t "+str(values))
-		print("table:"+tables)
-		print("value:"+str(values))
-		print("cols:"+str(cols))
+			cols = None			
 		tableObj = DB.get_table(tables)
 		if tableObj:
 			return tableObj.insert(values, cols)
 		else:
 			return False, "Table not exists."	
 		
-def stage1Test():
-	txt = input_file("string.txt")
-	print("txt:"+txt)
-	input_text(txt)
-def testVochar():
-	#m = re.search(r"\((0-9+)\)", s)
-	while(1):
-		st = input()
-		num = st[st.find("(")+1:st.find(")")]
-		ans = st.split("(",1)[0]
-		print (ans)
-
-def test3():
-	ans = input_file("string.txt")
-	Uans = ans.replace("\n"," ")
-
-	pattern = re.compile("insert", re.IGNORECASE)
-	st = pattern.sub("\ninsert", Uans)
-	
-	tokens = def_insert(st)
-	#print(tokens)
-
-def test1():
-	ans = input_file("string.txt")
-	Uans = ans.replace("\n"," ")
-	#s = """\CREATE TABLE Person (person_id int PRIMARY KEY,name varchar(20),gender varchar(1));"""
-	
-	tokens = def_create(Uans)
-	tables = tokens["tables"]
-	values = tokens["values"]
-	print("table:"+tables)
-	print("values:"+str(len(values))+" "+str(values))
-	"""
-	for ind in tokens:
-		print(str(ind))
-		print("\n\n\n\n")
-	"""
-	print(type(tokens[0]))
-
-def test2():
-	ans = input_file("string.txt")
-	Uans = ans.replace("\n"," ")
-
-	pattern = re.compile("create", re.IGNORECASE)
-	st = pattern.sub("\ncreate", Uans)
-	
-	tokens = def_create(st)
-	
-	
