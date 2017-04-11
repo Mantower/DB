@@ -345,6 +345,8 @@ class StageTwoTest(TestCase):
             )"
         passed, table, err_msg = database_with_book_author.exec_sql(sql)
         save_db(database_with_book_author, TEST_DB_WITH_BOOK_AUTHOR)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
 
     def loadSQLData(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -357,6 +359,7 @@ class StageTwoTest(TestCase):
         fd.close()
         passed, table, err_msg = database.exec_sql(sqlFile)
         save_db(database, TEST_DB_WITH_BOOK_AUTHOR)
+        #Not sure the total response that return
 
     def testSelect1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
@@ -368,6 +371,9 @@ class StageTwoTest(TestCase):
                 editorial\
                 FROM Book;"
         passed, table, err_msg = database.exec_sql(sql)
+        self.assertEqual(passed,[True])
+        self.assertEqual(err_msg, [None])
+        self.assertEqual(table, [None])
     
     def testSelectAll(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
