@@ -157,6 +157,14 @@ class Database:
         else:
             col_info = None
             col_obj = None
+            i = 0
+            if len(tables) > 1:
+                for (t_alias, tid), (alias, index) in zip(tables.iteritems(), table_aliases.iteritems()):
+                    t = self.get_table(tid)
+                    if cn in t.col_name2id and t.name == alias:
+                        i += 1
+                if i > 1:
+                    return None, None, "Ambiguous request"
             # look into all tables and see if there's column named cn
             for t_alias, tid in tables.iteritems():
                 t = self.get_table(tid)
