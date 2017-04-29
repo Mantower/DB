@@ -597,9 +597,8 @@ class Stage2TestCase(TestCase):
                 AND\
                 Book.title = 'Star Wars';"
         passed, table, err_msg = database.exec_sql(sql)         
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
-
+        self.assertEqual(passed,[False])
+        self.assertIn("Ambiguous", err_msg[0])
 
     def test_type_mismatch(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
