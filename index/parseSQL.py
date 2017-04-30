@@ -367,13 +367,13 @@ def process_input_select(DB, tokens):
 				if len(k[2])==3:
 					if k[2][1]=='.':
 						columns.append([k[2][0], k[2][2], k[0].lower()])
-						print("in count with dot")
+						#print("in count with dot")
 					else:
-						print("in count three character but no dot")
+						#print("in count three character but no dot")
 						columns.append([None, k[2][0], k[0].lower()])
 				else:
-					print("in colnmae")
-					print(k[2][0])
+					#print("in colnmae")
+					#print(k[2][0])
 					columns.append([None, k[2][0], k[0].lower()])
 			else:
 				if len(k) == 3:
@@ -413,16 +413,7 @@ def process_input_select(DB, tokens):
 			except:
 				table_names.append([None, table])
 
-		"""try:
-			table_alias = tokens[i]["various"]
-			for k in range(len(table_alias[1])):
-				#print("alias")
-				#print(table_alias[1][k])
-				table_names.append([table_alias[1][k], tables[k]])
-		except:
-			#print("No Alias")
-			for k in range(len(tables)):
-				table_names.append([None, tables[k]])"""
+		
 		#Where expression
 		try:
 			#tokens[i]["tables"]
@@ -433,7 +424,8 @@ def process_input_select(DB, tokens):
 			predicates.append(ans)
 			#not consider the . condition
 		except:
-			print("No where expresstion")
+			pass
+			#print("No where expresstion")
 
 		try:
 			and_expr = tokens[i]["and_expr"]
@@ -443,7 +435,8 @@ def process_input_select(DB, tokens):
 			#predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
 	
 		except:
-			print("No and expression")
+			pass
+			#print("No and expression")
 			
 		try: 
 			or_expr = tokens[i]["or_expr"]
@@ -452,7 +445,8 @@ def process_input_select(DB, tokens):
 			predicates.append(ans)
 			
 		except:
-			print("no OR expression")
+			pass
+			#print("no OR expression")
 
 		
 

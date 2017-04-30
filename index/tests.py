@@ -625,3 +625,18 @@ class Stage2TestCase(TestCase):
         passed, table, err_msg = database.exec_sql(sql) 
         self.assertEqual(passed,[False])
         self.assertIn("Type mismatch", err_msg[0]) 
+    def test_logic_error(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "SELECT \
+                a.name, b.title\
+                FROM \
+                Author AS b, Book AS a;"
+        passed, table, err_msg = database.exec_sql(sql) 
+        self.assertEqual(passed,[False])
+        self.assertIn("No column", err_msg[0]) 
+    def test_logic_alias_error(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "select authorId , title from Author as a,  Book as a;"
+        passed, table, err_msg = database.exec_sql(sql) 
+        self.assertEqual(passed,[False])
+        self.assertIn("alias name error", err_msg[0]) 
