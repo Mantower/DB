@@ -109,7 +109,34 @@ class Database:
             if t.name == name:
                 return t
         return None
-        
+    
+    def convert_table_names_to_tid(self, table_names):
+        # tables stores ('Tablealias':tableid)
+        tables = {}
+        tables_obj = []
+        aliases = {}
+        # use alias of table as key to get the object
+        # if alias is not provided, use table name as key
+        # tn for table name
+        index = 0
+        for alias, tn in table_names:
+            #try to find table id in the fast look up table
+            try:
+                tid = self.tab_name2id[tn]
+                if alias:
+                    tables[alias] = tid
+                    aliases[alias] = index
+                else:
+                    tables[tn] = tid
+                    aliases[tn] = index
+                tables_obj.append(self.get_table(tid))
+            except:
+                return False, None, "No table named " + tn + "." 
+            index += 1
+        output = (table, tables_obj, aliases)
+        return True, output, None
+
+
     def get_column_by_names(self, prefix=None, cn=None, aggr=None, table_aliases=None, tables=None):
         """
         Helper function that converts column name into column id and Column objects.
@@ -230,28 +257,9 @@ class Database:
         """
 
         ''' Convert table names to table id'''
-        # tables stores ('Tablealias':tableid)
-        tables = {}
-        tables_obj = []
-        aliases = {}
-        # use alias of table as key to get the object
-        # if alias is not provided, use table name as key
-        # tn for table name
-        index = 0
-        for alias, tn in table_names:
-            #try to find table id in the fast look up table
-            try:
-                tid = self.tab_name2id[tn]
-                if alias:
-                    tables[alias] = tid
-                    aliases[alias] = index
-                else:
-                    tables[tn] = tid
-                    aliases[tn] = index
-                tables_obj.append(self.get_table(tid))
-            except:
-                return False, None, "No table named " + tn + "." 
-            index += 1
+        success, output, err_msg = self.convert_table_names_to_tid(able_names)
+        table, tables_obj, aliases = output
+
         ''' Convert column names to column id'''
         # [(which table, column id, aggregation function)]
         # [(int, int, Aggregation)]
