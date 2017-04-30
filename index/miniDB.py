@@ -351,6 +351,48 @@ class Database:
 
         return True, None, None
 
+    def aggregate_table(self, column_infos, column_objs, result):
+        # check only the first column for the aggregation function
+        col_id = 0
+        
+        col_info = column_infos[col_id]
+        col_obj = column_objs[col_id]
+        # if Aggregation in column_infos exist
+        # do nothing if no Aggregation
+        if col_info[2]:
+            # container to save new columns
+            aggr_cols = []
+            aggr_entity = []
+            # apply aggregation function
+            # get a copy of column, and modify the name to aggr_name(col_name)
+            aggr_col = copy.deepcopy(col_obj)
+            # remove column constraint
+            # e.g. Count(Name):
+            # the constraint is VarcharConstraint at first
+            # but the value becomes int after aggregation
+            # remove or intconstraint()?!?!?!
+            aggr_col.constraint = IntConstraint()
+            # get the aggr function
+            aggr_func = col_info[2]
+            # apply aggregation function on the result table
+        
+            aggr_value, err_msg = aggr_func.aggregate(result, col_id)
+
+            if err_msg:
+                return False, None, err_msg
+            else:
+                # modify the column name
+                aggr_col.name = aggr_func.func_name + "(" + aggr_col.name + ")"
+                aggr_cols.append(aggr_col)
+                aggr_entity.append(aggr_value)
+
+            aggr_result = Table("SelectAggrQuery", aggr_cols)
+            aggr_result.insert(aggr_entity)
+
+            result = aggr_result
+
+        return True, result, None
+
     def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
         All the inputs should be String, the function will convert strings into objects.
@@ -418,45 +460,10 @@ class Database:
             return False, None, err_msg 
 
         ''' Create new table if aggregation exists '''
-        # check only the first column for the aggregation function
-        col_id = 0
-        
-        col_info = column_infos[col_id]
-        col_obj = column_objs[col_id]
-        # if Aggregation in column_infos exist
-        # do nothing if no Aggregation
-        if col_info[2]:
-            # container to save new columns
-            aggr_cols = []
-            aggr_entity = []
-            # apply aggregation function
-            # get a copy of column, and modify the name to aggr_name(col_name)
-            aggr_col = copy.deepcopy(col_obj)
-            # remove column constraint
-            # e.g. Count(Name):
-            # the constraint is VarcharConstraint at first
-            # but the value becomes int after aggregation
-            # remove or intconstraint()?!?!?!
-            aggr_col.constraint = IntConstraint()
-            # get the aggr function
-            aggr_func = col_info[2]
-            # apply aggregation function on the result table
-        
-            aggr_value, err_msg = aggr_func.aggregate(result, col_id)
-
-            if err_msg:
-                return False, None, err_msg
-            else:
-                # modify the column name
-                aggr_col.name = aggr_func.func_name + "(" + aggr_col.name + ")"
-                aggr_cols.append(aggr_col)
-                aggr_entity.append(aggr_value)
-
-            aggr_result = Table("SelectAggrQuery", aggr_cols)
-            aggr_result.insert(aggr_entity)
-
-            result = aggr_result
-
+        success, result, err_msg = self.aggregate_table(column_infos, column_objs, result)
+        if not success:
+            return False, None, err_msg 
+    
         return True, result, None 
 
     def predicate_check(self, predicates, operator, entity1, entity2):
