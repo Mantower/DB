@@ -320,6 +320,37 @@ class Database:
 
         return True, preds, None
 
+    def insert_filtered_entities(self, tables, tables_obj, column_infos, preds, operator, result):
+        # key of table
+        for fst_e in tables_obj[0].entities:
+            if len(tables) == 2:
+                for snd_e in tables_obj[1].entities:
+                    check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
+                    if err_msg:
+                        return False, None, err_msg
+                    if check: 
+                        # take requested column and append
+                        sub_entity = [None] * len(column_infos)
+                        for idx, (which_table, cid, aggr) in enumerate(column_infos):
+                            if which_table == 0:
+                                sub_entity[idx] = fst_e.values[cid]
+                            else:
+                                sub_entity[idx] = snd_e.values[cid]
+                        result.insert_without_check(sub_entity)
+
+            else:
+                check, err_msg = self.predicate_check(preds, operator, fst_e, None)
+                if err_msg:
+                        return False, None, err_msg
+                if check:
+                    # take requested column and append
+                    sub_entity = [None] * len(column_infos)
+                    for idx, (which_table, cid, aggr) in enumerate(column_infos):
+                        sub_entity[idx] = fst_e.values[cid]
+                    result.insert_without_check(sub_entity)
+
+        return True, None, None
+
     def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
         All the inputs should be String, the function will convert strings into objects.
@@ -377,39 +408,14 @@ class Database:
         ''' Convert predicate to predicate objects '''
         success, preds, err_msg = self.convert_predicate_names_to_obj(predicates, tables, aliases)
         if not success:
-            return False, None, err_msg
-        
+            return False, None, err_msg        
 
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
         result = Table("SelectQuery", column_objs)
-        # key of table
-        for fst_e in tables_obj[0].entities:
-            if len(tables) == 2:
-                for snd_e in tables_obj[1].entities:
-                    check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
-                    if err_msg:
-                        return False, None, err_msg
-                    if check: 
-                        # take requested column and append
-                        sub_entity = [None] * len(column_infos)
-                        for idx, (which_table, cid, aggr) in enumerate(column_infos):
-                            if which_table == 0:
-                                sub_entity[idx] = fst_e.values[cid]
-                            else:
-                                sub_entity[idx] = snd_e.values[cid]
-                        result.insert_without_check(sub_entity)
-
-            else:
-                check, err_msg = self.predicate_check(preds, operator, fst_e, None)
-                if err_msg:
-                        return False, None, err_msg
-                if check:
-                    # take requested column and append
-                    sub_entity = [None] * len(column_infos)
-                    for idx, (which_table, cid, aggr) in enumerate(column_infos):
-                        sub_entity[idx] = fst_e.values[cid]
-                    result.insert_without_check(sub_entity)
+        success, _, err_msg = self.insert_filtered_entities(tables, tables_obj, column_infos, preds, operator, result)
+        if not success:
+            return False, None, err_msg 
 
         ''' Create new table if aggregation exists '''
         # check only the first column for the aggregation function
