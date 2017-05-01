@@ -585,6 +585,13 @@ class Stage2TestCase(TestCase):
         self.assertEqual(len(table[0].entities), 1)
         self.assertEqual(table[0].entities[0].values[0],650)  
 
+    def test_switched_column_table(self):
+        database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
+        sql = "select Author.*, Book.editorial from Author, Book where Book.authorId = Author.authorId"
+        passed, table, err_msg = database.exec_sql(sql)
+        print(err_msg)
+        self.assertEqual(passed,[True])
+
     def test_ambigousError(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "SELECT\
@@ -612,7 +619,6 @@ class Stage2TestCase(TestCase):
         self.assertEqual(passed,[False])
         self.assertIn("Type mismatch", err_msg[0])
 
-
     def test_comparision_mismatch(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "SELECT\
@@ -625,6 +631,7 @@ class Stage2TestCase(TestCase):
         passed, table, err_msg = database.exec_sql(sql) 
         self.assertEqual(passed,[False])
         self.assertIn("Type mismatch", err_msg[0]) 
+
     def test_logic_error(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "SELECT \
@@ -634,9 +641,10 @@ class Stage2TestCase(TestCase):
         passed, table, err_msg = database.exec_sql(sql) 
         self.assertEqual(passed,[False])
         self.assertIn("No column", err_msg[0]) 
+
     def test_logic_alias_error(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "select authorId , title from Author as a,  Book as a;"
         passed, table, err_msg = database.exec_sql(sql) 
         self.assertEqual(passed,[False])
-        self.assertIn("alias name error", err_msg[0]) 
+        self.assertIn("Alias name", err_msg[0]) 

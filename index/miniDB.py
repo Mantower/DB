@@ -137,8 +137,14 @@ class Database:
             try:
                 tid = self.tab_name2id[tn]
                 if alias:
-                    tables[alias] = tid
-                    aliases[alias] = index
+                    # try to see if the alias exist
+                    try:
+                        _ = tables[alias]
+                        # if reached here, alias is used
+                        return False, None, "Alias name" + alias + " is used."
+                    except:
+                        tables[alias] = tid
+                        aliases[alias] = index
                 else:
                     tables[tn] = tid
                     aliases[tn] = index
@@ -192,7 +198,7 @@ class Database:
                         aggr_obj = None 
                         if aggr:
                             aggr_obj = Aggregation(aggr)
-                        column_infos.append((tables[prefix], cid, aggr_obj))
+                        column_infos.append((aliases[prefix], cid, aggr_obj))
                         column_objs.append(col)
             else:
                 col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
@@ -245,6 +251,7 @@ class Database:
             aggr_obj = None 
             if aggr:
                 aggr_obj = Aggregation(aggr)
+
             col_info = (table_aliases[prefix], cid, aggr_obj)
             col_obj = t.columns[cid]
             return col_info, col_obj, None
@@ -305,6 +312,7 @@ class Database:
                 # with table name and column name
                 if cn:
                     col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, value, aliases, tables)
+                    
                 # with value
                 else:
                     col_info = (None, None, value)
@@ -332,6 +340,7 @@ class Database:
                         # take requested column and append
                         sub_entity = [None] * len(column_infos)
                         for idx, (which_table, cid, aggr) in enumerate(column_infos):
+                            
                             if which_table == 0:
                                 sub_entity[idx] = fst_e.values[cid]
                             else:
