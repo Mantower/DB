@@ -1676,8 +1676,8 @@ class ParserElement(object):
             ans = ""
             out = ""
             try:
-                out.append(ans.dump())
                 ans = (self.parseString(t, parseAll=parseAll))
+                out.append(ans)
                 #print(ans)
             except ParseBaseException as pe:
                 fatal = "(FATAL)" if isinstance(pe, ParseFatalException) else ""
