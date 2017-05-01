@@ -7,14 +7,16 @@
 
 from miniDB import *
 import shlex
+import timeit
 import sys
 import re
 import unicodedata
 from ppUpdate import *
+f = open("output.txt","w")
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
 		content = content_file.read()
-	#print("file:"+content)
+	
 	return DB,content
 def input_text(DB,sqlText):
 	#Eliminate all newline
@@ -30,7 +32,7 @@ def input_text(DB,sqlText):
 	#Make them into list
 
 	sqlList = [s.strip() for s in st.splitlines()]
-	#print("sqlList:"+str(sqlList))
+	
 	#Call the specific function
 	success = []
 	errMsg = []
@@ -39,7 +41,7 @@ def input_text(DB,sqlText):
 		if str(obj) == "":
 			continue
 		act = obj.split(' ', 1)[0]
-		#print(obj)
+		
 		sucTemp = "" 
 		errTemp = ""
 		table = None
@@ -137,14 +139,20 @@ def def_insert(DB,text):
 	simpleSQL = insertStmt
 	oracleSqlComment = "--" + restOfLine
 	simpleSQL.ignore( oracleSqlComment )
-	success, tokens = simpleSQL.runTests(text)
+	
+	
 
+	start = timeit.timeit()
+	success, tokens = simpleSQL.runTests(text)
+	end = timeit.timeit()
+	f.write(str(end-start))
+	#print(end-start)
 	if(success):
 		return process_input_insert(DB,tokens)
 	else:
 		return success, tokens
 def def_select(DB, text):
-	#print("select function")
+	
 	LPAR,RPAR,COMMA = map(Suppress,"(),")
 	select_stmt = Forward().setName("select statement")
 
@@ -311,15 +319,6 @@ def process_where_expression(arrayContent):
 				else:
 					forw2 = word2[0]
 		
-		'''print(pre1)
-		print(forw1)
-		print(value1)
-		
-		print(pre2)
-
-		print(forw2)
-		print(value2)
-		print(arrayContent[1])'''
 
 		return [[pre1, forw1,value1], arrayContent[1], [pre2, forw2, value2 ]]
 	else:
@@ -339,41 +338,19 @@ def process_input_select(DB, tokens):
 		tables = tokens[i]["tables"]
 		col_names = tokens[i]["columns"]
 
-		#print(col_names.dump())
-		
-		#Not deal with table name, and "." and SUM and COUNT
-		'''
-		try:
-			agre = col_names["agre_expr"]
-			name = agre["agre_value"]
-			if len(name)==3 and name[1]=='.':				
-				columns.append([name[0], name[2],agre[0]])
-			elif len(name) == 1:
-				columns.append([None, name[0],agre[0]])			
-		except:
-			print("no aggregation function")
-		try:
-			col = col_names["col"]
-			
-			if len(col)==3 and col[1]=='.':				
-				columns.append([col[0], col[2],None])
-			elif len(col) == 1:
-				columns.append([None, col[0],None])	
-		except:
-			print("no col selected")'''
+	
 		
 		for k in col_names:
 			if(k[0]=="COUNT" or k[0]=="SUM"):
 				if len(k[2])==3:
 					if k[2][1]=='.':
 						columns.append([k[2][0], k[2][2], k[0].lower()])
-						#print("in count with dot")
+						
 					else:
-						#print("in count three character but no dot")
+						
 						columns.append([None, k[2][0], k[0].lower()])
 				else:
-					#print("in colnmae")
-					#print(k[2][0])
+					
 					columns.append([None, k[2][0], k[0].lower()])
 			else:
 				if len(k) == 3:
@@ -383,27 +360,7 @@ def process_input_select(DB, tokens):
 						columns.append([None, k[0], None])	
 				else:
 					columns.append([None, k[0], None])
-		'''for k in col_names:
-            if k[0].lower()=="count" or k[0].lower()=="sum":
-                if len(k[2])==3:
-                    if k[2][1] == ".":
-						columns.append([k[2][0], k[2][2], k[0]])
-                        print("in count with dot")
-                    else:
-                        print("in count three character but no dot")
-						columns.append(None, k[2][0], k[0]])
-                else:
-                    print("in count only column")
-            else:
-                if len(k) == 3:
-                    if k[1] == ".":
-                        print("with dot")
-						columns.append([k[0], k[2], None])
-                    else:
-                        print("three character but no dot")
-						columns.append(None, k[2], None])
-                else:
-                    print("only column")'''
+		
 		
 		for k in tables:
 			table = k["table"][0]
@@ -411,32 +368,26 @@ def process_input_select(DB, tokens):
 				table_alias = k["table_alias"][0]
 				table_names.append([table_alias, table])
 			except:
-				table_names.append([None, table])
-
-		
+				table_names.append([None, table])		
 		#Where expression
 		try:
-			#tokens[i]["tables"]
 			where_expr = tokens[i]["where_expr"]
-			#print("____")
-			#print(where_expr)
+			
 			ans = process_where_expression(where_expr)
 			predicates.append(ans)
-			#not consider the . condition
+			
 		except:
 			pass
-			#print("No where expresstion")
+			
 
 		try:
 			and_expr = tokens[i]["and_expr"]
 			operator = "and"
 			ans = process_where_expression(and_expr)
 			predicates.append(ans)
-			#predicates.append([None, where_expr[0],None], where_expr[1], [None, where_expr[2], None ])
-	
+			
 		except:
 			pass
-			#print("No and expression")
 			
 		try: 
 			or_expr = tokens[i]["or_expr"]
@@ -446,14 +397,7 @@ def process_input_select(DB, tokens):
 			
 		except:
 			pass
-			#print("no OR expression")
-
-		
-
-		#print("tables:"+str(tables))
-		#print("col_names:"+str(columns))
-		#print("table_names:"+str(table_names))
-		#print("predicates:"+str(predicates))
+			
 		return DB.select(columns, table_names, predicates, operator)
 		
 

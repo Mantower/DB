@@ -21,7 +21,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-
+import timeit
 __doc__ = \
 """
 pyparsing module - Classes and methods to define and execute parsing grammars
@@ -1659,12 +1659,15 @@ class ParserElement(object):
             tests = list(map(str.strip, tests.splitlines()))
         if isinstance(comment, basestring):
             comment = Literal(comment)
+        out = []
         allResults = []
         comments = []
         success = True
         allValue = []
+        #f = open("w","output.txt" )
+       
         for t in tests:
-
+            #start = timeit.timeit()
             if comment is not None and comment.matches(t, False) or comments and not t:
                 comments.append(t)
                 continue
@@ -1674,10 +1677,10 @@ class ParserElement(object):
             
             comments = []
             ans = ""
-            out = ""
+
             try:
                 ans = (self.parseString(t, parseAll=parseAll))
-                out.append(ans)
+                out.append(ans.dump)
                 #print(ans)
             except ParseBaseException as pe:
                 fatal = "(FATAL)" if isinstance(pe, ParseFatalException) else ""
