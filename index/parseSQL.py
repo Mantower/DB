@@ -451,7 +451,7 @@ def process_input_select(DB, tokens):
 		
 
 		#print("tables:"+str(tables))
-		print("col_names:"+str(columns))
+		#print("col_names:"+str(columns))
 		#print("table_names:"+str(table_names))
 		#print("predicates:"+str(predicates))
 		return DB.select(columns, table_names, predicates, operator)

@@ -1671,11 +1671,12 @@ class ParserElement(object):
             if not t:
                 continue
         
-            out = ['\n'.join(comments), t]
+            
             comments = []
             ans = ""
+            out = ""
             try:
-                out.append(self.parseString(t, parseAll=parseAll).dump())
+                out.append(ans.dump())
                 ans = (self.parseString(t, parseAll=parseAll))
                 #print(ans)
             except ParseBaseException as pe:
