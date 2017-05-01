@@ -329,6 +329,25 @@ class Database:
         return True, preds, None
 
     def insert_filtered_entities(self, tables, tables_obj, column_infos, preds, operator, result):
+        """
+        Helper function that inserts entities that fulfills the predicates.
+        Args:
+            tables ({String:int}): Dictionary that maps table alias to table id.
+            tables_obj ([Table]): List that contains the tables to query on.
+            column_infos ([(Int, Int, Aggregation)]): List that contains infomation of selected column.
+                (which table, column id, aggregation function)
+                which table: index value of SQL sequence.
+                column id: index value of the column in the table.
+                aggregation function: the Aggregation objects.
+            preds ([Predicate]): List of Predicate objects.
+            operator (String): Operator between predicates. Used when more than two predicates.
+            result (Table): Table to insert into.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            None: None. For same return format.
+            String: Error message.
+        """
         # key of table
         for fst_e in tables_obj[0].entities:
             if len(tables) == 2:
@@ -361,6 +380,22 @@ class Database:
         return True, None, None
 
     def aggregate_table(self, column_infos, column_objs, result):
+        """
+        Helper function that aggregate the table selected.
+        Args:
+            column_infos ([(Int, Int, Aggregation)]): List that contains infomation of selected column.
+                (which table, column id, aggregation function)
+                which table: index value of SQL sequence.
+                column id: index value of the column in the table.
+                aggregation function: the Aggregation objects.
+            column_objs ([Column]): List of Column.
+            result (Table): Table to aggregate.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            Table: Table aggregated. Not changed if no aggregation function to apply.
+            String: Error message.
+        """
         # check only the first column for the aggregation function
         col_id = 0
         
