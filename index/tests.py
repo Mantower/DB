@@ -589,7 +589,6 @@ class Stage2TestCase(TestCase):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)
         sql = "select Author.*, Book.editorial from Author, Book where Book.authorId = Author.authorId"
         passed, table, err_msg = database.exec_sql(sql)
-        print(err_msg)
         self.assertEqual(passed,[True])
 
     def test_ambigousError(self):

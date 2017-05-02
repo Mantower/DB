@@ -12,7 +12,7 @@ import sys
 import re
 import unicodedata
 from ppUpdate import *
-f = open("output.txt","w")
+#f = open("output.txt","w")
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
 		content = content_file.read()
@@ -145,7 +145,7 @@ def def_insert(DB,text):
 	start = timeit.timeit()
 	success, tokens = simpleSQL.runTests(text)
 	end = timeit.timeit()
-	f.write(str(end-start))
+	#f.write(str(end-start))
 	#print(end-start)
 	if(success):
 		return process_input_insert(DB,tokens)
