@@ -2,6 +2,7 @@
 from parseSQL import *
 import operator as Libop
 import copy
+import btree
 
 class Database:
     def __init__(self):
@@ -525,6 +526,8 @@ class Database:
                 return False, err_msg
             return Operator.str2dt[operator](bool1, bool2), None
 
+
+
 class Datatype():
     INT = 1
     VARCHAR = 2
@@ -554,6 +557,8 @@ class Table:
         self.col_name2id = {}
         for i, c in enumerate(columns):
             self.col_name2id[c.name] = i
+        self.indexing = None
+        self.indexing_type = None
   
     def entity_is_vaild(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
@@ -687,6 +692,25 @@ class Table:
             if c.name == name:
                 return c
         return None
+
+
+    def indexing(self, colName, indexType):
+        """ Create an indexing for a table, indexing on colName
+        indexType refers to either B+-tree or hashing.
+        Args:
+            colName: column name of the column we want to index after
+            indexType: index type we want to structure the table after (either B+-tree or hashing)
+        """
+
+        if indexType == "btree":
+            if self.get_column(colName) is not None:
+                indexing = BPlusTree(5)
+                indexing_type = indexType
+                return True, None
+            else:
+                return False, "Invalid indexing column"
+        return False, "Invalid indexing type"
+
 
 class Column:
     def __init__(self, name, datatype, constraint_val, key):
