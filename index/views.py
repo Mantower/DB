@@ -40,7 +40,7 @@ def sql_view(request):
         pattern = re.compile(";", re.IGNORECASE)
         st = pattern.sub(";\n", Uans)
         sqlList = [s.strip() for s in st.splitlines()]
-        print(sqlList)
+        #print(sqlList)
 
         
         success, tables, err_msgs = [], [], []
@@ -50,7 +50,7 @@ def sql_view(request):
             tables.extend(t)
             err_msgs.extend(err)
 
-        print(tables)
+        #print(tables)
         # additional message to indicate the execution is successful or not
         panel_msgs = []
         for s in success:

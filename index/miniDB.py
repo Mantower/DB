@@ -109,7 +109,109 @@ class Database:
             if t.name == name:
                 return t
         return None
-        
+    
+    def convert_table_names_to_tid(self, table_names):
+        """
+        Helper function that converts table name into table_name-id dict, 
+        Table objects and alias-orderid dict.
+        Args:
+            table_names ([String]): Names of tables to query on.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            {String:int}: Dictionary that maps table alias to table id.
+            [Table]: Table objects for the corresponding name.
+            {String:int}: Dictionary that maps table alias to SQL order.
+            String: Error message.
+        """
+        # tables stores ('Tablealias':tableid)
+        tables = {}
+        tables_obj = []
+        aliases = {}
+        # use alias of table as key to get the object
+        # if alias is not provided, use table name as key
+        # tn for table name
+        index = 0
+        for alias, tn in table_names:
+            #try to find table id in the fast look up table
+            try:
+                tid = self.tab_name2id[tn]
+                if alias:
+                    # try to see if the alias exist
+                    try:
+                        _ = tables[alias]
+                        # if reached here, alias is used
+                        return False, None, "Alias name" + alias + " is used."
+                    except:
+                        tables[alias] = tid
+                        aliases[alias] = index
+                else:
+                    tables[tn] = tid
+                    aliases[tn] = index
+                tables_obj.append(self.get_table(tid))
+            except:
+                return False, None, "No table named " + tn + "." 
+            index += 1
+        output = (tables, tables_obj, aliases)
+        return True, output, None
+
+    def convert_column_names_to_cid(self, column_names, tables, aliases):
+        """
+        Helper function that converts column name into 
+        orderid-columnid-aggrgation pairs and Column objects.
+        Args:
+            column_names ([String]): Names of columns to query on.
+            tables ({String:int}): Dictionary that maps table alias to table id.
+            aliases({String:int}): Dictionary that maps table alias to SQL order.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            [(int,int,Aggregation)]: List of tuple that stores (table_orderid, columnid, Aggregation)
+            [Column]: Column objects for the corresponding name.
+            String: Error message.
+        """
+        # [(which table, column id, aggregation function)]
+        # [(int, int, Aggregation)]
+        # Note: which table is the sequence in the query, not the real table id
+        # converted column information from column_names for future use
+        column_infos = []
+        # [Columns]
+        # The column objects
+        column_objs = []
+        # [[None, '*', None]] for select * from table case.
+        # cn for column name
+        # aggr for aggregation function name
+        for prefix, cn, aggr in column_names:
+            if cn == '*':
+                table_search_scope = None
+                # with prefix, search only one table
+                if tables.get(prefix) != None:
+                    table_search_scope = [self.tables[tables[prefix]]]
+                # no prefix, search all table
+                else:
+                    table_search_scope = [self.tables[tid] for key, tid in tables.iteritems() if key is not None]
+                for searching_table in table_search_scope:
+                    if prefix == None:
+                        prefix = searching_table.name
+                    for cid, col in enumerate(searching_table.columns):
+                        # convert aggr into object
+                        aggr_obj = None 
+                        if aggr:
+                            aggr_obj = Aggregation(aggr)
+                        column_infos.append((aliases[prefix], cid, aggr_obj))
+                        column_objs.append(col)
+            else:
+                col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
+  
+                if not err_msg:
+                    column_infos.append(col_info)
+                    column_objs.append(col_obj)
+                else:
+                    return False, None, err_msg
+
+        output = (column_infos, column_objs)
+        return True, output, None
+
     def get_column_by_names(self, prefix=None, cn=None, aggr=None, table_aliases=None, tables=None):
         """
         Helper function that converts column name into column id and Column objects.
@@ -149,6 +251,7 @@ class Database:
             aggr_obj = None 
             if aggr:
                 aggr_obj = Aggregation(aggr)
+
             col_info = (table_aliases[prefix], cid, aggr_obj)
             col_obj = t.columns[cid]
             return col_info, col_obj, None
@@ -186,6 +289,153 @@ class Database:
             if not col_obj:
                 return None, None, "No column named " + cn + "."
             return col_info, col_obj, None
+
+    def convert_predicate_names_to_obj(self, predicates, tables, aliases):
+        """
+        Helper function that converts predicate name into Predicate objects.
+        Args:
+            column_names ([String]): Names of columns to query on.
+            tables ({String:int}): Dictionary that maps table alias to table id.
+            aliases({String:int}): Dictionary that maps table alias to SQL order.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            [Predicate]: List of Predicate objects.
+            String: Error message.
+        """
+        preds = []
+        for rule1, op, rule2 in predicates:
+            rules = [None] * 2
+            prefixs = [None] * 2
+            cns = [None] * 2
+            for idx, (prefix, cn, value) in enumerate([rule1, rule2]):
+                # with table name and column name
+                if cn:
+                    col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, value, aliases, tables)
+                    
+                # with value
+                else:
+                    col_info = (None, None, value)
+
+                if not err_msg:
+                    rules[idx] = col_info
+                    prefixs[idx] = prefix
+                    cns[idx] = cn
+                else:
+                    return False, None, err_msg
+            
+            preds.append(Predicate(rules[0], op, rules[1], prefixs, cns))
+
+        return True, preds, None
+
+    def insert_filtered_entities(self, tables, tables_obj, column_infos, preds, operator, result):
+        """
+        Helper function that inserts entities that fulfills the predicates.
+        Args:
+            tables ({String:int}): Dictionary that maps table alias to table id.
+            tables_obj ([Table]): List that contains the tables to query on.
+            column_infos ([(Int, Int, Aggregation)]): List that contains infomation of selected column.
+                (which table, column id, aggregation function)
+                which table: index value of SQL sequence.
+                column id: index value of the column in the table.
+                aggregation function: the Aggregation objects.
+            preds ([Predicate]): List of Predicate objects.
+            operator (String): Operator between predicates. Used when more than two predicates.
+            result (Table): Table to insert into.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            None: None. For same return format.
+            String: Error message.
+        """
+        # key of table
+        for fst_e in tables_obj[0].entities:
+            if len(tables) == 2:
+                for snd_e in tables_obj[1].entities:
+                    check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
+                    if err_msg:
+                        return False, None, err_msg
+                    if check: 
+                        # take requested column and append
+                        sub_entity = [None] * len(column_infos)
+                        for idx, (which_table, cid, aggr) in enumerate(column_infos):
+                            
+                            if which_table == 0:
+                                sub_entity[idx] = fst_e.values[cid]
+                            else:
+                                sub_entity[idx] = snd_e.values[cid]
+                        result.insert_without_check(sub_entity)
+
+            else:
+                check, err_msg = self.predicate_check(preds, operator, fst_e, None)
+                if err_msg:
+                        return False, None, err_msg
+                if check:
+                    # take requested column and append
+                    sub_entity = [None] * len(column_infos)
+                    for idx, (which_table, cid, aggr) in enumerate(column_infos):
+                        sub_entity[idx] = fst_e.values[cid]
+                    result.insert_without_check(sub_entity)
+
+        return True, None, None
+
+    def aggregate_table(self, column_infos, column_objs, result):
+        """
+        Helper function that aggregate the table selected.
+        Args:
+            column_infos ([(Int, Int, Aggregation)]): List that contains infomation of selected column.
+                (which table, column id, aggregation function)
+                which table: index value of SQL sequence.
+                column id: index value of the column in the table.
+                aggregation function: the Aggregation objects.
+            column_objs ([Column]): List of Column.
+            result (Table): Table to aggregate.
+
+        Returns:
+            Bool: True for successful execution. False otherwise.
+            Table: Table aggregated. Not changed if no aggregation function to apply.
+            String: Error message.
+        """
+        # check only the first column for the aggregation function
+        col_id = 0
+        
+        col_info = column_infos[col_id]
+        col_obj = column_objs[col_id]
+        # if Aggregation in column_infos exist
+        # do nothing if no Aggregation
+        if col_info[2]:
+            # container to save new columns
+            aggr_cols = []
+            aggr_entity = []
+            # apply aggregation function
+            # get a copy of column, and modify the name to aggr_name(col_name)
+            aggr_col = copy.deepcopy(col_obj)
+            # remove column constraint
+            # e.g. Count(Name):
+            # the constraint is VarcharConstraint at first
+            # but the value becomes int after aggregation
+            # remove or intconstraint()?!?!?!
+            aggr_col.constraint = IntConstraint()
+            # get the aggr function
+            aggr_func = col_info[2]
+            # apply aggregation function on the result table
+        
+            aggr_value, err_msg = aggr_func.aggregate(result, col_id)
+
+            if err_msg:
+                return False, None, err_msg
+            else:
+                # modify the column name
+                aggr_col.name = aggr_func.func_name + "(" + aggr_col.name + ")"
+                aggr_cols.append(aggr_col)
+                aggr_entity.append(aggr_value)
+
+            aggr_result = Table("SelectAggrQuery", aggr_cols)
+            aggr_result.insert(aggr_entity)
+
+            result = aggr_result
+
+        return True, result, None
 
     def select(self, column_names, table_names, predicates=None, operator=None):
         """Select columns from tables where predicate fulfills. 
@@ -230,162 +480,34 @@ class Database:
         """
 
         ''' Convert table names to table id'''
-        # tables stores ('Tablealias':tableid)
-        tables = {}
-        tables_obj = []
-        aliases = {}
-        # use alias of table as key to get the object
-        # if alias is not provided, use table name as key
-        # tn for table name
-        index = 0
-        for alias, tn in table_names:
-            #try to find table id in the fast look up table
-            try:
-                tid = self.tab_name2id[tn]
-                if alias:
-                    tables[alias] = tid
-                    aliases[alias] = index
-                else:
-                    tables[tn] = tid
-                    aliases[tn] = index
-                tables_obj.append(self.get_table(tid))
-            except:
-                return False, None, "No table named " + tn + "." 
-            index += 1
+        success, output, err_msg = self.convert_table_names_to_tid(table_names)
+        if not success:
+            return False, None, err_msg
+        tables, tables_obj, aliases = output
+
         ''' Convert column names to column id'''
-        # [(which table, column id, aggregation function)]
-        # [(int, int, Aggregation)]
-        # Note: which table is the sequence in the query, not the real table id
-        # converted column information from column_names for future use
-        column_infos = []
-        # [Columns]
-        # The column objects
-        column_objs = []
-        # [[None, '*', None]] for select * from table case.
-        # cn for column name
-        # aggr for aggregation function name
-        for prefix, cn, aggr in column_names:
-            if cn == '*':
-                table_search_scope = None
-                # with prefix, search only one table
-                if tables.get(prefix) != None:
-                    table_search_scope = [self.tables[tables[prefix]]]
-                # no prefix, search all table
-                else:
-                    table_search_scope = [self.tables[tid] for key, tid in tables.iteritems() if key is not None]
-                for searching_table in table_search_scope:
-                    if prefix == None:
-                        prefix = searching_table.name
-                    for cid, col in enumerate(searching_table.columns):
-                        # convert aggr into object
-                        aggr_obj = None 
-                        if aggr:
-                            aggr_obj = Aggregation(aggr)
-                        column_infos.append((tables[prefix], cid, aggr_obj))
-                        column_objs.append(col)
-            else:
-                col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, aggr, aliases, tables)
-  
-                if not err_msg:
-                    column_infos.append(col_info)
-                    column_objs.append(col_obj)
-                else:
-                    return False, None, err_msg
+        success, output, err_msg = self.convert_column_names_to_cid(column_names, tables, aliases)
+        if not success:
+            return False, None, err_msg
+        column_infos, column_objs = output
 
         ''' Convert predicate to predicate objects '''
-        preds = []
-        for rule1, op, rule2 in predicates:
-            rules = [None] * 2
-            prefixs = [None] * 2
-            cns = [None] * 2
-            for idx, (prefix, cn, value) in enumerate([rule1, rule2]):
-                # with table name and column name
-                if cn:
-                    col_info, col_obj, err_msg = self.get_column_by_names(prefix, cn, value, aliases, tables)
-                # with value
-                else:
-                    col_info = (None, None, value)
-
-                if not err_msg:
-                    rules[idx] = col_info
-                    prefixs[idx] = prefix
-                    cns[idx] = cn
-                else:
-                    return False, None, err_msg
-            
-            preds.append(Predicate(rules[0], op, rules[1], prefixs, cns))
+        success, preds, err_msg = self.convert_predicate_names_to_obj(predicates, tables, aliases)
+        if not success:
+            return False, None, err_msg        
 
         ''' Form a new table to store all rows fulfill constraints '''
         # Table name should be changed?!
         result = Table("SelectQuery", column_objs)
-        # key of table
-        for fst_e in tables_obj[0].entities:
-            if len(tables) == 2:
-                for snd_e in tables_obj[1].entities:
-                    check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
-                    if err_msg:
-                        return False, None, err_msg
-                    if check: 
-                        # take requested column and append
-                        sub_entity = [None] * len(column_infos)
-                        for idx, (which_table, cid, aggr) in enumerate(column_infos):
-                            if which_table == 0:
-                                sub_entity[idx] = fst_e.values[cid]
-                            else:
-                                sub_entity[idx] = snd_e.values[cid]
-                        result.insert_without_check(sub_entity)
-
-            else:
-                check, err_msg = self.predicate_check(preds, operator, fst_e, None)
-                if err_msg:
-                        return False, None, err_msg
-                if check:
-                    # take requested column and append
-                    sub_entity = [None] * len(column_infos)
-                    for idx, (which_table, cid, aggr) in enumerate(column_infos):
-                        sub_entity[idx] = fst_e.values[cid]
-                    result.insert_without_check(sub_entity)
+        success, _, err_msg = self.insert_filtered_entities(tables, tables_obj, column_infos, preds, operator, result)
+        if not success:
+            return False, None, err_msg 
 
         ''' Create new table if aggregation exists '''
-        # check only the first column for the aggregation function
-        col_id = 0
-        
-        col_info = column_infos[col_id]
-        col_obj = column_objs[col_id]
-        # if Aggregation in column_infos exist
-        # do nothing if no Aggregation
-        if col_info[2]:
-            # container to save new columns
-            aggr_cols = []
-            aggr_entity = []
-            # apply aggregation function
-            # get a copy of column, and modify the name to aggr_name(col_name)
-            aggr_col = copy.deepcopy(col_obj)
-            # remove column constraint
-            # e.g. Count(Name):
-            # the constraint is VarcharConstraint at first
-            # but the value becomes int after aggregation
-            # remove or intconstraint()?!?!?!
-            aggr_col.constraint = IntConstraint()
-            # get the aggr function
-            aggr_func = col_info[2]
-            # apply aggregation function on the result table
-        
-            aggr_value, err_msg = aggr_func.aggregate(result, col_id)
-
-            if err_msg:
-                return False, None, err_msg
-            else:
-                # modify the column name
-                aggr_col.name = aggr_func.func_name + "(" + aggr_col.name + ")"
-                aggr_cols.append(aggr_col)
-                aggr_entity.append(aggr_value)
-
-            aggr_result = Table("SelectAggrQuery", aggr_cols)
-            aggr_result.insert(aggr_entity)
-
-            result = aggr_result
-
+        success, result, err_msg = self.aggregate_table(column_infos, column_objs, result)
+        if not success:
+            return False, None, err_msg 
+    
         return True, result, None 
 
     def predicate_check(self, predicates, operator, entity1, entity2):
