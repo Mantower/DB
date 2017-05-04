@@ -85,6 +85,12 @@ class Database:
             for cname, dtype, cons, key in zip(col_names, col_datatypes, col_constraints, keys):
                 columns.append(Column(cname, Datatype.str2dt[dtype], cons, key))
             table = Table(table_name, columns)
+            # Iterate over the keys for each table, the first non None value is set to the default indexing value
+            for t, key, col in zip(table, keys, col_names):
+                match = (i for i, k in enumerate(key) if k is not None)
+                i = next(match, None)
+                if i is not None:
+                    t.indexing(col[i])
             # register in fast look up table
             self.tab_name2id[table_name] = len(self.tables)
             # add newly created table into table list
@@ -557,8 +563,9 @@ class Table:
         self.col_name2id = {}
         for i, c in enumerate(columns):
             self.col_name2id[c.name] = i
-        self.indexing = None
-        self.indexing_type = None
+        # Dictionary with indexing tables, key the indexing column name. Value in dictionary
+        # contains a list with [BPlusTree, HashingTable]
+        self.indexing = {}
   
     def entity_is_vaild(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
@@ -694,22 +701,17 @@ class Table:
         return None
 
 
-    def indexing(self, colName, indexType):
+    def indexing(self, col_name):
         """ Create an indexing for a table, indexing on colName
-        indexType refers to either B+-tree or hashing.
         Args:
             colName: column name of the column we want to index after
-            indexType: index type we want to structure the table after (either B+-tree or hashing)
         """
 
-        if indexType == "btree":
-            if self.get_column(colName) is not None:
-                indexing = BPlusTree(5)
-                indexing_type = indexType
-                return True, None
-            else:
-                return False, "Invalid indexing column"
-        return False, "Invalid indexing type"
+        if self.get_column(col_name) is not None and not indexing.has_key(col_name):
+            indexing[col_name] = [BPlusTree(5), HashingTable]  # HashingTable a placeholder for now
+            return True, None
+        else:
+            return False, "Invalid indexing column"
 
 
 class Column:
