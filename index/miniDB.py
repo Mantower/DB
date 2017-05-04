@@ -567,7 +567,7 @@ class Table:
         # contains a list with [BPlusTree, HashingTable]
         self.indexing = {}
   
-    def entity_is_vaild(self, entity):
+    def entity_is_valid(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
         Args:
             entity (Entity): The entity we want to test.
@@ -587,10 +587,13 @@ class Table:
         # Basic setup.
         # Get all order id that the corresponding column is marked as primary key
         key_id = []
+        hash_table = []
         for i, c in enumerate(self.columns):
             if c.key:
                 key_id.append((i,c))
-        
+        # If a primary key exists, index from the hashing table for the first encountered primary key
+        if len(key_id) != 0:
+            hash_table = indexing[key_id[1]][1]
         # Get all value that the corresponding column is marked as primary key
         entity_key_values = [v for (v, c) in zip(entity.values, self.columns) if c.key]
         
@@ -617,6 +620,7 @@ class Table:
                     return False, "Duplicate data insertion"
             # Extract key column values of every entities, and compare with the one we want to test
             # If there's same combination, we say this entity is invalid
+            # TODO: Instead of checking against all entities, use the hashing table to check up duplicate values to achieve O(!) time
             if (entity_key_values == [e.values[i] for (i, c) in key_id]) and (key_id):
                 return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
             
@@ -685,7 +689,7 @@ class Table:
             entity = Entity(values)
 
         # validate entity
-        passed, err_msg = self.entity_is_vaild(entity)
+        passed, err_msg = self.entity_is_valid(entity)
         if not passed:
             return False, err_msg
         
