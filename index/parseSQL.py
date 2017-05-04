@@ -12,7 +12,9 @@ import sys
 import re
 import unicodedata
 from ppUpdate import *
-#f = open("output.txt","w")
+import time
+
+f = open("output.txt","w")
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
 		content = content_file.read()
@@ -142,15 +144,19 @@ def def_insert(DB,text):
 	
 	
 
-	start = timeit.timeit()
+	s = time.time()
 	success, tokens = simpleSQL.runTests(text)
-	end = timeit.timeit()
-	#f.write(str(end-start))
+	e = time.time()
+	
+	
+	#f.write(str(tokens))
+	f.write(str(e-s))
+	process_input_insert(DB,tokens)
 	#print(end-start)
-	if(success):
-		return process_input_insert(DB,tokens)
-	else:
-		return success, tokens
+	#if(success):
+		#return process_input_insert(DB,tokens)
+	#else:
+		#return success, tokens
 def def_select(DB, text):
 	
 	LPAR,RPAR,COMMA = map(Suppress,"(),")
@@ -455,9 +461,14 @@ def process_input_insert(DB,tokens):
 			cols = tokens[i]["col"]					
 		except:
 			cols = None			
+		f.write("------------value-----------\n")
+		f.write(str(values)+"\n")
+		f.write("-------------col------------\n")
+		f.write(str(cols)+"\n")
+		'''
 		tableObj = DB.get_table(tables)
 		if tableObj:
 			return tableObj.insert(values, cols)
 		else:
-			return False, "Table not exists."	
+			return False, "Table not exists."'''	
 		
