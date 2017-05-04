@@ -13,8 +13,8 @@ import re
 import unicodedata
 from ppUpdate import *
 import time
-
 f = open("output.txt","w")
+
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
 		content = content_file.read()
@@ -60,6 +60,9 @@ def input_text(DB,sqlText):
 
 	return success, tables, errMsg
 
+def input_insert(DB, sql):
+	success , errMsg = def_insert(DB,sql)
+	return success, None , errMsg
 
 def def_create(DB,text):
 	createStmt = Forward()
@@ -144,19 +147,17 @@ def def_insert(DB,text):
 	
 	
 
-	s = time.time()
+	
 	success, tokens = simpleSQL.runTests(text)
-	e = time.time()
 	
 	
-	#f.write(str(tokens))
-	f.write(str(e-s))
 	process_input_insert(DB,tokens)
 	#print(end-start)
-	#if(success):
-		#return process_input_insert(DB,tokens)
-	#else:
-		#return success, tokens
+	if(success):
+		return process_input_insert(DB,tokens)
+	else:
+		return success, tokens
+
 def def_select(DB, text):
 	
 	LPAR,RPAR,COMMA = map(Suppress,"(),")
@@ -449,7 +450,10 @@ def process_input_create(DB,tokens):
 		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
 		
 def process_input_insert(DB,tokens):
-	for i in range(len(tokens)):		
+	res = []
+	for i in range(len(tokens)):
+		
+		f.write(str(tokens[i]))		
 		tables = tokens[i]["tables"]
 		values = tokens[i]["val"]
 		for k in range(len(values)):
@@ -461,14 +465,24 @@ def process_input_insert(DB,tokens):
 			cols = tokens[i]["col"]					
 		except:
 			cols = None			
-		f.write("------------value-----------\n")
-		f.write(str(values)+"\n")
-		f.write("-------------col------------\n")
-		f.write(str(cols)+"\n")
-		'''
+		#print("------------value-----------\n")
+		#print(str(values)+"\n")
+		#print("-------------col------------\n")
+		#print(str(cols)+"\n")
+		print(tables)
 		tableObj = DB.get_table(tables)
 		if tableObj:
-			return tableObj.insert(values, cols)
+			f.write(str(values))
+			res.append([tableObj, values, cols])
+			#return tableObj.insert(values, cols)
 		else:
-			return False, "Table not exists."'''	
+			print("table not exist")
+			#return False, "Table not exists."	
+	sucTemp = []
+	errTemp = []
+	for tab, val, c in res:
+		s, err = tab.insert(val, c)
+		sucTemp.append(s)
+		errTemp.append(err)
+	return sucTemp, errTemp
 		

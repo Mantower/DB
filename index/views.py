@@ -32,42 +32,46 @@ def sql_view(request):
         # apply sql to the database
         # (Bool,String) to indicate status of execution and error message
         sql_str = sql_unicode.encode('ascii','ignore')
-        
+        '''     
         Uans = re.sub(r"\r\n"," ",sql_str)
         Uans = Uans.replace('\n', ' ')
         #print(Uans)
         #print("++++++++++++++")
         pattern = re.compile(";", re.IGNORECASE)
         st = pattern.sub(";\n", Uans)
-        sqlList = [s.strip() for s in st.splitlines()]
-        #print(sqlList)
+        
+        #print(sqlList)'''
 
         
+
         success, tables, err_msgs = [], [], []
+        #s, t, err = database.exec_insert(sql_str)
+        s, t, err = database.exec_insert(sql_str)
+        '''
         for small_sql in sqlList:
             s, t, err = database.exec_sql(small_sql)
             success.extend(s)
             tables.extend(t)
-            err_msgs.extend(err)
+            err_msgs.extend(err)'''
 
         #print(tables)
         # additional message to indicate the execution is successful or not
-        panel_msgs = []
+        '''panel_msgs = []
         for s in success:
             if s:
                 panel_msg = "success"
             else:
                 panel_msg = "error"
-            panel_msgs.append(panel_msg)
+            panel_msgs.append(panel_msg)'''
 
         save_db(database)
 
         data = {'sql':sql_str,
-                'info':zip(success, panel_msgs, sqlList, err_msgs, tables),
+                #'info':zip(success, panel_msgs, sqlList, err_msgs, tables),
                 }
 
         return render(request,'index/sql.html', data)
-
+        
 def table_view(request,table_name=None):
     # the db we want to view
     database = load_db()
