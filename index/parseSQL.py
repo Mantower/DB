@@ -13,7 +13,7 @@ import re
 import unicodedata
 from ppUpdate import *
 import time
-f = open("output.txt","w")
+#f = open("output.txt","w")
 
 def input_file(DB,file):
 	with open(file, 'r') as content_file:
@@ -453,7 +453,7 @@ def process_input_insert(DB,tokens):
 	res = []
 	for i in range(len(tokens)):
 		
-		f.write(str(tokens[i]))		
+		#f.write(str(tokens[i]))		
 		tables = tokens[i]["tables"]
 		values = tokens[i]["val"]
 		for k in range(len(values)):
@@ -469,10 +469,10 @@ def process_input_insert(DB,tokens):
 		#print(str(values)+"\n")
 		#print("-------------col------------\n")
 		#print(str(cols)+"\n")
-		print(tables)
+		#print(tables)
 		tableObj = DB.get_table(tables)
 		if tableObj:
-			f.write(str(values))
+			#f.write(str(values))
 			res.append([tableObj, values, cols])
 			#return tableObj.insert(values, cols)
 		else:
