@@ -8,7 +8,8 @@ class Database:
         self.tables = []
         # dictionary for fast look up from table_name to its order in the table
         self.tab_name2id = {}
-
+    def exec_insert(self,sql):
+        return input_insert(self, sql)
     def exec_sql(self, sql):
         """The fucntion to run sql
         Args:

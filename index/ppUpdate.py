@@ -21,46 +21,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-import timeit
-__doc__ = \
-"""
-pyparsing module - Classes and methods to define and execute parsing grammars
-
-The pyparsing module is an alternative approach to creating and executing simple grammars,
-vs. the traditional lex/yacc approach, or the use of regular expressions.  With pyparsing, you
-don't need to learn a new syntax for defining grammars or matching expressions - the parsing module
-provides a library of classes that you use to construct the grammar directly in Python.
-
-Here is a program to parse "Hello, World!" (or any greeting of the form C{"<salutation>, <addressee>!"})::
-
-    from pyparsing import Word, alphas
-
-    # define grammar of a greeting
-    greet = Word( alphas ) + "," + Word( alphas ) + "!"
-
-    hello = "Hello, World!"
-    print (hello, "->", greet.parseString( hello ))
-
-The program outputs the following::
-
-    Hello, World! -> ['Hello', ',', 'World', '!']
-
-The Python representation of the grammar is quite readable, owing to the self-explanatory
-class names, and the use of '+', '|' and '^' operators.
-
-The parsed results returned from C{parseString()} can be accessed as a nested list, a dictionary, or an
-object with named attributes.
-
-The pyparsing module handles some of the problems that are typically vexing when writing text parsers:
- - extra or missing whitespace (the above program will also handle "Hello,World!", "Hello  ,  World  !", etc.)
- - quoted strings
- - embedded comments
-"""
-
-__version__ = "2.1.4"
-__versionTime__ = "13 May 2016 18:25 UTC"
-__author__ = "Paul McGuire <ptmcg@users.sourceforge.net>"
-
+import time
 import string
 from weakref import ref as wkref
 import copy
@@ -1639,7 +1600,7 @@ class ParserElement(object):
             return True
         except ParseBaseException:
             return False
-                
+       
     def runTests(self, tests, parseAll=False, comment='#', printResults=True):
         """Execute the parse expression on a series of test strings, showing each
            test, the parsed results or where the parse failed. Quick and easy way to
@@ -1665,7 +1626,8 @@ class ParserElement(object):
         success = True
         allValue = []
         #f = open("w","output.txt" )
-       
+        
+        
         for t in tests:
             #start = timeit.timeit()
             if comment is not None and comment.matches(t, False) or comments and not t:
@@ -1677,10 +1639,15 @@ class ParserElement(object):
             
             comments = []
             ans = ""
-
+            
             try:
+                #f.write("-----------------------\n")
+                #start = time.time()
                 ans = (self.parseString(t, parseAll=parseAll))
                 out.append(ans.dump)
+                #end = time.time()
+                #f.write(str(end-start)+"\n")
+
                 #print(ans)
             except ParseBaseException as pe:
                 fatal = "(FATAL)" if isinstance(pe, ParseFatalException) else ""
@@ -1710,7 +1677,7 @@ class ParserElement(object):
             else:
                 allResults.append(out)
 
-            allValue.append(ans)
+            allValue.append(ans)        
         return success, allValue
         
         if not printResults:

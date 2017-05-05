@@ -6,6 +6,10 @@
     float: right;
 }
 
+#sql-insert-submit {
+    float: right;
+}
+
 p.danger {
     color: #d9534f;
 }
