@@ -1,3 +1,5 @@
+PAGE_SZ = 32
+
 class Page(object):
 
     def __init__(self):
