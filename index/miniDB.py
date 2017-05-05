@@ -688,7 +688,7 @@ class Table:
                 return c
         return None
 
-     def indexing(self, col_name):
+    def indexing(self, col_name):
         """ Create an indexing for a table, indexing on colName
         Args:
             colName: column name of the column we want to index after
