@@ -50,7 +50,7 @@ def input_text(DB,sqlText):
 		if act.lower()=="create":			
 			sucTemp ,errTemp = def_create(DB,obj)
 		elif act.lower()=="insert":
-			sucTemp ,errTemp = def_insert(DB,obj)
+			sucTemp ,errTemp = def_insert(DB,obj, False)
 		elif act.lower()=="select":
 			sucTemp , table, errTemp = def_select(DB,obj)
 			
@@ -61,7 +61,7 @@ def input_text(DB,sqlText):
 	return success, tables, errMsg
 
 def input_insert(DB, sql):
-	success , errMsg = def_insert(DB,sql)
+	success , errMsg = def_insert(DB,sql, True)
 	return success, None , errMsg
 
 def def_create(DB,text):
@@ -115,7 +115,7 @@ def def_create(DB,text):
 	else:
 		return success, tokens
 
-def def_insert(DB,text):
+def def_insert(DB,text, flag):
 	insertStmt = Forward()
 	INSERT = Keyword("insert", caseless = True)
 	INTO = Keyword("into",caseless = True)
@@ -151,10 +151,13 @@ def def_insert(DB,text):
 	success, tokens = simpleSQL.runTests(text)
 	
 	
-	process_input_insert(DB,tokens)
+	#process_input_insert(DB,tokens)
 	#print(end-start)
 	if(success):
-		return process_input_insert(DB,tokens)
+		if flag :
+			return process_input_BIGinsert(DB,tokens)
+		else:
+			return process_input_insert(DB,tokens)
 	else:
 		return success, tokens
 
@@ -448,8 +451,27 @@ def process_input_create(DB,tokens):
 			col_constraints.append(con)
 			keys.append(key)
 		return DB.create_table(tables, col_names, col_datatypes, col_constraints, keys)
-		
+
 def process_input_insert(DB,tokens):
+	for i in range(len(tokens)):		
+		tables = tokens[i]["tables"]
+		values = tokens[i]["val"]
+		for k in range(len(values)):
+			try:				
+				values[k] = int(values[k])				
+			except:				
+				values[k] = values[k].replace("'","").replace('"', '')	
+		try:
+			cols = tokens[i]["col"]					
+		except:
+			cols = None			
+		tableObj = DB.get_table(tables)
+		if tableObj:
+			return tableObj.insert(values, cols)
+		else:
+			return False, "Table not exists."	
+			
+def process_input_BIGinsert(DB,tokens):
 	res = []
 	for i in range(len(tokens)):
 		
@@ -478,11 +500,9 @@ def process_input_insert(DB,tokens):
 		else:
 			print("table not exist")
 			#return False, "Table not exists."	
-	sucTemp = []
-	errTemp = []
+	judge = True
 	for tab, val, c in res:
 		s, err = tab.insert(val, c)
-		sucTemp.append(s)
-		errTemp.append(err)
-	return sucTemp, errTemp
+		judge = s and judge 
+	return judge , None
 		
