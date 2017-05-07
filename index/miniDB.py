@@ -2,6 +2,7 @@
 from parseSQL import *
 import operator as Libop
 import copy
+from extendibleHashing import *
 
 class Database:
     def __init__(self):
@@ -553,6 +554,7 @@ class Table:
         self.entities = []
         # dictionary for fast look up from col_name to its order in the table
         self.col_name2id = {}
+        self.hashTable = EH()
         for i, c in enumerate(columns):
             self.col_name2id[c.name] = i
   
@@ -654,13 +656,16 @@ class Table:
         # check if the col_name is in column
         # and convert the whole list to their order in the table
         col_ids = []
+        primaryKeyVal = None
         if col_names:
-            for n in col_names:
-                if n not in self.col_name2id:
-                    return False, "Column " + str(n) + " is not in Table " + self.name
+            for (val, col) in (values, col_names):
+                if col not in self.col_name2id:
+                    return False, "Column " + str(col) + " is not in Table " + self.name
                 else:
                     # convert col_name to its order in the table and append to list
-                    col_ids.append(self.col_name2id[n])
+                    col_ids.append(self.col_name2id[col])
+                    if get_column(col).key:
+                        primaryKeyVal = val
         
         # check if len(values) is less than equal to len(columns)
         # should not accept too many value
@@ -680,6 +685,11 @@ class Table:
         
         # insert entity
         self.entities.append(entity)
+
+        # Insert Hash Table
+        if primaryKeyVal:
+            self.hashTable.put(primaryKeyVal, entity)
+
         return True, None  
 
     # Getting Column for the given name
