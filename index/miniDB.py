@@ -2,7 +2,7 @@
 from parseSQL import *
 import operator as Libop
 import copy
-import btree
+import btree as bt
 
 class Database:
     def __init__(self):
@@ -85,12 +85,12 @@ class Database:
             for cname, dtype, cons, key in zip(col_names, col_datatypes, col_constraints, keys):
                 columns.append(Column(cname, Datatype.str2dt[dtype], cons, key))
             table = Table(table_name, columns)
-            # Iterate over the keys for each table, the first non None value is set to the default indexing value
+            # Creating indexing tables for all columns in the table, no Hashing table if it's not a key
             for t, key, col in zip(table, keys, col_names):
-                match = (i for i, k in enumerate(key) if k is not None)
-                i = next(match, None)
-                if i is not None:
-                    t.indexing(col[i])
+                if key is not None:
+                    t.indexing(col[i], True)
+                else:
+                    t.indexing(col[i], False)
             # register in fast look up table
             self.tab_name2id[table_name] = len(self.tables)
             # add newly created table into table list
@@ -587,13 +587,11 @@ class Table:
         # Basic setup.
         # Get all order id that the corresponding column is marked as primary key
         key_id = []
-        hash_table = []
+        hash_tables = []
         for i, c in enumerate(self.columns):
             if c.key:
                 key_id.append((i,c))
-        # If a primary key exists, index from the hashing table for the first encountered primary key
-        if len(key_id) != 0:
-            hash_table = indexing[key_id[1]][1]
+                hash_tables.append((i, indexing[c][1]))
         # Get all value that the corresponding column is marked as primary key
         entity_key_values = [v for (v, c) in zip(entity.values, self.columns) if c.key]
         
@@ -624,7 +622,32 @@ class Table:
             if (entity_key_values == [e.values[i] for (i, c) in key_id]) and (key_id):
                 return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
             
+        if not key_id:
+            compare_val = None
+            index = None
+            for i, val in enumerate(entity.values):
+                if val is not None:
+                 compare_val = val
+                 index = i
+                 return
+            if compare_val is None:
+                return False, "Entity only None values"
+            btree = indexing[self.columns[i].name][0]
+            matches = btree.getvalues(compare_val)
+            for i in matches:
+                if (self.entities[i].values[:] == entity[:]):
+                    return False, "Duplicate data insertion"
+        else:
+            index, hash_table = next(table for index, table in enumerate(table) if table is not None)
+            key = entity.values[index]
+            # Get the entities that matches the key value (could be more then 1 in case of several primary keys)
+            matches = hash_table.getvalues(key)
+            for i in matches:
+                if (entity_key_values == [self.entities[i].values[k] for (k, c) in key_id]):
+                    return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
+
         # Pass all validation 
+
         return True, None
 
     def insert_without_check(self, values, col_names=None):
@@ -695,6 +718,13 @@ class Table:
         
         # insert entity
         self.entities.append(entity)
+
+        # Add entity to all indexing tables
+        for key in indexing:
+            btree, hashing = self.indexing[key]
+            col_id = self.col_name2id(key)
+            btree.insert(entity.values[col_id], len(entities) - 1)
+            hashing.insert(entity.values[col_id], len(entities) - 1)
         return True, None  
 
     # Getting Column for the given name
@@ -705,14 +735,17 @@ class Table:
         return None
 
 
-    def indexing(self, col_name):
+    def indexing(self, col_name, key):
         """ Create an indexing for a table, indexing on colName
         Args:
             colName: column name of the column we want to index after
         """
 
         if self.get_column(col_name) is not None and not indexing.has_key(col_name):
-            indexing[col_name] = [BPlusTree(5), HashingTable]  # HashingTable a placeholder for now
+            if key:
+                indexing[col_name] = [bt.BPlusTree(5), HashingTable()]
+            else:
+                indexing[col_name] = [bt.BPlusTree(5), None]
             return True, None
         else:
             return False, "Invalid indexing column"
