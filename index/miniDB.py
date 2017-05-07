@@ -689,18 +689,6 @@ class Table:
                 return c
         return None
 
-    def indexing(self, col_name):
-        """ Create an indexing for a table, indexing on colName
-        Args:
-            colName: column name of the column we want to index after
-        """
-
-        if self.get_column(col_name) is not None and not indexing.has_key(col_name):
-            indexing[col_name] = [BPlusTree(5), HashingTable]  # HashingTable a placeholder for now
-            return True, None
-        else:
-            return False, "Invalid indexing column"
-
 class Column:
     def __init__(self, name, datatype, constraint_val, key):
         """The fucntion to create a column. It assumes that all parameter are valid. 
