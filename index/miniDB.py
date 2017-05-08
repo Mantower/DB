@@ -88,11 +88,11 @@ class Database:
                 columns.append(Column(cname, Datatype.str2dt[dtype], cons, key))
             table = Table(table_name, columns)
             # Creating indexing tables for all columns in the table, no Hashing table if it's not a key
-            for t, key, col in zip(table, keys, col_names):
-                if key is not None:
-                    t.indexing(col[i], True)
+            for key, col in zip(keys, col_names):
+                if key:
+                    table.indexing(col, True)
                 else:
-                    t.indexing(col[i], False)
+                    table.indexing(col, False)
             # register in fast look up table
             self.tab_name2id[table_name] = len(self.tables)
             # add newly created table into table list
@@ -567,7 +567,7 @@ class Table:
             self.col_name2id[c.name] = i
         # Dictionary with indexing tables, key the indexing column name. Value in dictionary
         # contains a list with [BPlusTree, HashingTable]
-        self.indexing = {}
+        self.indexes = {}
   
     def entity_is_valid(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
@@ -593,7 +593,7 @@ class Table:
         for i, c in enumerate(self.columns):
             if c.key:
                 key_id.append((i,c))
-                hash_tables.append((i, indexing[c][1]))
+                hash_tables.append((i, self.indexes[c][1]))
         # Get all value that the corresponding column is marked as primary key
         entity_key_values = [v for (v, c) in zip(entity.values, self.columns) if c.key]
         
@@ -621,7 +621,7 @@ class Table:
                  return
             if compare_val is None:
                 return False, "Entity only None values"
-            btree = indexing[self.columns[i].name][0]
+            btree = self.indexes[self.columns[i].name][0]
             matches = btree.getvalues(compare_val)
             for i in matches:
                 if (self.entities[i].values[:] == entity[:]):
@@ -713,8 +713,8 @@ class Table:
         self.entities.append(entity)
 
         # Add entity to all indexing tables
-        for key in indexing:
-            btree, hashing = self.indexing[key]
+        for key in self.indexes:
+            btree, hashing = self.indexes[key]
             col_id = self.col_name2id(key)
             btree.insert(entity.values[col_id], len(entities) - 1)
             if hashing is not None:
@@ -736,11 +736,11 @@ class Table:
             colName: column name of the column we want to index after
         """
 
-        if self.get_column(col_name) is not None and not indexing.has_key(col_name):
+        if self.get_column(col_name) is not None and not self.indexes.has_key(col_name):
             if key:
-                indexing[col_name] = [bt.BPlusTree(5), hashing.EH()]
+                self.indexes[col_name] = [bt.BPlusTree(5), hashing.EH()]
             else:
-                indexing[col_name] = [bt.BPlusTree(5), None]
+                self.indexes[col_name] = [bt.BPlusTree(5), None]
             return True, None
         else:
             return False, "Invalid indexing column"
