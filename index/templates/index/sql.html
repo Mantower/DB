@@ -16,6 +16,12 @@
         <input type="file" name="filesql" id="filesql">
         <input class="btn btn-default" id="sql-submit" type="submit" value="Submit">
     </form>
+    <br>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'index:sql_insert'%}">
+        {% csrf_token %}
+        <input type="file" name="filesql" id="filesql">
+        <input class="btn btn-primary" id="sql-insert-submit" type="submit" value="Submit Insert">
+    </form>
 </div>
 <br>
 <hr>

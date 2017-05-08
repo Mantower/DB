@@ -10,6 +10,34 @@ import re
 def index(request):
     return render(request,'index/index.html')
 
+def sql_insert(request):
+    sql_unicode = ""
+    if request.FILES.get('filesql'):
+        sqlfile = request.FILES.get('filesql')
+        sql_unicode = sqlfile.read()
+        
+    elif request.POST.get('sql'):
+        sql_unicode = request.POST['sql']
+
+    # read DB from pkl file
+    database = load_db()
+
+    # apply sql to the database
+    # (Bool,String) to indicate status of execution and error message
+    sql_str = sql_unicode.encode('ascii','ignore')
+
+    success, tables, err_msgs = [], [], []
+    
+    s, t, err = database.exec_insert(sql_str)
+
+    save_db(database)
+
+    data = {'sql':sql_str,
+            #'info':zip(success, panel_msgs, sqlList, err_msgs, tables),
+            }
+
+    return render(request,'index/sql.html', data)
+
 def sql_view(request):
     # to store input sql, make sure we receive the right input
     sql_str = "Input SQL will be shown here"
@@ -67,7 +95,7 @@ def sql_view(request):
                 }
 
         return render(request,'index/sql.html', data)
-
+        
 def table_view(request,table_name=None):
     # the db we want to view
     database = load_db()

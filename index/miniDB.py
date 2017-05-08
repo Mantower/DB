@@ -3,13 +3,15 @@ from parseSQL import *
 import operator as Libop
 import copy
 import btree as bt
+import extendibleHashing as hashing
 
 class Database:
     def __init__(self):
         self.tables = []
         # dictionary for fast look up from table_name to its order in the table
         self.tab_name2id = {}
-
+    def exec_insert(self,sql):
+        return input_insert(self, sql)
     def exec_sql(self, sql):
         """The fucntion to run sql
         Args:
@@ -607,24 +609,11 @@ class Table:
             passed, err_msg = c.constraint.is_valid(v)
             if not passed:
                 return False, err_msg
-        
-        
-        # Check that there are no keys with the same value
-        # Go through all entities, and check there are no same primary key
-        # Can speed up by better Data Structure
-        for e in self.entities:
-            if not key_id:
-                if (e.values[:] == entity.values[:]):
-                    return False, "Duplicate data insertion"
-            # Extract key column values of every entities, and compare with the one we want to test
-            # If there's same combination, we say this entity is invalid
-            # TODO: Instead of checking against all entities, use the hashing table to check up duplicate values to achieve O(!) time
-            if (entity_key_values == [e.values[i] for (i, c) in key_id]) and (key_id):
-                return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
             
         if not key_id:
             compare_val = None
             index = None
+            # Get the first non None value in the entity for comparision in Btree
             for i, val in enumerate(entity.values):
                 if val is not None:
                  compare_val = val
@@ -638,10 +627,11 @@ class Table:
                 if (self.entities[i].values[:] == entity[:]):
                     return False, "Duplicate data insertion"
         else:
-            index, hash_table = next(table for index, table in enumerate(table) if table is not None)
+            # Use the first hash table available
+            index, hash_table = next(table for index, table in enumerate(hash_tables) if table is not None)
             key = entity.values[index]
             # Get the entities that matches the key value (could be more then 1 in case of several primary keys)
-            matches = hash_table.getvalues(key)
+            matches = hash_table.get(key)
             for i in matches:
                 if (entity_key_values == [self.entities[i].values[k] for (k, c) in key_id]):
                     return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
@@ -692,13 +682,16 @@ class Table:
         # check if the col_name is in column
         # and convert the whole list to their order in the table
         col_ids = []
+        primary_key_val = None
         if col_names:
-            for n in col_names:
-                if n not in self.col_name2id:
-                    return False, "Column " + str(n) + " is not in Table " + self.name
+            for (val, col) in zip(values, col_names):
+                if col not in self.col_name2id:
+                    return False, "Column " + str(col) + " is not in Table " + self.name
                 else:
                     # convert col_name to its order in the table and append to list
-                    col_ids.append(self.col_name2id[n])
+                    col_ids.append(self.col_name2id[col])
+                    if self.get_column(col).key:
+                        primary_key_val = val
         
         # check if len(values) is less than equal to len(columns)
         # should not accept too many value
@@ -724,7 +717,9 @@ class Table:
             btree, hashing = self.indexing[key]
             col_id = self.col_name2id(key)
             btree.insert(entity.values[col_id], len(entities) - 1)
-            hashing.insert(entity.values[col_id], len(entities) - 1)
+            if hashing is not None:
+                hashing.insert(entity.values[col_id], len(entities) - 1)
+
         return True, None  
 
     # Getting Column for the given name
@@ -743,7 +738,7 @@ class Table:
 
         if self.get_column(col_name) is not None and not indexing.has_key(col_name):
             if key:
-                indexing[col_name] = [bt.BPlusTree(5), HashingTable()]
+                indexing[col_name] = [bt.BPlusTree(5), hashing.EH()]
             else:
                 indexing[col_name] = [bt.BPlusTree(5), None]
             return True, None
