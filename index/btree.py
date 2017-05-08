@@ -14,6 +14,13 @@ class _BNode(object):
             assert len(self.contents) + 1 == len(self.children), \
                     "one more child than data item required"
 
+    def __getstate__(self):
+        return { slot: getattr(self, slot) for slot in self.__slots__}
+
+    def __setstate__(self, d):
+        for slot in d:
+            setattr(self, slot, d[slot])
+
     def __repr__(self):
         name = getattr(self, "children", 0) and "Branch" or "Leaf"
         return "<%s %s>" % (name, ", ".join(map(str, self.contents)))
@@ -167,6 +174,13 @@ class _BPlusLeaf(_BNode):
         self.data = data or []
         self.next = next
         assert len(self.contents) == len(self.data), "one data per key"
+
+    def __getstate__(self):
+        return { slot: getattr(self, slot) for slot in self.__slots__}
+
+    def __setstate__(self, d):
+        for slot in d:
+            setattr(self, slot, d[slot])
 
     def insert(self, index, key, data, ancestors):
         self.contents.insert(index, key)

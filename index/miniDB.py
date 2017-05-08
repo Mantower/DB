@@ -10,6 +10,7 @@ class Database:
         self.tables = []
         # dictionary for fast look up from table_name to its order in the table
         self.tab_name2id = {}
+
     def exec_insert(self,sql):
         return input_insert(self, sql)
     def exec_sql(self, sql):
@@ -89,10 +90,7 @@ class Database:
             table = Table(table_name, columns)
             # Creating indexing tables for all columns in the table, no Hashing table if it's not a key
             for key, col in zip(keys, col_names):
-                if key:
-                    table.indexing(col, True)
-                else:
-                    table.indexing(col, False)
+                table.indexing(col, key)
             # register in fast look up table
             self.tab_name2id[table_name] = len(self.tables)
             # add newly created table into table list
@@ -593,7 +591,7 @@ class Table:
         for i, c in enumerate(self.columns):
             if c.key:
                 key_id.append((i,c))
-                hash_tables.append((i, self.indexes[c][1]))
+                hash_tables.append((i, self.indexes[c.name][1]))
         # Get all value that the corresponding column is marked as primary key
         entity_key_values = [v for (v, c) in zip(entity.values, self.columns) if c.key]
         
@@ -632,9 +630,10 @@ class Table:
             key = entity.values[index]
             # Get the entities that matches the key value (could be more then 1 in case of several primary keys)
             matches = hash_table.get(key)
-            for i in matches:
-                if (entity_key_values == [self.entities[i].values[k] for (k, c) in key_id]):
-                    return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
+            if matches is not None:
+                for i in matches:
+                    if (entity_key_values == [self.entities[i].values[k] for (k, c) in key_id]):
+                        return False, "Primary key pair (" + ','.join(str(v) for v in entity_key_values) + ") duplicate."
 
         # Pass all validation 
 
@@ -708,18 +707,19 @@ class Table:
         passed, err_msg = self.entity_is_valid(entity)
         if not passed:
             return False, err_msg
-        
-        # insert entity
-        self.entities.append(entity)
+
 
         # Add entity to all indexing tables
         for key in self.indexes:
             btree, hashing = self.indexes[key]
-            col_id = self.col_name2id(key)
-            btree.insert(entity.values[col_id], len(entities) - 1)
+            col_id = self.col_name2id[key]
+            btree.insert(entity.values[col_id], len(self.entities))
             if hashing is not None:
-                hashing.insert(entity.values[col_id], len(entities) - 1)
+                hashing.put(entity.values[col_id], len(self.entities))
 
+        # insert entity
+        self.entities.append(entity)
+        
         return True, None  
 
     # Getting Column for the given name
@@ -741,6 +741,7 @@ class Table:
                 self.indexes[col_name] = [bt.BPlusTree(5), hashing.EH()]
             else:
                 self.indexes[col_name] = [bt.BPlusTree(5), None]
+            print(self.indexes[col_name])
             return True, None
         else:
             return False, "Invalid indexing column"

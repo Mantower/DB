@@ -10,10 +10,10 @@ class Page(object):
         return len(self.m) >= PAGE_SZ
 
     def put(self,k,v):
-        if k in m:
+        if k in self.m:
             self.m[k] = self.m[k].append(v)
         else:
-            self.m[k] = [v]
+            self.m[k] = [v] 
 
     def get(self,k):
         return self.m.get(k)
