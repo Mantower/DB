@@ -5,6 +5,8 @@ import pickle
 import miniDB
 import sql
 import re
+import sys
+sys.setrecursionlimit(5000)
 
 # Create your views here.
 def index(request):

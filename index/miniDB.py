@@ -616,7 +616,7 @@ class Table:
                 if val is not None:
                  compare_val = val
                  index = i
-                 return
+                 break
             if compare_val is None:
                 return False, "Entity only None values"
             btree = self.indexes[self.columns[i].name][0]
@@ -719,7 +719,7 @@ class Table:
 
         # insert entity
         self.entities.append(entity)
-        
+
         return True, None  
 
     # Getting Column for the given name
@@ -738,9 +738,9 @@ class Table:
 
         if self.get_column(col_name) is not None and not self.indexes.has_key(col_name):
             if key:
-                self.indexes[col_name] = [bt.BPlusTree(5), hashing.EH()]
+                self.indexes[col_name] = [bt.BPlusTree(20), hashing.EH()]
             else:
-                self.indexes[col_name] = [bt.BPlusTree(5), None]
+                self.indexes[col_name] = [bt.BPlusTree(20), None]
             print(self.indexes[col_name])
             return True, None
         else:
