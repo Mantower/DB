@@ -530,7 +530,7 @@ class Stage2TestCase(TestCase):
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
         self.assertEqual(len(table[0].entities), 7)
-        self.assertEqual(table[0].entities[1].values,['Michael Crichton','Jurassic Park'])
+        self.assertEqual(table[0].entities[1].values,['John   Goodman', 'VPN Architectures'])
 
     def test_aggregation1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)

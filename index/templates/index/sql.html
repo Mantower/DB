@@ -43,6 +43,7 @@
     <table class="table">
       <thead>
         <tr>
+          <th>#</th>
           {% for col in info_row.4.columns %}
           <th>{{ col.name }}</th>
           {% endfor %}
@@ -51,6 +52,7 @@
       <tbody>
         {% for ent in info_row.4.entities %}
         <tr>
+          <td>{{ forloop.counter }}</td>
           {% for e in ent.values %}
           <td>{{ e }}</td>
           {% endfor %}
