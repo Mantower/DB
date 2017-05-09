@@ -366,7 +366,43 @@ class Database:
         # key of table
         for fst_e in entities1:
             if len(tables) == 2:
-                for snd_e in entities2:
+                filtered_entities2 = entities2
+       
+                # speed up inner join
+                # predicates 1, handles inner join
+                is_inner_join = preds[0].is_inner_join()
+                is_rule1_pk = is_inner_join and tables_obj[1].columns[preds[0].rule1[1]].key
+                is_rule2_pk = is_inner_join and tables_obj[1].columns[preds[0].rule2[1]].key
+                if is_inner_join and (is_rule1_pk or is_rule2_pk):
+                    key = None
+                    # predicate col
+                    if preds[0].rule1[0] == 0:
+                        key = fst_e.values[preds[0].rule1[1]]
+                    elif preds[0].rule2[0] == 0:
+                        key = fst_e.values[preds[0].rule2[1]]
+
+                    filtered_entities2 = [tables_obj[1].hashTable.get(key)]
+                
+                if filtered_entities2 == [None]:
+                    continue
+
+                is_inner_join = preds[1].is_inner_join()
+                is_rule1_pk = is_inner_join and tables_obj[1].columns[preds[1].rule1[1]].key
+                is_rule2_pk = is_inner_join and tables_obj[1].columns[preds[1].rule2[1]].key
+                if is_inner_join and (is_rule1_pk or is_rule2_pk):
+                    key = None
+                    # predicate col
+                    if preds[1].rule1[0] == 0:
+                        key = fst_e.values[preds[1].rule1[1]]
+                    elif preds[1].rule2[0] == 0:
+                        key = fst_e.values[preds[1].rule2[1]]
+
+                    filtered_entities2 = [tables_obj[1].hashTable.get(key)]
+                
+                if filtered_entities2 == [None]:
+                    continue
+
+                for snd_e in filtered_entities2:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
                     if err_msg:
                         return False, None, err_msg
@@ -720,6 +756,7 @@ class Table:
         
         # insert entity
         self.entities.append(entity)
+        
         return True, None 
 
     def insert(self, values, col_names=None):
@@ -742,8 +779,10 @@ class Table:
                 else:
                     # convert col_name to its order in the table and append to list
                     col_ids.append(self.col_name2id[col])
-                    if self.get_column(col).key:
-                        primary_key_val = val
+
+        for val, c in zip(values, self.columns):
+            if c.key:
+                primary_key_val = val
         
         # check if len(values) is less than equal to len(columns)
         # should not accept too many value

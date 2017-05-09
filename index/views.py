@@ -79,7 +79,7 @@ def sql_view(request):
             err_msgs.extend(err)
             tables.extend(t)
             # ignore rows id more than 50
-            if s[0] and len(t[0].entities) > 50:
+            if s[0] and t[0] and len(t[0].entities) > 50:
                 more.append((True, "x" * len(t[0].columns)))
                 t[0].entities = t[0].entities[:50]
             else:
