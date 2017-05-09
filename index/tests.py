@@ -251,7 +251,7 @@ class TableTestCase(TestCase):
         VALUES(17, 'Infinity Man', 'M', 2147483650)"
         passed, table, err_msg = database.exec_sql(sql)
         self.assertEqual(passed,[False])
-        self.assertIn("out of range", err_msg[0])
+        self.assertIn("is not int", err_msg[0])
 
     def test_insert_int_size1(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -283,8 +283,8 @@ class TableTestCase(TestCase):
         sql = "INSERT INTO STUDENT \
         VALUES(20, 'Prof. No Age', 'M')"
         passed, table, err_msg = database.exec_sql(sql)
-        self.assertEqual(passed,[True])
-        self.assertEqual(err_msg, [None])
+        self.assertEqual(passed,[False])
+        self.assertEqual("Incorrect number of column values", err_msg[0])
 
     def test_insert_missing_pk_attribute(self):
         database = load_db(TEST_DB_WITH_STUDENT)
@@ -530,7 +530,7 @@ class Stage2TestCase(TestCase):
         self.assertEqual(passed,[True])
         self.assertEqual(err_msg, [None])
         self.assertEqual(len(table[0].entities), 7)
-        self.assertEqual(table[0].entities[1].values,['Michael Crichton','Jurassic Park'])
+        self.assertEqual(table[0].entities[1].values,['John   Goodman', 'VPN Architectures'])
 
     def test_aggregation1(self):
         database = load_db(TEST_DB_WITH_BOOK_AUTHOR)

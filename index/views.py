@@ -7,6 +7,7 @@ import sql
 import re
 import sys
 sys.setrecursionlimit(5000)
+import time
 
 # Create your views here.
 def index(request):
@@ -72,13 +73,14 @@ def sql_view(request):
         sqlList = [s.strip() for s in st.splitlines()]
         #print(sqlList)
 
-        
+        starttime = time.time()
         success, tables, err_msgs = [], [], []
         for small_sql in sqlList:
             s, t, err = database.exec_sql(small_sql)
             success.extend(s)
             tables.extend(t)
             err_msgs.extend(err)
+        endtime = time.time()
 
         #print(tables)
         # additional message to indicate the execution is successful or not
@@ -94,6 +96,7 @@ def sql_view(request):
 
         data = {'sql':sql_str,
                 'info':zip(success, panel_msgs, sqlList, err_msgs, tables),
+                'used_time': endtime-starttime,
                 }
 
         return render(request,'index/sql.html', data)

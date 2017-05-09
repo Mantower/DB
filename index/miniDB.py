@@ -438,7 +438,7 @@ class Database:
                 aggr_entity.append(aggr_value)
 
             aggr_result = Table("SelectAggrQuery", aggr_cols)
-            aggr_result.insert(aggr_entity)
+            aggr_result.insert_without_check(aggr_entity)
 
             result = aggr_result
 
@@ -601,7 +601,9 @@ class Table:
             if not v:
                 return False, "Empty value for primary key Column " + self.columns[i].name + "."
         
-        
+        if len(self.columns) is not len(entity.values):
+            return False, "Incorrect number of column values"
+
         # Check if column values are valid
         for v, c in zip(entity.values, self.columns):
             passed, err_msg = c.constraint.is_valid(v)
@@ -682,6 +684,7 @@ class Table:
         # and convert the whole list to their order in the table
         col_ids = []
         primary_key_val = None
+
         if col_names:
             for (val, col) in zip(values, col_names):
                 if col not in self.col_name2id:
@@ -741,7 +744,6 @@ class Table:
                 self.indexes[col_name] = [bt.BPlusTree(20), hashing.EH()]
             else:
                 self.indexes[col_name] = [bt.BPlusTree(20), None]
-            print(self.indexes[col_name])
             return True, None
         else:
             return False, "Invalid indexing column"
