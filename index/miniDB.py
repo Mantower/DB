@@ -355,10 +355,23 @@ class Database:
             None: None. For same return format.
             String: Error message.
         """
+        starttime = time.time()
+        entities1 = []
+        entities2 = []
+        if len(tables) == 2:
+            entities1, entities2 = self.predicate_filter(preds, operator, tables_obj[0].entities, tables_obj[1].entities)
+        else:
+            entities1, entities2 = self.predicate_filter(preds, operator, tables_obj[0].entities, None)
+        endtime = time.time()
+        print("pre do ok")
+        print(endtime-starttime)
+        print(len(entities1))
+        print(len(entities2))
+
         # key of table
-        for fst_e in tables_obj[0].entities:
+        for fst_e in entities1:
             if len(tables) == 2:
-                for snd_e in tables_obj[1].entities:
+                for snd_e in entities2:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
                     if err_msg:
                         return False, None, err_msg
@@ -516,6 +529,71 @@ class Database:
             return False, None, err_msg 
     
         return True, result, None 
+
+    def predicate_filter_helper(self, predicate, entities1, entities2):
+        filtered_entities = [[],[]]
+        entities_list = [entities1, entities2]
+        # check if first predicte not inner join
+        if not predicate.is_inner_join():
+            # get which table the predicate constrain
+            which_table = predicate.which_table()
+            # get all rows that fulfills this predicate
+            for e in entities_list[which_table]:
+                if which_table == 0:
+                    b, _ = predicate.evaluate_predicates(e, None)
+                    if b:
+                        filtered_entities[which_table].append(e)
+                elif which_table == 1:
+                    b, _ = predicate.evaluate_predicates(None, e)
+                    if b:
+                        filtered_entities[which_table].append(e)
+
+        return filtered_entities
+
+    def predicate_filter(self, predicates, operator, entities1, entities2):
+        entities_list = (entities1, entities2)
+        if not len(predicates):
+            return entities_list
+
+        filtered = []
+        for p in predicates:
+            filtered.append(self.predicate_filter_helper(p, entities1, entities2))
+
+        if len(filtered) == 1:
+            # first and second filtered element
+            filtered1, filtered2 = filtered[0]
+            if filtered1 == []:
+                filtered1 = entities1
+            if filtered2 == []:
+                filtered2 = entities2
+            return (filtered1, filtered2)
+
+        combined = [None, None]
+        fst_filtered1, fst_filtered2 = filtered[0]
+        snd_filtered1, snd_filtered2 = filtered[1]
+        if fst_filtered1 != [] and snd_filtered1 != []:
+            combined[0] = list(set(fst_filtered1) & set(snd_filtered1))
+            combined[1] = entities2
+        elif fst_filtered2 != [] and snd_filtered2 != []:
+            combined[0] = entities1
+            combined[1] = list(set(fst_filtered2) & set(snd_filtered2))
+        
+        if fst_filtered1 == [] and snd_filtered1 != []:
+            combined[0] = snd_filtered1
+        elif fst_filtered1 != [] and snd_filtered1 == []:
+            combined[0] = fst_filtered1
+
+        if fst_filtered2 == [] and snd_filtered2 != []:
+            combined[1] = snd_filtered2
+        elif fst_filtered2 != [] and snd_filtered2 == []:
+            combined[1] = fst_filtered2
+
+        if combined[0] == None:
+            combined[0] = entities1
+        if combined[1] == None:
+            combined[1] = entities2
+
+        return combined
 
     def predicate_check(self, predicates, operator, entity1, entity2):
         if not len(predicates):
@@ -907,6 +985,35 @@ class Predicate:
         self.op = op
         self.table_names = table_names
         self.column_names = column_names
+
+    def is_inner_join(self):
+        """ Check if the predicates is an inner join.
+        Args:
+            
+        Returns:
+            bool: The return value.
+            
+        """
+        tid1, cid1, _ = self.rule1
+        tid2, cid2, _ = self.rule2
+        # if both rule specify table id and column id
+        return tid1 != None and cid1 != None and tid2 != None and cid2 != None
+
+    def which_table(self):
+        """ Return which table the predicate rule constrains on.
+        e.g. table0.id > 32, predicate.which_table() returns 0
+        Args:
+
+        Returns:
+            bool: The return value.     
+        """
+        tid1, _, _ = self.rule1
+        tid2, _, _ = self.rule2
+        if tid1 != None:
+            return tid1
+        elif tid2 != None:
+            return tid2
+        return None
 
     def rule_format(self, num):
         rule = self.rule1

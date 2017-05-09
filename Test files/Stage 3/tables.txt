@@ -1,0 +1,2 @@
+create table user1 (userId int PRIMARY KEY, name varchar(40), salary int, IQ int, tax int);
+create table trans (transactionId varchar(40) PRIMARY KEY, userId int, stockId int, buyPrice int, sellPrice int)
