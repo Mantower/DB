@@ -74,13 +74,21 @@ def sql_view(request):
         #print(sqlList)
 
         starttime = time.time()
-        success, tables, err_msgs = [], [], []
+        success, tables, err_msgs, more = [], [], [], []
         for small_sql in sqlList:
             s, t, err = database.exec_sql(small_sql)
             success.extend(s)
-            tables.extend(t)
             err_msgs.extend(err)
+            tables.extend(t)
+            # ignore rows id more than 50
+            if s[0] and t[0] and len(t[0].entities) > 50:
+                more.append((True, "x" * len(t[0].columns)))
+                t[0].entities = t[0].entities[:50]
+            else:
+                more.append((False, None))
+            
         endtime = time.time()
+        used_time = endtime-starttime
 
         #print(tables)
         # additional message to indicate the execution is successful or not
@@ -92,11 +100,14 @@ def sql_view(request):
                 panel_msg = "error"
             panel_msgs.append(panel_msg)
 
+        print(used_time)
+        print(success)
+
         save_db(database)
 
         data = {'sql':sql_str,
-                'info':zip(success, panel_msgs, sqlList, err_msgs, tables),
-                'used_time': endtime-starttime,
+                'info':zip(success, panel_msgs, sqlList, err_msgs, tables, more),
+                'used_time': used_time,
                 }
 
         return render(request,'index/sql.html', data)

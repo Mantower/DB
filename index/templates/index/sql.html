@@ -59,6 +59,14 @@
           {% endfor %}
         </tr>
         {% endfor %}
+        {% if info_row.5.0 %}
+        <tr>
+          <td>...</td>
+          {% for c in info_row.5.1 %}
+          <td>...</td>
+          {% endfor %}
+        </tr>
+        {% endif %}
       </tbody>
     </table>
     {% endif %}

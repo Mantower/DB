@@ -363,15 +363,56 @@ class Database:
         else:
             entities1, entities2 = self.predicate_filter(preds, operator, tables_obj[0].entities, None)
         endtime = time.time()
-        print("pre do ok")
-        print(endtime-starttime)
-        print(len(entities1))
-        print(len(entities2))
-
+        #print("pre do ok")
+        #print(endtime-starttime)
+        #print(len(entities1))
+        #print(len(entities2))
+                
         # key of table
         for fst_e in entities1:
             if len(tables) == 2:
-                for snd_e in entities2:
+                filtered_entities2 = entities2
+       
+                if len(preds) >= 1:
+                    # speed up inner join
+                    # predicates 1, handles inner join
+                    is_inner_join = preds[0].is_inner_join()
+                    
+                    if is_inner_join:
+                        is_rule1_pk = is_inner_join and preds[0].rule1[0]==1 and tables_obj[1].columns[preds[0].rule1[1]].key
+                        is_rule2_pk = is_inner_join and preds[0].rule2[0]==1 and tables_obj[1].columns[preds[0].rule2[1]].key
+                        if is_inner_join and (is_rule1_pk or is_rule2_pk):
+                            key = None
+                            # predicate col
+                            if preds[0].rule1[0] == 0:
+                                key = fst_e.values[preds[0].rule1[1]]
+                            elif preds[0].rule2[0] == 0:
+                                key = fst_e.values[preds[0].rule2[1]]
+
+                            filtered_entities2 = [tables_obj[1].hashTable.get(key)]
+                        
+                        if filtered_entities2 == [None]:
+                            continue
+
+                if len(preds) >= 2:
+                    is_inner_join = preds[1].is_inner_join()
+                    if is_inner_join:
+                        is_rule1_pk = is_inner_join and preds[1].rule1[0]==1 and tables_obj[1].columns[preds[1].rule1[1]].key
+                        is_rule2_pk = is_inner_join and preds[1].rule1[0]==1 and tables_obj[1].columns[preds[1].rule2[1]].key
+                        if is_inner_join and (is_rule1_pk or is_rule2_pk):
+                            key = None
+                            # predicate col
+                            if preds[1].rule1[0] == 0:
+                                key = fst_e.values[preds[1].rule1[1]]
+                            elif preds[1].rule2[0] == 0:
+                                key = fst_e.values[preds[1].rule2[1]]
+
+                            filtered_entities2 = [tables_obj[1].hashTable.get(key)]
+                        
+                        if filtered_entities2 == [None]:
+                            continue
+
+                for snd_e in filtered_entities2:
                     check, err_msg = self.predicate_check(preds, operator, fst_e, snd_e)
                     if err_msg:
                         return False, None, err_msg
@@ -572,11 +613,17 @@ class Database:
         fst_filtered1, fst_filtered2 = filtered[0]
         snd_filtered1, snd_filtered2 = filtered[1]
         if fst_filtered1 != [] and snd_filtered1 != []:
-            combined[0] = list(set(fst_filtered1) & set(snd_filtered1))
+            if operator == 'or':
+                combined[0] = list(set(fst_filtered1) | set(snd_filtered1))
+            elif operator == 'and':
+                combined[0] = list(set(fst_filtered1) & set(snd_filtered1))
             combined[1] = entities2
         elif fst_filtered2 != [] and snd_filtered2 != []:
             combined[0] = entities1
-            combined[1] = list(set(fst_filtered2) & set(snd_filtered2))
+            if operator == 'or':
+                combined[1] = list(set(fst_filtered2) | set(snd_filtered2))
+            elif operator == 'and':
+                combined[1] = list(set(fst_filtered2) & set(snd_filtered2))
         
         if fst_filtered1 == [] and snd_filtered1 != []:
             combined[0] = snd_filtered1
@@ -745,6 +792,7 @@ class Table:
         
         # insert entity
         self.entities.append(entity)
+        
         return True, None 
 
     def insert(self, values, col_names=None):
@@ -767,8 +815,10 @@ class Table:
                 else:
                     # convert col_name to its order in the table and append to list
                     col_ids.append(self.col_name2id[col])
-                    if self.get_column(col).key:
-                        primary_key_val = val
+
+        for val, c in zip(values, self.columns):
+            if c.key:
+                primary_key_val = val
         
         # check if len(values) is less than equal to len(columns)
         # should not accept too many value
