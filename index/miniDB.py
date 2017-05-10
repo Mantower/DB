@@ -492,7 +492,7 @@ class Database:
                 aggr_entity.append(aggr_value)
 
             aggr_result = Table("SelectAggrQuery", aggr_cols)
-            aggr_result.insert(aggr_entity)
+            aggr_result.insert_without_check(aggr_entity)
 
             result = aggr_result
 
@@ -691,6 +691,8 @@ class Table:
         # Dictionary with indexing tables, key the indexing column name. Value in dictionary
         # contains a list with [BPlusTree, HashingTable]
         self.indexes = {}
+        self.hashTable = hashing.EH()
+
   
     def entity_is_valid(self, entity):
         """The fucntion checks if the entity is fine to insert into the table.
@@ -847,6 +849,9 @@ class Table:
 
         # insert entity
         self.entities.append(entity)
+
+        if primary_key_val:
+            self.hashTable.put(primary_key_val, entity)
 
         return True, None  
 
